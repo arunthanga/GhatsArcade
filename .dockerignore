@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.env
+.env.*
+tests/reports
+playwright-report
+test-results
+*.db
+*.db-journal
+README.md

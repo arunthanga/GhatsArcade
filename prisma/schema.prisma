@@ -1,0 +1,167 @@
+// Ghats Arcade - Prisma schema (initial draft, see prj.md Section 8).
+//
+// Provider is SQLite for the lightweight path (local file / Turso-libSQL in cloud).
+// NOTE: SQLite does not support Prisma `enum` or scalar list fields, so role/status
+// values are modelled as `String` (allowed values documented inline and enforced by
+// Zod + src/lib/roles.ts) and lists are modelled as relations.
+//
+// The Better Auth tables (User/Session/Account/Verification) follow Better Auth's
+// expected shape; regenerate/adjust them with `npx @better-auth/cli generate`.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// --- Auth / accounts -------------------------------------------------------
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  role          String   @default("ADMIN") // "OWNER" | "ADMIN" (exactly one OWNER, see prj.md Section 9)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+  listings      Listing[]      @relation("ListingCreatedBy")
+  blogPosts     BlogPost[]
+  followUpNotes FollowUpNote[]
+
+  @@index([role])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// --- Domain ----------------------------------------------------------------
+
+model Listing {
+  id             String         @id @default(cuid())
+  title          String
+  slug           String         @unique
+  description    String
+  district       String
+  nearestTown    String?
+  keralaTnBorder Boolean        @default(false)
+  landType       String         @default("agricultural") // "agricultural" | "converted_non_agricultural"
+  sizeAcres      Float
+  priceInr       Int // whole rupees (avoids float money issues)
+  status         String         @default("draft") // "draft" | "published" | "under_offer" | "sold"
+  photos         ListingPhoto[]
+  leads          Lead[]
+  createdById    String
+  createdBy      User           @relation("ListingCreatedBy", fields: [createdById], references: [id])
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([status])
+  @@index([district])
+}
+
+model ListingPhoto {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([listingId])
+}
+
+model Lead {
+  id              String         @id @default(cuid())
+  name            String
+  email           String?
+  phone           String // stored with country code
+  buyerType       String         @default("resident_indian") // resident_indian | nri | oci | foreign_citizen
+  message         String?
+  status          String         @default("new") // new | contacted | negotiating | converted | lost
+  sourceListingId String?
+  sourceListing   Listing?       @relation(fields: [sourceListingId], references: [id], onDelete: SetNull)
+  followUpNotes   FollowUpNote[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([status])
+  @@index([sourceListingId])
+}
+
+model FollowUpNote {
+  id            String   @id @default(cuid())
+  leadId        String
+  lead          Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  authorId      String
+  author        User     @relation(fields: [authorId], references: [id])
+  noteText      String
+  contactMethod String   @default("call") // whatsapp | call | email | in_person
+  createdAt     DateTime @default(now())
+
+  @@index([leadId])
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  body        String
+  coverImage  String?
+  status      String    @default("draft") // "draft" | "published"
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status])
+}

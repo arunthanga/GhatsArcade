@@ -1,0 +1,21 @@
+# Lightweight path: the Next.js app with a persistent SQLite volume.
+# Scale-up path: add a `postgres` service and point DATABASE_URL at it.
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "file:/data/prod.db"
+      BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET}"
+      BETTER_AUTH_URL: "${BETTER_AUTH_URL:-http://localhost:3000}"
+      NEXT_PUBLIC_SITE_URL: "${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}"
+      NEXT_PUBLIC_WHATSAPP_NUMBER: "${NEXT_PUBLIC_WHATSAPP_NUMBER:-}"
+    volumes:
+      - sqlite-data:/data
+      - media:/app/public/uploads
+    restart: unless-stopped
+
+volumes:
+  sqlite-data:
+  media:

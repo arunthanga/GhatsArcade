@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      # Dummy values so build/codegen steps that read env do not fail in CI.
+      DATABASE_URL: "file:./ci.db"
+      BETTER_AUTH_SECRET: "ci-placeholder-secret"
+      BETTER_AUTH_URL: "http://localhost:3000"
+      NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm prisma generate
+
+      - name: Lint & format check (Biome)
+        run: pnpm check
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Unit / component / integration tests (with coverage)
+        run: pnpm test:coverage

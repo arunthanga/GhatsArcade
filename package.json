@@ -1,0 +1,66 @@
+{
+  "name": "ghats-arcade",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Marketing and lead-generation website for the Ghats Arcade managed-farmland business.",
+  "type": "module",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:regression": "vitest run --dir tests/regression",
+    "test:report": "vitest run --coverage --reporter=html --outputFile=tests/reports/index.html",
+    "test:e2e": "playwright test",
+    "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@libsql/client": "latest",
+    "@prisma/adapter-libsql": "latest",
+    "@prisma/client": "latest",
+    "@tanstack/react-query": "latest",
+    "better-auth": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-hook-form": "latest",
+    "@hookform/resolvers": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "latest",
+    "@playwright/test": "latest",
+    "@tailwindcss/postcss": "latest",
+    "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
+    "@testing-library/user-event": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "latest",
+    "@vitest/coverage-v8": "latest",
+    "jsdom": "latest",
+    "msw": "latest",
+    "next-sitemap": "latest",
+    "postcss": "latest",
+    "prisma": "latest",
+    "tailwindcss": "latest",
+    "tsx": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}

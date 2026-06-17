@@ -1,0 +1,13 @@
+# Code owners for Ghats Arcade.
+# Replace @OWNER_GITHUB_USERNAME with your GitHub username (must have write access).
+
+# Default owner for everything in the repo.
+*                       @OWNER_GITHUB_USERNAME
+
+# Security-critical areas warrant explicit review (prj.md Section 9).
+/src/lib/roles.ts       @OWNER_GITHUB_USERNAME
+/src/lib/roles.test.ts  @OWNER_GITHUB_USERNAME
+/src/lib/auth.ts        @OWNER_GITHUB_USERNAME
+/src/server/admins.ts   @OWNER_GITHUB_USERNAME
+/prisma/                @OWNER_GITHUB_USERNAME
+/.github/               @OWNER_GITHUB_USERNAME
