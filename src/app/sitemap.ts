@@ -1,12 +1,14 @@
 import type { MetadataRoute } from "next";
+import { absoluteUrl, buildSitemapEntries } from "@/lib/seo";
+import { listPublishedPosts } from "@/server/blog";
+import { listPublicListings } from "@/server/listings";
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
-// Static routes only for now; listing/blog routes are appended once those
-// data sources are implemented (TDD: sitemap.test.ts first).
-export default function sitemap(): MetadataRoute.Sitemap {
-  return ["", "/listings", "/blog", "/about", "/contact"].map((path) => ({
-    url: `${baseUrl}${path}`,
-    lastModified: new Date(),
-  }));
+// Static routes plus every publicly-visible listing and published blog post. The entry
+// shapes are built by the pure buildSitemapEntries helper.
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [listings, posts] = await Promise.all([listPublicListings(), listPublishedPosts()]);
+  return buildSitemapEntries(absoluteUrl("/"), {
+    listingSlugs: listings.map((listing) => listing.slug),
+    blogSlugs: posts.map((post) => post.slug),
+  });
 }

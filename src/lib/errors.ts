@@ -16,3 +16,11 @@ export class NotFoundError extends Error {
     this.name = "NotFoundError";
   }
 }
+
+export class ValidationError extends Error {
+  readonly code = "VALIDATION" as const;
+  constructor(message = "The request is invalid.") {
+    super(message);
+    this.name = "ValidationError";
+  }
+}

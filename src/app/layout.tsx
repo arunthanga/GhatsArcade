@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { LegalDisclaimer } from "@/components/public/LegalDisclaimer";
+import { absoluteUrl } from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(absoluteUrl("/")),
   title: {
     default: "Ghats Arcade - Tranquility meets high-yields",
     template: "%s | Ghats Arcade",
@@ -14,12 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>
-        {children}
-        <footer>
-          <LegalDisclaimer />
-        </footer>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
