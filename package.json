@@ -20,6 +20,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:regression": "vitest run --dir tests/regression",
     "test:report": "vitest run --coverage --reporter=html --outputFile=tests/reports/index.html",
     "test:e2e": "playwright test",

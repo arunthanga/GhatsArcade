@@ -1,20 +1,17 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { isValidOwnerCount } from "@/lib/roles";
+import { createCredentialedUser } from "@/server/users";
 
-// Seeds the single OWNER (Super Admin) account, enforcing the prj.md Section 9
-// invariant that exactly one OWNER exists. Credentials come from the environment.
-//
-// TDD: the password-hashing + Better Auth wiring is implemented behind a failing
-// test first (see src/lib/auth.test.ts, to be added). This seed currently sets up
-// the User row; the credential/Account row is created via the auth layer.
-
-const prisma = new PrismaClient();
-
+// Seeds the single OWNER (Super Admin) account with a working email/password
+// credential, enforcing the prj.md Section 9 invariant that exactly one OWNER exists.
+// Idempotent: re-running does nothing once an Owner is present.
 async function main() {
   const email = process.env.OWNER_EMAIL;
+  const password = process.env.OWNER_PASSWORD;
   const name = process.env.OWNER_NAME ?? "Ghats Arcade Owner";
 
-  if (!email) {
-    throw new Error("OWNER_EMAIL must be set to seed the Owner account.");
+  if (!email || !password) {
+    throw new Error("OWNER_EMAIL and OWNER_PASSWORD must be set to seed the Owner account.");
   }
 
   const existingOwner = await prisma.user.findFirst({ where: { role: "OWNER" } });
@@ -23,11 +20,14 @@ async function main() {
     return;
   }
 
-  const owner = await prisma.user.create({
-    data: { email, name, role: "OWNER", emailVerified: true, isActive: true },
-  });
+  const owner = await createCredentialedUser({ email, password, name, role: "OWNER" });
+
+  const ownerCount = await prisma.user.count({ where: { role: "OWNER" } });
+  if (!isValidOwnerCount(ownerCount)) {
+    throw new Error(`Single-Owner invariant violated: found ${ownerCount} owners.`);
+  }
+
   console.log(`Created OWNER account: ${owner.email}`);
-  console.log("Set the Owner password via the Better Auth flow (see src/lib/auth.ts).");
 }
 
 main()

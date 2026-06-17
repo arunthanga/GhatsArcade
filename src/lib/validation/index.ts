@@ -33,3 +33,10 @@ export const listingSchema = z.object({
 export type ListingInput = z.infer<typeof listingSchema>;
 
 export const leadStatusSchema = z.enum(LEAD_STATUSES);
+
+export const createAdminSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("A valid email is required"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+export type CreateAdminInput = z.infer<typeof createAdminSchema>;

@@ -201,7 +201,8 @@ The final application code is intended to remain **private/proprietary** (not sh
 | Repo hygiene (CI, Dependabot, CONTRIBUTING, SECURITY, LICENSE, editor configs) | Done | N/A |
 | Roles/permissions module (`src/lib/roles.ts`) | In Progress | Tests written (`roles.test.ts`: Owner/Admin, fail-closed, single-Owner invariant); pending first run/CI to confirm green + 100% branch coverage |
 | Typed env validation (`src/lib/env.ts`) | In Progress | Implemented (zod); tests not yet written |
-| Auth (Owner/Admin login) | Not Started | Better Auth config + route stub only |
+| Auth (Owner/Admin login) | In Progress | Better Auth email/password + admin plugin, client (`auth-client.ts`), server session/role guards (`server/session.ts`), `/admin/login` form, and guarded `admin/(dashboard)` layout implemented; `session.test.ts` written; pending verified green run |
+| Admin management (Owner-only add/remove) | In Progress | Pure guard rules (`server/admin-rules.ts`) + service (`server/admins.ts`) + Owner-only API routes + Owner-only UI; unit tests (`admin-rules.test.ts`) and DB integration tests (`admins.integration.test.ts`) written; pending verified green run |
 | Listing CRUD | Not Started | Prisma model + service/route stubs only |
 | Lead capture + CRM | Not Started | Prisma model + Zod schema + route stubs only |
 | Blog/CMS module | Not Started | Prisma model + route stub only |

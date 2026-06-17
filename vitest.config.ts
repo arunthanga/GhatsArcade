@@ -11,10 +11,19 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
-    // Co-located unit/component/integration tests run by default.
-    // Regression suites live in tests/regression and run on demand
-    // via `pnpm test:regression` (excluded here so they are not run every commit).
+    // Dummy env so modules that import src/lib/env.ts do not throw during unit tests.
+    env: {
+      NODE_ENV: "test",
+      DATABASE_URL: "file:./test-unit.db",
+      BETTER_AUTH_SECRET: "unit-test-secret",
+      BETTER_AUTH_URL: "http://localhost:3000",
+      NEXT_PUBLIC_SITE_URL: "http://localhost:3000",
+    },
+    // Co-located unit/component tests run by default. DB-backed *.integration.test.ts
+    // run via `pnpm test:integration`. Regression suites (tests/regression) run on
+    // demand via `pnpm test:regression`.
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    exclude: ["**/node_modules/**", "**/*.integration.test.ts"],
     coverage: {
       provider: "v8",
       reportsDirectory: "tests/reports/coverage",
