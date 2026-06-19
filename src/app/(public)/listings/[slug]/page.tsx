@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { ConstructionDisclaimer } from "@/components/public/ConstructionDisclaimer";
 import { LeadInquiryForm } from "@/components/public/LeadInquiryForm";
 import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -89,6 +90,10 @@ export default async function ListingDetailPage({
       ) : null}
 
       <p className="mb-8 whitespace-pre-line leading-relaxed text-brand-800">{listing.description}</p>
+
+      <div className="mb-8">
+        <ConstructionDisclaimer />
+      </div>
 
       {whatsappNumber ? (
         <div className="mb-8">

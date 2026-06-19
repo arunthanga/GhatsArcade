@@ -5,6 +5,7 @@
 import { isBlogPubliclyVisible, resolvePublishedAt } from "@/lib/blog-status";
 import { prisma } from "@/lib/db";
 import { AuthorizationError, NotFoundError } from "@/lib/errors";
+import { estimateReadMinutes } from "@/lib/reading-time";
 import { can } from "@/lib/roles";
 import { slugify } from "@/lib/slug";
 import type { CreateBlogPostInput, UpdateBlogPostInput } from "@/lib/validation";
@@ -13,6 +14,11 @@ function assertCanManage(actorRole: unknown): void {
   if (!can(actorRole, "blog:manage")) {
     throw new AuthorizationError("You are not allowed to manage blog posts.");
   }
+}
+
+// Optional free-text/URL fields: an empty string clears the value, undefined leaves it untouched.
+function cleanText(value: string | undefined): string | null {
+  return value && value.trim().length > 0 ? value : null;
 }
 
 async function uniqueSlug(title: string): Promise<string> {
@@ -40,7 +46,13 @@ export async function createBlogPost(args: {
       title: args.data.title,
       slug,
       body: args.data.body,
-      coverImage: args.data.coverImage ?? null,
+      coverImage: cleanText(args.data.coverImage),
+      category: args.data.category,
+      metaTitle: cleanText(args.data.metaTitle),
+      metaDescription: cleanText(args.data.metaDescription),
+      ogImageUrl: cleanText(args.data.ogImageUrl),
+      // Honour a manual override, otherwise estimate from the body.
+      estimatedReadMinutes: args.data.estimatedReadMinutes ?? estimateReadMinutes(args.data.body),
       status: args.data.status,
       publishedAt,
       authorId: args.authorId,
@@ -70,12 +82,27 @@ export async function updateBlogPost(args: {
     new Date(),
   );
 
-  const { coverImage, ...rest } = args.data;
+  const { coverImage, metaTitle, metaDescription, ogImageUrl, estimatedReadMinutes, body, ...rest } =
+    args.data;
+
+  // Recompute reading time when the body changes, unless an explicit override was given.
+  const readMinutes =
+    estimatedReadMinutes !== undefined
+      ? estimatedReadMinutes
+      : body !== undefined
+        ? estimateReadMinutes(body)
+        : undefined;
+
   return prisma.blogPost.update({
     where: { id: args.id },
     data: {
-      ...rest,
-      ...(coverImage !== undefined ? { coverImage: coverImage ?? null } : {}),
+      ...rest, // title / category / status, only when provided
+      ...(body !== undefined ? { body } : {}),
+      ...(coverImage !== undefined ? { coverImage: cleanText(coverImage) } : {}),
+      ...(metaTitle !== undefined ? { metaTitle: cleanText(metaTitle) } : {}),
+      ...(metaDescription !== undefined ? { metaDescription: cleanText(metaDescription) } : {}),
+      ...(ogImageUrl !== undefined ? { ogImageUrl: cleanText(ogImageUrl) } : {}),
+      ...(readMinutes !== undefined ? { estimatedReadMinutes: readMinutes } : {}),
       publishedAt,
     },
   });
@@ -106,6 +133,15 @@ export async function getPublicPostBySlug(slug: string) {
 export async function listPublishedPosts() {
   return prisma.blogPost.findMany({
     where: { status: "published" },
+    orderBy: { publishedAt: "desc" },
+  });
+}
+
+// Published posts in a single editorial category — backs the content hubs
+// ("Farmland — Real or Hype?" and "Farming Guides / Knowledge Base").
+export async function listPublishedPostsByCategory(category: string) {
+  return prisma.blogPost.findMany({
+    where: { status: "published", category },
     orderBy: { publishedAt: "desc" },
   });
 }

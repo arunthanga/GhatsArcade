@@ -61,6 +61,8 @@ export type ArticleJsonLdInput = {
   excerpt?: string;
   publishedAt?: Date | string | null;
   authorName?: string;
+  image?: string | null;
+  section?: string;
 };
 
 export function articleJsonLd(post: ArticleJsonLdInput): Record<string, unknown> {
@@ -73,8 +75,22 @@ export function articleJsonLd(post: ArticleJsonLdInput): Record<string, unknown>
     description: post.excerpt,
     url: absoluteUrl(`/blog/${post.slug}`),
     datePublished: published,
+    ...(post.image ? { image: [post.image] } : {}),
+    ...(post.section ? { articleSection: post.section } : {}),
     author: { "@type": "Organization", name: post.authorName ?? SITE_NAME },
     publisher: { "@type": "Organization", name: SITE_NAME },
+  };
+}
+
+export function faqPageJsonLd(items: { question: string; answer: string }[]): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
   };
 }
 
@@ -99,16 +115,46 @@ export function websiteJsonLd(): Record<string, unknown> {
 
 export type SitemapEntry = { url: string; lastModified?: Date };
 
-const STATIC_PATHS = ["/", "/listings", "/blog", "/about", "/contact"] as const;
+const STATIC_PATHS = [
+  "/",
+  "/projects",
+  "/listings",
+  "/blog",
+  "/farmland-real-or-hype",
+  "/farming-guides",
+  "/events",
+  "/resources",
+  "/what-is-managed-farmland",
+  "/why-invest",
+  "/who-should-buy",
+  "/what-managed-means",
+  "/legal-checklist",
+  "/resale",
+  "/horticulture",
+  "/in-and-around",
+  "/gallery",
+  "/faq",
+  "/about",
+  "/contact",
+] as const;
 
 export function buildSitemapEntries(
   baseUrl: string,
-  dynamic: { listingSlugs?: string[]; blogSlugs?: string[] } = {},
+  dynamic: {
+    listingSlugs?: string[];
+    blogSlugs?: string[];
+    projectSlugs?: string[];
+    eventSlugs?: string[];
+  } = {},
 ): SitemapEntry[] {
   const base = baseUrl.replace(/\/+$/, "");
   const now = new Date();
   const staticEntries: SitemapEntry[] = STATIC_PATHS.map((path) => ({
     url: `${base}${path}`,
+    lastModified: now,
+  }));
+  const projectEntries: SitemapEntry[] = (dynamic.projectSlugs ?? []).map((slug) => ({
+    url: `${base}/projects/${slug}`,
     lastModified: now,
   }));
   const listingEntries: SitemapEntry[] = (dynamic.listingSlugs ?? []).map((slug) => ({
@@ -119,5 +165,9 @@ export function buildSitemapEntries(
     url: `${base}/blog/${slug}`,
     lastModified: now,
   }));
-  return [...staticEntries, ...listingEntries, ...blogEntries];
+  const eventEntries: SitemapEntry[] = (dynamic.eventSlugs ?? []).map((slug) => ({
+    url: `${base}/events/${slug}`,
+    lastModified: now,
+  }));
+  return [...staticEntries, ...projectEntries, ...listingEntries, ...blogEntries, ...eventEntries];
 }

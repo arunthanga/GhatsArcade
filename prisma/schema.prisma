@@ -1,9 +1,12 @@
-// Ghats Arcade - Prisma schema (initial draft, see prj.md Section 8).
+// Ghats Arcade - Prisma schema (v4 data model, see prj.md Section 8).
 //
 // Provider is SQLite for the lightweight path (local file / Turso-libSQL in cloud).
 // NOTE: SQLite does not support Prisma `enum` or scalar list fields, so role/status
 // values are modelled as `String` (allowed values documented inline and enforced by
 // Zod + src/lib/roles.ts) and lists are modelled as relations.
+//
+// JSON columns (Project.locationDistances, Project.nearbyAttractions) use the Prisma
+// `Json` scalar, which is supported on SQLite as of Prisma ORM 6.2+ (maps to JSONB).
 //
 // The Better Auth tables (User/Session/Account/Verification) follow Better Auth's
 // expected shape; regenerate/adjust them with `npx @better-auth/cli generate`.
@@ -35,11 +38,16 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  sessions      Session[]
-  accounts      Account[]
-  listings      Listing[]      @relation("ListingCreatedBy")
-  blogPosts     BlogPost[]
-  followUpNotes FollowUpNote[]
+  sessions         Session[]
+  accounts         Account[]
+  listings         Listing[]         @relation("ListingCreatedBy")
+  projects         Project[]         @relation("ProjectCreatedBy")
+  events           Event[]           @relation("EventCreatedBy")
+  testimonials     Testimonial[]     @relation("TestimonialCreatedBy")
+  horticultureLogs HorticultureLog[] @relation("HortLoggedBy")
+  leadMagnetAssets LeadMagnetAsset[] @relation("LeadMagnetCreatedBy")
+  blogPosts        BlogPost[]
+  followUpNotes    FollowUpNote[]
 
   @@index([role])
 }
@@ -87,26 +95,109 @@ model Verification {
   updatedAt  DateTime @updatedAt
 }
 
-// --- Domain ----------------------------------------------------------------
+// --- Projects & Plots ------------------------------------------------------
+
+model Project {
+  id                            String   @id @default(cuid())
+  title                         String
+  slug                          String   @unique
+  tagline                       String?
+  theme                         String? // e.g. "Kerala Heritage" | "Food Forest" | "Wellness Farm"
+  description                   String // rich text (sanitized HTML)
+  locationDistrict              String
+  locationNearestTown           String?
+  latitude                      Float? // decimal degrees; when both set, an OSM/Leaflet map renders on the detail page
+  longitude                     Float?
+  keralaTnBorder                Boolean  @default(false)
+  locationDistances             Json? // [{ city, km, driveMinutes }]
+  totalAreaAcres                Float?
+  landRevenueClassification     String   @default("purayidam") // nilam | purayidam | converted
+  roadStatus                    String   @default("planned") // planned | in_progress | complete
+  roadSpec                      String?
+  clubhouseDescription          String?
+  waterSourceDescription        String?
+  plantationDescription         String?
+  maintenanceFeePerCentPerMonth Int? // whole rupees
+  maintenanceFeeIncludedScope   String?
+  maintenanceFeeExcludedScope   String?
+  maintenanceFeeEscalationPolicy String?
+  commonAssetHandoverStatus     String   @default("owner_held") // owner_held | association_pending | transferred_to_association | transferred_to_panchayat
+  associationFormationTrigger   String?
+  roadHandoverToPanchayatStatus String   @default("not_initiated") // not_initiated | in_progress | complete
+  nearbyAttractions             Json? // [{ name, distanceKm, driveMinutes, description, seasonalNote }]
+  legalChecklistSummary         String?
+  status                        String   @default("draft") // draft | published | sold_out | coming_soon
+  coverPhotoUrl                 String?
+  videoEmbedUrl                 String?
+
+  photos           ProjectPhoto[]
+  plots            Plot[]
+  leads            Lead[]
+  events           Event[]
+  testimonials     Testimonial[]
+  horticultureLogs HorticultureLog[]
+  createdById      String
+  createdBy        User              @relation("ProjectCreatedBy", fields: [createdById], references: [id])
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([status])
+  @@index([slug])
+}
+
+model ProjectPhoto {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  tag       String? // land | road | water | clubhouse | plantation | landscape | aerial | seasonal | community
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+}
+
+model Plot {
+  id            String   @id @default(cuid())
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  plotNumber    String
+  sizeCents     Float
+  pricePerCent  Int // whole rupees
+  totalPrice    Int // whole rupees
+  positionNotes String?
+  status        String   @default("available") // available | reserved | sold
+
+  horticultureLogs HorticultureLog[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([projectId])
+  @@index([status])
+}
+
+// --- Standalone listings ---------------------------------------------------
 
 model Listing {
-  id             String         @id @default(cuid())
-  title          String
-  slug           String         @unique
-  description    String
-  district       String
-  nearestTown    String?
-  keralaTnBorder Boolean        @default(false)
-  landType       String         @default("agricultural") // "agricultural" | "converted_non_agricultural"
-  sizeAcres      Float
-  priceInr       Int // whole rupees (avoids float money issues)
-  status         String         @default("draft") // "draft" | "published" | "under_offer" | "sold"
-  photos         ListingPhoto[]
-  leads          Lead[]
-  createdById    String
-  createdBy      User           @relation("ListingCreatedBy", fields: [createdById], references: [id])
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  id                        String         @id @default(cuid())
+  title                     String
+  slug                      String         @unique
+  description               String
+  district                  String
+  nearestTown               String?
+  keralaTnBorder            Boolean        @default(false)
+  landType                  String         @default("agricultural") // agricultural | converted_non_agricultural
+  landRevenueClassification String         @default("purayidam") // nilam | purayidam | converted
+  sizeAcres                 Float
+  priceInr                  Int // whole rupees (avoids float money issues)
+  status                    String         @default("draft") // draft | published | under_offer | sold
+  photos                    ListingPhoto[]
+  leads                     Lead[]
+  createdById               String
+  createdBy                 User           @relation("ListingCreatedBy", fields: [createdById], references: [id])
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
 
   @@index([status])
   @@index([district])
@@ -124,22 +215,39 @@ model ListingPhoto {
   @@index([listingId])
 }
 
+// --- Leads & CRM -----------------------------------------------------------
+
 model Lead {
-  id              String         @id @default(cuid())
+  id              String    @id @default(cuid())
   name            String
   email           String?
   phone           String // stored with country code
-  buyerType       String         @default("resident_indian") // resident_indian | nri | oci | foreign_citizen
+  whatsapp        String?
+  buyerType       String    @default("resident_indian") // resident_indian | nri | oci | foreign_citizen
+  leadType        String    @default("inquiry") // inquiry | site_visit_request | callback | lead_magnet_download
   message         String?
-  status          String         @default("new") // new | contacted | negotiating | converted | lost
-  sourceListingId String?
-  sourceListing   Listing?       @relation(fields: [sourceListingId], references: [id], onDelete: SetNull)
-  followUpNotes   FollowUpNote[]
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  status          String    @default("new") // new | contacted | site_visit_scheduled | negotiating | converted | lost
+  isCofarmer      Boolean   @default(false)
+  preferredDate   DateTime? // for site_visit_request
+  projectInterest String? // free-text / dropdown selection from a capture form
+  plotInterest    String? // which plot number/size the buyer asked about
+  sourcePage      String?
+
+  sourceListingId  String?
+  sourceListing    Listing?       @relation(fields: [sourceListingId], references: [id], onDelete: SetNull)
+  sourceProjectId  String?
+  sourceProject    Project?       @relation(fields: [sourceProjectId], references: [id], onDelete: SetNull)
+  sourceBlogPostId String?
+  sourceBlogPost   BlogPost?      @relation(fields: [sourceBlogPostId], references: [id], onDelete: SetNull)
+  followUpNotes    FollowUpNote[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
   @@index([status])
+  @@index([leadType])
   @@index([sourceListingId])
+  @@index([sourceProjectId])
+  @@index([sourceBlogPostId])
 }
 
 model FollowUpNote {
@@ -149,24 +257,115 @@ model FollowUpNote {
   authorId      String
   author        User     @relation(fields: [authorId], references: [id])
   noteText      String
-  contactMethod String   @default("call") // whatsapp | call | email | in_person
+  contactMethod String   @default("call") // whatsapp | call | email | in_person | site_visit
   createdAt     DateTime @default(now())
 
   @@index([leadId])
 }
 
+// --- Content: Blog / Events / Testimonials / Horticulture / Lead magnet ----
+
 model BlogPost {
-  id          String    @id @default(cuid())
-  title       String
-  slug        String    @unique
-  body        String
-  coverImage  String?
-  status      String    @default("draft") // "draft" | "published"
-  authorId    String
-  author      User      @relation(fields: [authorId], references: [id])
-  publishedAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id                   String    @id @default(cuid())
+  title                String
+  slug                 String    @unique
+  body                 String // plain text; rendered with line breaks preserved (not sanitized HTML)
+  coverImage           String?
+  category             String    @default("lifestyle") // legal_guides | investment | lifestyle | plantation_farming | location_spotlight | nri_corner | community_stories | myth_busting | farming_guides
+  metaTitle            String?
+  metaDescription      String?
+  ogImageUrl           String?
+  estimatedReadMinutes Int?
+  status               String    @default("draft") // draft | published
+  authorId             String
+  author               User      @relation(fields: [authorId], references: [id])
+  leads                Lead[]
+  publishedAt          DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   @@index([status])
+  @@index([category])
+}
+
+model Event {
+  id          String       @id @default(cuid())
+  title       String
+  slug        String       @unique
+  description String // rich text (sanitized HTML)
+  eventDate   DateTime
+  theme       String?
+  status      String       @default("upcoming") // upcoming | past
+  projectId   String?
+  project     Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  photos      EventPhoto[]
+  createdById String
+  createdBy   User         @relation("EventCreatedBy", fields: [createdById], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([status])
+  @@index([eventDate])
+}
+
+model EventPhoto {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([eventId])
+}
+
+model Testimonial {
+  id           String   @id @default(cuid())
+  buyerName    String
+  buyerCity    String?
+  buyerType    String   @default("resident_indian") // resident_indian | nri | oci
+  quoteText    String
+  videoUrl     String?
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  projectId    String?
+  project      Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdById  String
+  createdBy    User     @relation("TestimonialCreatedBy", fields: [createdById], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+model HorticultureLog {
+  id           String   @id @default(cuid())
+  projectId    String
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  plotId       String?
+  plot         Plot?    @relation(fields: [plotId], references: [id], onDelete: SetNull)
+  activityType String // plantation | maintenance | harvest | irrigation | pest_control
+  description  String
+  activityDate DateTime
+  loggedById   String
+  loggedBy     User     @relation("HortLoggedBy", fields: [loggedById], references: [id])
+  createdAt    DateTime @default(now())
+
+  @@index([projectId])
+  @@index([plotId])
+}
+
+model LeadMagnetAsset {
+  id            String   @id @default(cuid())
+  title         String
+  fileUrl       String
+  downloadCount Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdById   String
+  createdBy     User     @relation("LeadMagnetCreatedBy", fields: [createdById], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([isActive])
 }

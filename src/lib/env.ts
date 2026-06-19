@@ -13,11 +13,29 @@ const serverSchema = z.object({
   DATABASE_AUTH_TOKEN: z.string().optional(),
   BETTER_AUTH_SECRET: z.string().min(1, "BETTER_AUTH_SECRET is required"),
   BETTER_AUTH_URL: z.string().url("BETTER_AUTH_URL must be a valid URL"),
+  // Media uploads. Files land in UPLOAD_DIR (a Docker volume in production) and are
+  // served at UPLOAD_PUBLIC_BASE. Default keeps them under Next's static `public/` dir.
+  UPLOAD_DIR: z.string().default("public/uploads"),
+  UPLOAD_PUBLIC_BASE: z.string().default("/uploads"),
+  MAX_IMAGE_UPLOAD_MB: z.coerce.number().int().positive().default(15),
+  MAX_PDF_UPLOAD_MB: z.coerce.number().int().positive().default(25),
+  MAX_VIDEO_UPLOAD_MB: z.coerce.number().int().positive().default(200),
 });
+
+// Treat an empty string env var as "unset" so `NEXT_PUBLIC_OFFICE_LAT=""` doesn't coerce to 0.
+const emptyToUndefined = (value: unknown) => (value === "" ? undefined : value);
 
 const publicSchema = z.object({
   NEXT_PUBLIC_SITE_URL: z.string().url().default("http://localhost:3000"),
   NEXT_PUBLIC_WHATSAPP_NUMBER: z.string().optional(),
+  // Office / contact location for the map on /contact. Both lat & lng must be set for the
+  // map to render; the address is an optional human-readable line shown beside it.
+  NEXT_PUBLIC_OFFICE_LAT: z.preprocess(emptyToUndefined, z.coerce.number().min(-90).max(90).optional()),
+  NEXT_PUBLIC_OFFICE_LNG: z.preprocess(
+    emptyToUndefined,
+    z.coerce.number().min(-180).max(180).optional(),
+  ),
+  NEXT_PUBLIC_OFFICE_ADDRESS: z.string().optional(),
 });
 
 function parse<T extends z.ZodTypeAny>(schema: T, source: NodeJS.ProcessEnv): z.infer<T> {

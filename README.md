@@ -17,7 +17,7 @@ The canonical, always-up-to-date project specification lives in [prj.md](prj.md)
 - [Features](#features)
 - [Out of Scope (this phase)](#out-of-scope-this-phase)
 - [Tech Stack](#tech-stack)
-- [Development Methodology (TDD)](#development-methodology-tdd)
+- [Development Methodology](#development-methodology)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Testing](#testing)
@@ -58,8 +58,8 @@ The site's job is to showcase land listings attractively, rank well in search en
 ### Public-facing website
 - **Home page** — hero, value proposition, featured listings, trust signals
 - **Listings page** — browse/filter by location, size, price range, land type
-- **Listing detail** — photos, description, location/map, price, land classification, buyer-eligibility disclaimer, inquiry form, WhatsApp click-to-chat
-- **About** and **Contact** pages (phone, email, WhatsApp, address, hours, embedded map)
+- **Listing detail** — photos, description, location (text), price, land classification, buyer-eligibility disclaimer, inquiry form, WhatsApp click-to-chat *(embedded map is a Phase-2 enhancement)*
+- **About** and **Contact** pages (phone, email, WhatsApp, address, hours; the Contact page shows an embedded OpenStreetMap of the office when `NEXT_PUBLIC_OFFICE_LAT`/`_LNG` are configured)
 - **Blog / CMS** — SEO articles (investment guides, region spotlights, legal FAQs), admin-publishable
 - **Legal disclaimer** — prominent and persistent (footer + listing pages + inquiry form), covering NRI/FEMA eligibility caveats
 - **Lead capture** — inquiry forms on listings, contact page, and a general "request a callback" form
@@ -72,7 +72,7 @@ The site's job is to showcase land listings attractively, rank well in search en
 - **Listings management** — CRUD with status: Draft / Published / Under Offer / Sold
 - **Lead / CRM management** — view captured leads with source, update status (New → Contacted → Negotiating → Converted/Lost), add follow-up notes, log WhatsApp/call contact attempts
 - **Data export** — CSV export of leads/listings, **Owner-only**
-- **Blog / CMS management** — create/edit/delete/publish posts, rich text + image upload
+- **Blog / CMS management** — create/edit/delete/publish posts with an editorial category, per-post SEO overrides (meta title/description, social image), cover-image upload, and auto-estimated reading time (overridable)
 
 ---
 
@@ -92,7 +92,7 @@ The site's job is to showcase land listings attractively, rank well in search en
 
 ## Tech Stack
 
-> The stack is **provisional** and may be revised; the strict TDD methodology applies regardless of tooling. All dependencies are free and permissively licensed — see the [License Policy](#license-policy).
+> The stack is **provisional** and may be revised. All dependencies are free and permissively licensed — see the [License Policy](#license-policy). v4 added server-side HTML sanitisation, media/PDF upload, and open-source maps (Leaflet, wired on the project-detail page) — all in active use. A rich-text WYSIWYG editor (TipTap) was evaluated but removed from dependencies until it is actually built (no architectural change).
 
 | Layer | Choice | License |
 |---|---|---|
@@ -100,13 +100,14 @@ The site's job is to showcase land listings attractively, rank well in search en
 | Framework (UI + API) | **Next.js (App Router) + React** | MIT |
 | Database (primary, lightweight) | **SQLite** locally (file / in-memory for tests) + **Turso / libSQL** in the cloud | Public domain / MIT |
 | Database (scale-up path) | **PostgreSQL** via Neon / Supabase | PostgreSQL License |
-| ORM | **Prisma** (Drizzle acceptable alternative) | Apache-2.0 |
+| ORM | **Prisma ≥ 6.2** (native `Json` columns on SQLite need 6.2+) | Apache-2.0 |
 | Auth | **Better Auth** (Auth.js/NextAuth as fallback) | MIT |
 | Validation | **Zod** | MIT |
 | Styling / UI | **Tailwind CSS** + **shadcn/ui** | MIT |
 | Forms | **React Hook Form** | MIT |
-| Rich text (blog) | **Tiptap (core)** or **Lexical** | MIT |
-| Media storage | **Local disk / Docker volume** (SeaweedFS / object-storage tier later) | Apache-2.0 (scale-up) |
+| Rich text | **As built:** project + event descriptions authored as HTML in a `<textarea>`, sanitised with **sanitize-html** on write, rendered as HTML. Blog bodies are plain text (line breaks preserved). A WYSIWYG editor (TipTap) is a future upgrade — *not a current dependency* | MIT |
+| Maps | **Leaflet + react-leaflet** with OpenStreetMap tiles (free, no API key) — *wired on the project-detail page (per-project lat/lng) and the contact page (office location via env)* | BSD-2-Clause |
+| Media storage | Upload to **local disk / Docker volume**, processed with **sharp**; lead-magnet PDF + gallery uploads (SeaweedFS / object-storage tier later) | Apache-2.0 |
 | Testing | **Vitest**, **React Testing Library**, **Playwright** (E2E, Phase 2) | MIT / Apache-2.0 |
 | Lint / format | **Biome** (or ESLint + Prettier) | permissive |
 | SEO | Next.js Metadata API, **next-sitemap**, schema.org JSON-LD | MIT |
@@ -116,22 +117,17 @@ The site's job is to showcase land listings attractively, rank well in search en
 
 ---
 
-## Development Methodology (TDD)
+## Development Methodology
 
-This project follows **strict Test-Driven Development**. This is a fixed requirement, independent of the (provisional) tech stack.
+> **Current mode (v4): Vibe Coding** — AI-assisted, ship-first. The priority is working software and visible progress, not test-first coverage. TDD is now **opt-in**, to be activated when handing off to a professional dev team.
 
-**Red → Green → Refactor:**
-1. **RED** — Translate the relevant `prj.md` requirement(s) into *failing* tests before writing any production code.
-2. **GREEN** — Write the minimum code to make the tests pass.
-3. **REFACTOR** — Improve the design with tests staying green.
+**In vibe-coding mode:**
+- Write code directly — no failing-test-first requirement.
+- Iterate on UI/UX through live feedback rather than spec-driven cycles.
+- Security-critical paths (auth, role checks, single-Owner invariant) should still be **manually verified** before any real data is stored.
+- Vitest + React Testing Library remain installed and usable; existing tests are kept, just not required for every change.
 
-Hard rules:
-- No production code without a failing test first.
-- `prj.md` is the source of truth from which test lists are derived.
-- Security-critical logic (roles/permissions, single-Owner invariant, fail-closed default) requires **100% branch coverage** and lives in a pure, independently tested module (`src/lib/roles.ts`), never inline in UI only.
-- A feature is **Done** only when its full derived test suite passes.
-
-See Section 6 of [prj.md](prj.md) for the complete methodology.
+**Switching to strict TDD (when needed):** Red → Green → Refactor, no production code without a failing test first, `prj.md` as the source of truth, and 100% branch coverage for security-critical logic in `src/lib/roles.ts`. See Section 6 of [prj.md](prj.md) for the full methodology and how to activate it.
 
 ---
 
@@ -143,7 +139,7 @@ A single Next.js App Router app (frontend + API routes together), with Prisma, c
 GhatsArcade/
 ├─ README.md
 ├─ prj.md                        # canonical spec (source of truth)
-├─ CONTRIBUTING.md               # TDD workflow + quality gate
+├─ CONTRIBUTING.md               # workflow + quality gate
 ├─ SECURITY.md                   # vulnerability reporting policy
 ├─ CHANGELOG.md
 ├─ LICENSE                       # proprietary / all rights reserved
@@ -151,114 +147,148 @@ GhatsArcade/
 ├─ next.config.mjs
 ├─ tsconfig.json
 ├─ biome.json                    # lint + format config
-├─ .editorconfig
-├─ .gitattributes                # line-ending normalization (LF)
-├─ .nvmrc                        # pinned Node version
-├─ .env.example                  # DB url (SQLite file / Turso), auth secrets, WhatsApp number, site URL
-├─ .gitignore
-├─ .dockerignore
-├─ docker-compose.yml            # Next.js app + SQLite volume (Postgres service on scale-up path)
+├─ .editorconfig · .gitattributes · .nvmrc
+├─ .env.example                  # DB, auth, WhatsApp, site URL, UPLOAD_* media settings
+├─ .gitignore · .dockerignore
+├─ docker-compose.yml            # Next.js app + SQLite volume + /app/public/uploads media volume
 ├─ Dockerfile
 ├─ vitest.config.ts
 ├─ next-sitemap.config.js
 │
-├─ .github/
-│  ├─ workflows/ci.yml           # install, prisma generate, biome check, typecheck, tests
-│  ├─ dependabot.yml             # weekly dependency + actions updates
-│  ├─ CODEOWNERS
-│  └─ pull_request_template.md   # TDD + license checklist
-│
-├─ .vscode/                      # recommended extensions + Biome-on-save settings
+├─ .github/                      # CI, Dependabot, CODEOWNERS, PR template
+├─ .vscode/                      # recommended extensions + Biome-on-save
 │
 ├─ prisma/
-│  ├─ schema.prisma              # User, Listing, Lead, BlogPost, FollowUpNote
+│  ├─ schema.prisma              # User, Project, Plot, Listing, Lead, BlogPost, Event, Testimonial, HorticultureLog, LeadMagnetAsset, FollowUpNote
 │  ├─ migrations/
 │  └─ seed.ts                    # seeds the single OWNER account
 │
 ├─ public/
-│  ├─ images/                    # static/brand assets (placeholder branding)
-│  ├─ robots.txt
-│  └─ favicon.ico
+│  ├─ uploads/                   # >>> ADMIN-UPLOADED MEDIA (gitignored), one folder per content type:
+│  │  ├─ projects/               #     cover photos, galleries, project videos
+│  │  ├─ listings/               #     listing photos
+│  │  ├─ blog/                   #     blog cover/inline images
+│  │  ├─ events/ · testimonials/ #     event & testimonial media
+│  │  ├─ lead-magnets/           #     gated PDFs
+│  │  ├─ misc/                   #     uncategorised fallback
+│  │  └─ .gitkeep
+│  ├─ robots.txt · favicon.ico
 │
 ├─ src/
 │  ├─ app/
-│  │  ├─ (public)/               # public marketing site (SSR/SSG for SEO)
-│  │  │  ├─ page.tsx             # Home (hero, featured listings, trust signals)
-│  │  │  ├─ listings/
-│  │  │  │  ├─ page.tsx          # browse/filter
-│  │  │  │  └─ [slug]/page.tsx   # listing detail + inquiry + WhatsApp + disclaimer
-│  │  │  ├─ blog/
-│  │  │  │  ├─ page.tsx
-│  │  │  │  └─ [slug]/page.tsx
-│  │  │  ├─ about/page.tsx
-│  │  │  └─ contact/page.tsx
+│  │  ├─ (public)/               # public marketing site — NO login surface anywhere
+│  │  │  ├─ layout.tsx           # SiteHeader + SiteFooter chrome
+│  │  │  ├─ page.tsx             # Home — full 14-block sequence + 3 lead-capture moments
+│  │  │  ├─ projects/            # list + [slug] detail (plots-remaining, gallery, disclaimers)
+│  │  │  ├─ listings/            # list + [slug] detail
+│  │  │  ├─ blog/                # list + [slug]
+│  │  │  ├─ events/              # list (upcoming + past) + [slug] detail
+│  │  │  ├─ farmland-real-or-hype/ # myth-busting hub (CMS category myth_busting)
+│  │  │  ├─ farming-guides/      # knowledge-base hub (CMS category farming_guides)
+│  │  │  ├─ resources/page.tsx   # "Free Guides" — lead-magnet gated downloads
+│  │  │  ├─ what-is-managed-farmland/ · why-invest/ · who-should-buy/ # education pages
+│  │  │  ├─ what-managed-means/ · legal-checklist/ · resale/ # education pages
+│  │  │  ├─ horticulture/ · in-and-around/ # region pages
+│  │  │  ├─ gallery/page.tsx     # tag-filtered photo gallery (project + event photos)
+│  │  │  ├─ faq/page.tsx         # 12-question FAQ (FAQPage JSON-LD)
+│  │  │  ├─ about/ · contact/    # contact has the site-visit + message forms (#site-visit anchor)
 │  │  │
-│  │  ├─ admin/                  # auth-gated CRM backend
-│  │  │  ├─ layout.tsx           # session + role guard
-│  │  │  ├─ login/page.tsx
-│  │  │  ├─ dashboard/page.tsx
-│  │  │  ├─ listings/            # CRUD UI
-│  │  │  ├─ leads/               # CRM: status, follow-up notes
-│  │  │  ├─ blog/                # CMS CRUD
-│  │  │  └─ admins/page.tsx      # Owner-only: add/delete admins
+│  │  ├─ admin/                  # the dark "Control Room" — separate from the public site
+│  │  │  ├─ page.tsx             # /admin → redirect to dashboard
+│  │  │  ├─ login/page.tsx       # standalone staff sign-in
+│  │  │  └─ (dashboard)/         # session/role-guarded group (sidebar shell)
+│  │  │     ├─ layout.tsx        # guard + AdminNav + sign-out
+│  │  │     ├─ dashboard/        # overview: live metrics + latest leads
+│  │  │     ├─ projects/         # list + [id] details/media/plots editor
+│  │  │     ├─ horticulture/     # internal plantation/maintenance/harvest log
+│  │  │     ├─ listings/ · leads/ · blog/ · events/ · testimonials/ · lead-magnets/
+│  │  │     ├─ media/           # Media Library: browse/reuse/delete every asset
+│  │  │     ├─ admins/           # Owner-only: add/remove admins
+│  │  │     └─ export/           # Owner-only CSV export
 │  │  │
 │  │  ├─ api/
-│  │  │  ├─ auth/                # login/logout/session (Better Auth)
-│  │  │  ├─ listings/
-│  │  │  ├─ leads/               # public POST (capture) + admin routes
-│  │  │  ├─ blog/
-│  │  │  ├─ admins/              # Owner-only
-│  │  │  └─ export/              # Owner-only CSV export
+│  │  │  ├─ auth/[...all]/       # Better Auth
+│  │  │  ├─ uploads/             # auth-gated media upload (sharp/PDF/video → public/uploads)
+│  │  │  ├─ projects/ · plots/   # CRUD (public GET, gated writes)
+│  │  │  ├─ listings/ · blog/ · events/ · testimonials/
+│  │  │  ├─ horticulture-logs/   # auth GET + gated writes (internal log)
+│  │  │  ├─ leads/               # public POST capture + admin status/notes
+│  │  │  ├─ media/               # auth-gated list + delete of stored assets
+│  │  │  ├─ lead-magnets/        # admin CRUD + public [id]/download (gated capture)
+│  │  │  ├─ admins/ · export/    # Owner-only
 │  │  │
-│  │  ├─ sitemap.ts
-│  │  ├─ layout.tsx              # root layout + persistent legal disclaimer footer
-│  │  └─ globals.css
+│  │  ├─ sitemap.ts · layout.tsx · globals.css
 │  │
 │  ├─ components/
-│  │  ├─ public/                 # Hero, ListingCard, InquiryForm, WhatsAppButton, LegalDisclaimer, SeoJsonLd
-│  │  ├─ admin/                  # tables, forms, status badges
-│  │  └─ ui/                     # shared primitives (shadcn/ui)
+│  │  ├─ public/                 # Hero/cards, forms (Inquiry, PlotHold, SiteVisit, LeadMagnetGate), disclaimers, WhatsApp
+│  │  ├─ admin/                  # managers (Project/Plot/Listing/Blog/Lead/LeadMagnet/Horticulture/Admin),
+│  │  │                          #   AdminNav, ProjectEditor, MediaUploader, GalleryUploader
+│  │  └─ seo/                    # JsonLd
 │  │
 │  ├─ lib/
-│  │  ├─ roles.ts                # SECURITY-CRITICAL pure permissions module (100% branch cov)
-│  │  ├─ roles.test.ts           # co-located tests (fail-closed + single-Owner invariant)
-│  │  ├─ env.ts                  # typed, validated env vars (zod) - fail fast on misconfig
-│  │  ├─ auth.ts                 # Better Auth setup + session helpers
-│  │  ├─ db.ts                   # Prisma client singleton (SQLite/libSQL; Postgres on scale-up)
-│  │  ├─ csv.ts                  # export serialization (Owner-only)
-│  │  ├─ seo.ts                  # meta/OpenGraph/JSON-LD helpers
-│  │  ├─ whatsapp.ts             # wa.me link builder w/ pre-filled context
-│  │  └─ validation/             # zod schemas for forms/inputs
+│  │  ├─ roles.ts (+test)        # SECURITY-CRITICAL pure permissions module
+│  │  ├─ env.ts                  # typed, validated env vars (zod), incl. UPLOAD_* settings
+│  │  ├─ uploads.ts              # sharp image pipeline + PDF/video storage + UPLOAD_CATEGORIES
+│  │  ├─ sanitize.ts             # sanitize-html for rich-text on write
+│  │  ├─ auth.ts · auth-client.ts · db.ts · errors.ts
+│  │  ├─ csv.ts · seo.ts · slug.ts · format.ts · whatsapp.ts
+│  │  ├─ *-status.ts             # pure status rules: listing/project/plot/lead/blog
+│  │  └─ validation/             # zod schemas for forms/inputs/uploads
 │  │
-│  ├─ server/                    # service-layer logic callable from API routes/actions
-│  │  ├─ listings.ts
-│  │  ├─ leads.ts
-│  │  ├─ blog.ts
-│  │  └─ admins.ts
+│  ├─ server/                    # service layer (role checks enforced here)
+│  │  ├─ projects.ts · listings.ts · leads.ts · blog.ts · events.ts · testimonials.ts
+│  │  ├─ horticulture.ts         # internal activity-log CRUD (project:manage)
+│  │  ├─ lead-magnets.ts · export.ts · admins.ts · admin-rules.ts
+│  │  ├─ users.ts · session.ts
 │  │
-│  └─ types/                     # shared TS types/enums
+│  └─ types/                     # shared TS enums/unions (single source of truth)
 │
 │  # Unit / component / integration tests are CO-LOCATED with source as *.test.ts(x)
-│  # e.g. src/lib/roles.test.ts, src/components/public/ListingCard.test.tsx
 │
-├─ tests/                        # suites that don't map to a single source file
-│  ├─ regression/                # regression suites (run on demand, not every commit)
-│  ├─ e2e/                       # Playwright end-to-end (Phase 2, deferred)
-│  └─ reports/                   # generated test/coverage reports (on demand, gitignored)
+├─ tests/
+│  ├─ helpers/                   # db reset + factories for integration tests
+│  ├─ regression/ · e2e/         # cross-cutting + Playwright (Phase 2)
+│  └─ reports/                   # generated reports (gitignored)
 │
 └─ docs/
-   └─ ERD.md                     # data model / ERD as it formalizes
+   └─ ERD.md                     # data model / ERD
 ```
 
 Key conventions:
-- The `(public)` route group is statically generated / server-rendered for SEO.
+- The `(public)` route group is server-rendered for SEO and contains **no login or admin link** — staff reach the admin area directly at `/admin`.
+- The admin **"Control Room"** is a separate `admin/(dashboard)` route group with its own dark, sidebar shell — deliberately unlike the public marketing site.
 - `app/` is kept **thin** (routing only) — pages compose UI and delegate logic to `src/lib` / `src/server`.
 - Permissions live **only** in `src/lib/roles.ts` as a pure, independently tested module — never inline in UI.
 - All write APIs go through `src/server/*` so role checks and the single-Owner invariant are enforced server-side.
 - Environment variables are validated once in `src/lib/env.ts` (zod) and read from there, never via raw `process.env`.
-- **Tests:** unit, component, and integration tests are **co-located** with their source as `*.test.ts(x)`. The top-level `tests/` folder holds only cross-cutting suites — `regression/`, `e2e/`, and generated `reports/`.
+- **Tests:** co-located with their source as `*.test.ts(x)`; `tests/` holds only cross-cutting suites + integration `helpers/`.
 
-> Architecture note: this uses a **layer-based** structure (`lib` / `server` / `components`) rather than full feature-sliced (`src/features/*`). For a solo-operator app of this size that is the simpler, lower-overhead choice and matches the `lib/roles.ts` path called out in the spec. If the domain grows substantially, migrating to feature folders is a natural next step.
+> Architecture note: this uses a **layer-based** structure (`lib` / `server` / `components`) rather than full feature-sliced (`src/features/*`). For a solo-operator app of this size that is the simpler, lower-overhead choice. If the domain grows substantially, migrating to feature folders is a natural next step.
+
+### Media & asset uploads (non-developer admins)
+
+Uploading photos, project videos, and PDFs is a **first-class, UI-only task** — a non-technical Owner/Admin never touches the filesystem, Git, or a CLI:
+
+1. Sign in at `/admin`, open the relevant manager (e.g. a Project, or **Lead Magnets**).
+2. Use the **drag-and-drop / file-picker** (`MediaUploader` for single files, `GalleryUploader` for multi-image galleries with alt text + tags + reordering).
+3. On upload the file is sent to `POST /api/uploads`, which (server-side) **optimises images to WebP with `sharp`** (auto-orients, strips EXIF, caps dimensions), validates PDFs/videos against an allowlist + size caps, and stores the file. The form receives back a URL and saves it with the record.
+
+**Where assets live (the optimised structure):** every upload is filed into a **named category folder** under `UPLOAD_DIR` (default `public/uploads`), never a flat dump:
+
+```text
+public/uploads/
+├─ projects/        # project cover photos, galleries, videos
+├─ listings/        # listing photos
+├─ blog/            # blog images
+├─ events/          # event media
+├─ testimonials/    # testimonial media
+├─ lead-magnets/    # gated PDFs
+└─ misc/            # fallback for anything uncategorised
+```
+
+The category allowlist is defined once in `src/lib/uploads.ts` (`UPLOAD_CATEGORIES`); the API rejects/falls back any value outside it. This keeps the media library **browsable and back-up-friendly** (e.g. snapshot just `projects/`), and maps cleanly onto a single mounted volume in production (`/app/public/uploads`). Swapping to object storage (S3/R2/SeaweedFS) later means changing only `src/lib/uploads.ts`, not any caller.
+
+**Media Library (`/admin/media`).** Beyond the inline uploaders on each form, the Control Room has a dedicated **Media Library** page that lists every stored asset across all category folders. Admins can filter by category, copy a public URL to reuse an existing asset, open it in a new tab, delete what's stale, and upload new files inline (pick a category, then choose a file). It's backed by the server-only `src/server/media.ts` (`listMedia`/`deleteMedia`, both hardened against path traversal) and an auth-gated `GET`/`DELETE /api/media`.
 
 ---
 
@@ -305,7 +335,27 @@ BETTER_AUTH_URL="http://localhost:3000"
 
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 NEXT_PUBLIC_WHATSAPP_NUMBER="<country-code-and-number>"
+
+# Contact-page map (optional — set both lat & lng to show it; address line is optional)
+NEXT_PUBLIC_OFFICE_LAT="10.7867"
+NEXT_PUBLIC_OFFICE_LNG="76.6548"
+NEXT_PUBLIC_OFFICE_ADDRESS="<office address line>"
+
+# Media uploads (optional — these are the defaults)
+# Where uploaded photos/PDFs/videos are written. Served as static files under /uploads.
+# In Docker/production, mount a persistent volume at this path.
+UPLOAD_DIR="public/uploads"
+UPLOAD_PUBLIC_BASE="/uploads"
+MAX_IMAGE_UPLOAD_MB="15"
+MAX_PDF_UPLOAD_MB="25"
+MAX_VIDEO_UPLOAD_MB="200"
 ```
+
+> **Admin is private and separate.** The public website has no login link or auth surface.
+> Staff reach the admin "Control Room" directly at `/admin` (a dark, sidebar UI distinct from
+> the marketing site). Media uploads are accepted only from authenticated Owner/Admin users
+> via `POST /api/uploads`; images are optimised to WebP with `sharp`, PDFs/videos are stored
+> behind an allowlist. For Docker, mount a volume at `/app/public/uploads` so uploads persist.
 
 ### Run with Docker
 
@@ -355,12 +405,17 @@ pnpm test:report          # generate test/coverage report into tests/reports/
 |---|---|---|
 | Log in to admin panel | Yes | Yes |
 | Create/edit/delete listings | Yes | Yes |
+| Create/edit/delete projects & plots | Yes | Yes |
 | Create/edit/delete blog posts | Yes | Yes |
+| Create/edit/delete events | Yes | Yes |
+| Create/edit/delete testimonials | Yes | Yes |
+| Create/edit/delete lead magnets | Yes | Yes |
+| Create/edit/delete horticulture logs *(under `project:manage`)* | Yes | Yes |
 | View leads / CRM | Yes | Yes |
 | Update lead status, add follow-up notes | Yes | Yes |
 | Add a new Admin account | Yes | No |
 | Delete an Admin account | Yes | No |
-| Export any data (leads, listings, CSV) | Yes | No |
+| Export any data (leads, listings, projects, events CSV) | Yes | No |
 | Promote/demote the Owner role | No (impossible by design) | No |
 | Delete the Owner account | No (impossible by design) | No |
 | Duplicate/create a second Owner | No (impossible by design) | No |
@@ -373,13 +428,21 @@ pnpm test:report          # generate test/coverage report into tests/reports/
 
 ## Data Model
 
-Initial draft (formalized as development proceeds — see [prj.md](prj.md) Section 8 and the ERD in [docs/ERD.md](docs/ERD.md); authoritative schema is [prisma/schema.prisma](prisma/schema.prisma)):
+Full v4 model (see [prj.md](prj.md) Section 8 and the ERD in [docs/ERD.md](docs/ERD.md); authoritative schema is [prisma/schema.prisma](prisma/schema.prisma)):
 
-- **User** — `id, name, email, password_hash, role (OWNER | ADMIN), created_at, is_active`
-- **Listing** — `id, title, slug, description, location, land_type, size_acres, price, status (draft | published | under_offer | sold), photos[], created_by, created_at, updated_at`
-- **Lead** — `id, name, email, phone, buyer_type (resident_indian | nri | oci | foreign_citizen), source_listing?, message, status (new | contacted | negotiating | converted | lost), follow_up_notes[], created_at, updated_at`
-- **BlogPost** — `id, title, slug, body, cover_image, status (draft | published), author, published_at, created_at, updated_at`
-- **FollowUpNote** — `id, lead_id, author, note_text, contact_method (whatsapp | call | email | in_person), created_at`
+- **User** — `id, name, email, role (OWNER | ADMIN), is_active, ...`
+- **Project** *(parent land parcel → many Plots)* — `id, title, slug, tagline, theme, description (rich text), location_*, latitude?, longitude?, kerala_tn_border, location_distances (JSON), total_area_acres, land_revenue_classification (nilam | purayidam | converted), road_status/spec, clubhouse/water/plantation descriptions, maintenance_fee_*, common_asset_handover_status, road_handover_to_panchayat_status, nearby_attractions (JSON), legal_checklist_summary, status (draft | published | sold_out | coming_soon), cover_photo_url, video_embed_url, photos[], created_by, ...`
+- **Plot** *(sub-unit of a Project)* — `id, project_id, plot_number, size_cents, price_per_cent, total_price, position_notes, status (available | reserved | sold)`
+- **Listing** *(standalone)* — `id, title, slug, description, district, nearest_town, kerala_tn_border, land_type, land_revenue_classification, size_acres, price, status (draft | published | under_offer | sold), photos[], created_by, ...`
+- **Lead** — `id, name, email, phone, whatsapp, buyer_type (resident_indian | nri | oci | foreign_citizen), lead_type (inquiry | site_visit_request | callback | lead_magnet_download), message, status (new | contacted | site_visit_scheduled | negotiating | converted | lost), is_cofarmer, preferred_date, project_interest, plot_interest, source_page, source_listing?, source_project?, source_blog_post?, follow_up_notes[], ...`
+- **BlogPost** — `id, title, slug, body (plain text, line breaks preserved on render), cover_image, category (legal_guides | investment | lifestyle | plantation_farming | location_spotlight | nri_corner | community_stories | myth_busting | farming_guides), meta_title, meta_description, og_image_url, estimated_read_minutes, status (draft | published), author, published_at, ...`
+- **Event** — `id, title, slug, description (rich text), event_date, theme, status (upcoming | past), project_id?, photos[], created_by, ...`
+- **Testimonial** — `id, buyer_name, buyer_city, buyer_type (resident_indian | nri | oci), quote_text, video_url?, display_order, is_active, project_id?, created_by, ...`
+- **HorticultureLog** — `id, project_id, plot_id?, activity_type (plantation | maintenance | harvest | irrigation | pest_control), description, activity_date, logged_by, ...`
+- **LeadMagnetAsset** — `id, title, file_url, download_count, is_active, created_by, ...`
+- **FollowUpNote** *(sub-entity of Lead)* — `id, lead_id, author, note_text, contact_method (whatsapp | call | email | in_person | site_visit), created_at`
+
+> SQLite has no native enums/arrays, so statuses are `String` (validated by Zod + `src/lib/roles.ts`), photo lists are relation tables (`ProjectPhoto`, `ListingPhoto`, `EventPhoto`), and `location_distances`/`nearby_attractions` use Prisma's `Json` scalar (SQLite support requires Prisma ≥ 6.2).
 
 ---
 
@@ -404,6 +467,7 @@ The final application code is intended to remain **private/proprietary**. Techno
 
 ## Roadmap (Phase 2)
 
+- **WYSIWYG rich-text editor** (e.g. TipTap) to replace the raw-HTML textarea for project/event descriptions
 - WhatsApp Business API (open-source gateway or official Cloud API free tier) for templated/automated follow-ups
 - Automated email drip sequences for lead nurturing
 - Multi-language support (Malayalam, Tamil, Hindi, Arabic)

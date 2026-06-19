@@ -14,10 +14,19 @@ export default async function AdminLeadsPage() {
           id: lead.id,
           name: lead.name,
           phone: lead.phone,
+          whatsapp: lead.whatsapp,
           email: lead.email,
           buyerType: lead.buyerType,
+          leadType: lead.leadType,
           status: lead.status,
-          sourceTitle: lead.sourceListing?.title ?? null,
+          projectInterest: lead.projectInterest,
+          plotInterest: lead.plotInterest,
+          preferredDate: lead.preferredDate ? lead.preferredDate.toISOString().slice(0, 10) : null,
+          sourceTitle:
+            lead.sourceProject?.title ??
+            lead.sourceListing?.title ??
+            lead.sourceBlogPost?.title ??
+            null,
           notes: lead.followUpNotes.map((note) => ({
             id: note.id,
             noteText: note.noteText,

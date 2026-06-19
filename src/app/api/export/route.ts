@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   const dataset = new URL(request.url).searchParams.get("dataset");
   if (!isExportDataset(dataset)) {
     return NextResponse.json(
-      { error: "Invalid dataset. Use ?dataset=leads or ?dataset=listings." },
+      { error: "Invalid dataset. Use ?dataset=leads, listings, projects, or events." },
       { status: 400 },
     );
   }

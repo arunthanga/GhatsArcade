@@ -12,6 +12,8 @@ import type { LeadInquiryInput } from "@/lib/validation";
 
 const LEAD_INCLUDE = {
   sourceListing: { select: { id: true, title: true, slug: true } },
+  sourceProject: { select: { id: true, title: true, slug: true } },
+  sourceBlogPost: { select: { id: true, title: true, slug: true } },
   followUpNotes: {
     orderBy: { createdAt: "desc" },
     include: { author: { select: { id: true, name: true } } },
@@ -30,27 +32,51 @@ function assertCanUpdate(actorRole: unknown): void {
   }
 }
 
-// Public, unauthenticated. A provided sourceListingId that does not resolve is
-// stored as null rather than rejected, so a genuine inquiry is never blocked.
-export async function captureLead(data: LeadInquiryInput) {
-  let sourceListingId: string | null = null;
-  if (data.sourceListingId) {
-    const listing = await prisma.listing.findUnique({
-      where: { id: data.sourceListingId },
-      select: { id: true },
-    });
-    sourceListingId = listing?.id ?? null;
+// Resolve a foreign-key reference, fail-open to null: a stale/spoofed id must never
+// block a genuine inquiry from being captured.
+async function resolveRef(
+  id: string | undefined,
+  exists: (id: string) => Promise<{ id: string } | null>,
+): Promise<string | null> {
+  if (!id) {
+    return null;
   }
+  return (await exists(id))?.id ?? null;
+}
+
+// Public, unauthenticated. Source references that do not resolve are stored as null
+// rather than rejected. `leadType` records which capture surface the lead used.
+export async function captureLead(data: LeadInquiryInput) {
+  const [sourceListingId, sourceProjectId, sourceBlogPostId] = await Promise.all([
+    resolveRef(data.sourceListingId, (id) =>
+      prisma.listing.findUnique({ where: { id }, select: { id: true } }),
+    ),
+    resolveRef(data.sourceProjectId, (id) =>
+      prisma.project.findUnique({ where: { id }, select: { id: true } }),
+    ),
+    resolveRef(data.sourceBlogPostId, (id) =>
+      prisma.blogPost.findUnique({ where: { id }, select: { id: true } }),
+    ),
+  ]);
 
   return prisma.lead.create({
     data: {
       name: data.name,
       email: data.email ? data.email : null,
       phone: data.phone,
+      whatsapp: data.whatsapp ? data.whatsapp : null,
       buyerType: data.buyerType,
+      leadType: data.leadType,
       message: data.message ? data.message : null,
+      isCofarmer: data.isCofarmer,
+      preferredDate: data.preferredDate ?? null,
+      projectInterest: data.projectInterest ? data.projectInterest : null,
+      plotInterest: data.plotInterest ? data.plotInterest : null,
+      sourcePage: data.sourcePage ? data.sourcePage : null,
       status: "new",
       sourceListingId,
+      sourceProjectId,
+      sourceBlogPostId,
     },
   });
 }

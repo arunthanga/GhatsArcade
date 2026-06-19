@@ -21,12 +21,19 @@ next-env.d.ts
 .env.local
 .env.*.local
 
+# uploaded media (served from public/uploads; mounted as a volume in production)
+/public/uploads/*
+!/public/uploads/.gitkeep
+
 # testing / reports
 /coverage
 /tests/reports/*
 !/tests/reports/.gitkeep
 /playwright-report/
 /test-results/
+
+# recorded demo videos (scripts/demo-video.mjs)
+/tests/demo-video/
 
 # misc
 .DS_Store

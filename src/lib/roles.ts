@@ -8,7 +8,11 @@ import { type Role, ROLES } from "@/types";
 
 export const ACTIONS = [
   "listing:manage",
+  "project:manage",
   "blog:manage",
+  "leadMagnet:manage",
+  "event:manage",
+  "testimonial:manage",
   "lead:view",
   "lead:update",
   "admin:add",
@@ -26,7 +30,11 @@ const OWNER_ONLY_ACTIONS: ReadonlySet<Action> = new Set<Action>([
 
 const SHARED_ACTIONS: ReadonlySet<Action> = new Set<Action>([
   "listing:manage",
+  "project:manage",
   "blog:manage",
+  "leadMagnet:manage",
+  "event:manage",
+  "testimonial:manage",
   "lead:view",
   "lead:update",
 ]);

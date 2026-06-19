@@ -12,7 +12,16 @@ import {
 } from "./roles";
 
 const OWNER_ONLY: Action[] = ["admin:add", "admin:delete", "data:export"];
-const SHARED: Action[] = ["listing:manage", "blog:manage", "lead:view", "lead:update"];
+const SHARED: Action[] = [
+  "listing:manage",
+  "project:manage",
+  "blog:manage",
+  "leadMagnet:manage",
+  "event:manage",
+  "testimonial:manage",
+  "lead:view",
+  "lead:update",
+];
 
 describe("isRole", () => {
   it("accepts known roles", () => {
