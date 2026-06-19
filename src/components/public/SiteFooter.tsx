@@ -2,10 +2,12 @@ import Link from "next/link";
 import { LegalDisclaimer } from "@/components/public/LegalDisclaimer";
 import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { publicEnv } from "@/lib/env";
+import { getTranslations } from "@/lib/i18n/server";
 
-export function SiteFooter() {
+export async function SiteFooter() {
   const whatsappNumber = publicEnv.NEXT_PUBLIC_WHATSAPP_NUMBER;
   const year = new Date().getFullYear();
+  const { t } = await getTranslations();
 
   return (
     <footer className="mt-16 border-t border-brand-100 bg-brand-50">
@@ -13,30 +15,27 @@ export function SiteFooter() {
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-base font-semibold text-brand-900">Ghats Arcade</p>
-            <p className="mt-1 max-w-sm text-sm text-brand-600">
-              Tranquility meets high-yields - managed farmland in Kerala and the Kerala-Tamil Nadu
-              border region.
-            </p>
+            <p className="mt-1 max-w-sm text-sm text-brand-600">{t("footer.tagline")}</p>
           </div>
           <div className="flex flex-wrap gap-8 sm:gap-12">
-            <nav aria-label="Explore">
+            <nav aria-label={t("footer.explore")}>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-brand-500">
-                Explore
+                {t("footer.explore")}
               </p>
               <ul className="flex flex-col gap-2 text-sm text-brand-700">
                 <li>
                   <Link href="/projects" className="hover:text-brand-900">
-                    Projects
+                    {t("nav.projects")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/listings" className="hover:text-brand-900">
-                    Listings
+                    {t("nav.listings")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/events" className="hover:text-brand-900">
-                    Events
+                    {t("nav.events")}
                   </Link>
                 </li>
                 <li>
@@ -46,19 +45,19 @@ export function SiteFooter() {
                 </li>
                 <li>
                   <Link href="/about" className="hover:text-brand-900">
-                    About
+                    {t("nav.about")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/contact" className="hover:text-brand-900">
-                    Contact
+                    {t("nav.contact")}
                   </Link>
                 </li>
               </ul>
             </nav>
-            <nav aria-label="Learn">
+            <nav aria-label={t("footer.learn")}>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-brand-500">
-                Learn
+                {t("footer.learn")}
               </p>
               <ul className="flex flex-col gap-2 text-sm text-brand-700">
                 <li>
@@ -88,9 +87,9 @@ export function SiteFooter() {
                 </li>
               </ul>
             </nav>
-            <nav aria-label="Guidance">
+            <nav aria-label={t("footer.guidance")}>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-brand-500">
-                Guidance
+                {t("footer.guidance")}
               </p>
               <ul className="flex flex-col gap-2 text-sm text-brand-700">
                 <li>
@@ -138,14 +137,16 @@ export function SiteFooter() {
           </div>
           {whatsappNumber ? (
             <div>
-              <WhatsAppButton phone={whatsappNumber} label="Chat with us" />
+              <WhatsAppButton phone={whatsappNumber} label={t("common.chatWhatsApp")} />
             </div>
           ) : null}
         </div>
 
         <div className="mt-8 border-t border-brand-100 pt-6 text-xs text-brand-500">
           <LegalDisclaimer />
-          <p className="mt-3">(c) {year} Ghats Arcade. All rights reserved.</p>
+          <p className="mt-3">
+            (c) {year} Ghats Arcade. {t("footer.rights")}
+          </p>
         </div>
       </div>
     </footer>

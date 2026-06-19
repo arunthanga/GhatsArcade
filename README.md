@@ -73,6 +73,8 @@ The site's job is to showcase land listings attractively, rank well in search en
 - **Lead / CRM management** — view captured leads with source, update status (New → Contacted → Negotiating → Converted/Lost), add follow-up notes, log WhatsApp/call contact attempts
 - **Data export** — CSV export of leads/listings, **Owner-only**
 - **Blog / CMS management** — create/edit/delete/publish posts with an editorial category, per-post SEO overrides (meta title/description, social image), cover-image upload, and auto-estimated reading time (overridable)
+- **Multilingual UI** — English (default), Tamil, and Malayalam, switchable from the header. Cookie-based (`NEXT_LOCALE`), read server-side so pages re-render in the chosen language; missing translations fall back to English per key. Currently covers UI chrome (nav/footer/CTAs) + the home hero, extensible via `src/lib/i18n/messages/`
+- **Responsive design** — mobile, tablet, and laptop friendly: hamburger nav on mobile, horizontally scrollable data tables, and Tailwind `sm/md/lg` breakpoints throughout
 
 ---
 
@@ -82,8 +84,8 @@ The site's job is to showcase land listings attractively, rank well in search en
 - Legal document generation, contract management, or e-signing
 - Property title verification or legal due-diligence tooling
 - Automated WhatsApp Business API messaging/chatbots (Phase 2)
-- Multi-language i18n (Phase 2)
-- Mobile native apps (web-responsive only at launch)
+- ~~Multi-language i18n~~ — now shipped for the UI: English (default) + Tamil & Malayalam toggle (see Features). Hindi/Arabic and full page-prose translation remain Phase 2.
+- Mobile native apps (the site is fully web-responsive — mobile, tablet, laptop)
 - Buyer-side accounts/logins (only Owner/Admin log in)
 - Automated drip-email / marketing-automation sequences (Phase 2)
 - Multi-tenant / multi-business support (single business only)
@@ -220,9 +222,10 @@ GhatsArcade/
 │  │  ├─ sitemap.ts · layout.tsx · globals.css
 │  │
 │  ├─ components/
-│  │  ├─ public/                 # Hero/cards, forms (Inquiry, PlotHold, SiteVisit, LeadMagnetGate), disclaimers, WhatsApp
+│  │  ├─ public/                 # Hero/cards, forms (Inquiry, PlotHold, SiteVisit, LeadMagnetGate), disclaimers, WhatsApp, HeaderNav
 │  │  ├─ admin/                  # managers (Project/Plot/Listing/Blog/Lead/LeadMagnet/Horticulture/Admin),
 │  │  │                          #   AdminNav, ProjectEditor, MediaUploader, GalleryUploader
+│  │  ├─ i18n/                   # LocaleProvider (client context) + LanguageSwitcher
 │  │  └─ seo/                    # JsonLd
 │  │
 │  ├─ lib/
@@ -230,6 +233,7 @@ GhatsArcade/
 │  │  ├─ env.ts                  # typed, validated env vars (zod), incl. UPLOAD_* settings
 │  │  ├─ uploads.ts              # sharp image pipeline + PDF/video storage + UPLOAD_CATEGORIES
 │  │  ├─ sanitize.ts             # sanitize-html for rich-text on write
+│  │  ├─ i18n/                   # locale config + en/ta/ml message catalogues, translate(), server getTranslations()
 │  │  ├─ auth.ts · auth-client.ts · db.ts · errors.ts
 │  │  ├─ csv.ts · seo.ts · slug.ts · format.ts · whatsapp.ts
 │  │  ├─ *-status.ts             # pure status rules: listing/project/plot/lead/blog
@@ -470,7 +474,7 @@ The final application code is intended to remain **private/proprietary**. Techno
 - **WYSIWYG rich-text editor** (e.g. TipTap) to replace the raw-HTML textarea for project/event descriptions
 - WhatsApp Business API (open-source gateway or official Cloud API free tier) for templated/automated follow-ups
 - Automated email drip sequences for lead nurturing
-- Multi-language support (Malayalam, Tamil, Hindi, Arabic)
+- Multi-language support — Malayalam & Tamil UI toggles **shipped** (English default, cookie-based, per-key English fallback). Remaining: Hindi/Arabic, translating the rest of the page prose (currently English-fallback), and optional URL-prefixed locales (`/ta`, `/ml`) for stronger multilingual SEO
 - Multiple Admins / regional agents with finer-grained permissions
 - Playwright E2E test suite
 - Possible company/share-based investment structure for NRI buyers (pending legal advice)

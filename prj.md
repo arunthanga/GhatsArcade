@@ -598,8 +598,8 @@ Both are hard requirements, independently rendered as separate components. Foldi
 - Online payments, deposits, escrow
 - Legal document generation or e-signing
 - Automated WhatsApp Business API chatbots
-- Multi-language i18n
-- Mobile native apps
+- ~~Multi-language i18n~~ — **now in scope**: English (default) + Tamil & Malayalam UI toggle shipped (see Feature Status). Hindi/Arabic and full content translation remain Phase 2.
+- Mobile native apps (the site is fully web-responsive — mobile/tablet/laptop)
 - Buyer-side accounts/logins
 - Automated email drip sequences
 - Multi-tenant/multi-business support
@@ -853,6 +853,8 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 | Legal disclaimer component (NRI/FEMA) | Done | `LegalDisclaimer` in SiteFooter + project detail; construction disclaimer is a separate component. Automated suite to be run on the host machine |
 | Embedded location maps | Done | Reusable `LocationMap` (client-only OpenStreetMap/Leaflet via `next/dynamic` `ssr:false`, marker + "View larger map" link). **Project detail**: renders when a project has `latitude`/`longitude` (admin `ProjectEditor` has lat/lng inputs). **Contact page**: renders the office location from `NEXT_PUBLIC_OFFICE_LAT`/`_LNG` (+ optional `_ADDRESS`). Automated suite to be run on the host machine |
 | WYSIWYG rich-text editor | Not started | Admins author project/event descriptions as raw HTML in a `<textarea>` (sanitised server-side on write); blog bodies are plain text. TipTap was removed from dependencies; a WYSIWYG editor is a future authoring-UX upgrade |
+| Multilingual UI (EN/TA/ML) | Done | Cookie-based i18n (`src/lib/i18n/`): English is the default + source-of-truth catalogue; Tamil (`ta`) & Malayalam (`ml`) are partial catalogues with per-key English fallback. Locale persists in the `NEXT_LOCALE` cookie, read server-side (`getTranslations()`) so Server Components re-render after `router.refresh()`; `<html lang>` tracks the locale. `LanguageSwitcher` in the header. Translations cover UI chrome (nav/footer/CTAs) + home hero; remaining page prose falls back to English and can be translated incrementally. Automated suite to be run on the host machine |
+| Responsive layout (mobile/tablet/laptop) | Done | Public header is a `HeaderNav` with a desktop link row + mobile hamburger panel (language switcher always reachable); public + admin data tables scroll horizontally on small screens (`overflow-x-auto`); admin shell stacks on mobile and becomes a sidebar at `md:`. Layouts use Tailwind `sm/md/lg` breakpoints throughout. Automated suite to be run on the host machine |
 
 ---
 
@@ -860,7 +862,7 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 
 - **WhatsApp Business API** — automated follow-ups once lead volume justifies
 - **Automated email drip sequences** — lead nurturing for NRI/Gulf segment
-- **Multi-language support** — Malayalam, Tamil, Hindi, Arabic
+- **Multi-language support** — Malayalam & Tamil UI toggles shipped (Phase 1.5); remaining: Hindi & Arabic, plus full translation of page prose (currently English-fallback) and optional URL-prefixed locales for SEO
 - **Owner Portal / Farm Progress Reports** — buyers log in to see plantation updates, harvest logs, maintenance for their specific plot. High-trust, high-retention for NRI buyers who cannot visit frequently.
 - **Buyers' Association formation workflow** — tracked admin state: member list, registration status, formal common-asset handover
 - **Maintenance fee billing tracker** — per-plot monthly ledger; overdue flagging; PDF statements

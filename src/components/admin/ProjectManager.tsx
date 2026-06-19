@@ -91,7 +91,8 @@ export function ProjectManager({ initialProjects }: { initialProjects: AdminProj
     <section data-testid="project-manager">
       {error ? <p role="alert">{error}</p> : null}
 
-      <table>
+      <div className="overflow-x-auto">
+        <table>
         <thead>
           <tr>
             <th>Title</th>
@@ -129,7 +130,8 @@ export function ProjectManager({ initialProjects }: { initialProjects: AdminProj
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
 
       <h3>Add project</h3>
       <form onSubmit={handleCreate}>

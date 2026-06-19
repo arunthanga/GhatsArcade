@@ -7,6 +7,17 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- **Multilingual site (English / Tamil / Malayalam).** A lightweight, cookie-based i18n layer
+  (`src/lib/i18n/`): English is the default and the source-of-truth message catalogue, with Tamil
+  (`ta`) and Malayalam (`ml`) partial catalogues that fall back to English per key. The chosen
+  locale is stored in the `NEXT_LOCALE` cookie and read server-side (`getTranslations()`), so Server
+  Components re-render in the right language after a `router.refresh()`. A `LanguageSwitcher`
+  (native `<select>`) sits in the header; `<html lang>` reflects the active locale. Translations
+  currently cover the UI chrome (nav, footer, common CTAs) and the home hero; everything else
+  cleanly falls back to English and can be translated incrementally by extending the catalogues.
+- **Responsive navigation.** The public header is now a `HeaderNav` client component with an inline
+  link row on tablet/desktop (`md:`) and a collapsible hamburger panel on mobile, with the language
+  switcher always reachable.
 - **Demo video recorder** (`scripts/demo-video.mjs`, `pnpm demo:video`): drives a real browser
   through the public site page-by-page with smooth scrolling and saves a `.webm` walkthrough via
   Playwright's built-in recording. Output is gitignored under `tests/demo-video/`.
@@ -37,6 +48,10 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   table (lead magnets, horticulture logs).
 
 ### Changed
+- **Mobile/tablet friendliness.** Admin data tables now scroll horizontally on small screens
+  (`overflow-x-auto` wrappers + sensible `min-w`) instead of clipping; the public plot-availability
+  and harvest-calendar tables already scrolled. The admin shell remains a stack-on-mobile,
+  sidebar-on-desktop layout.
 - Renamed the public blog brand to **"The Farmlands Journal"**: list page title/heading, metadata
   description, the footer navigation label, and a "← The Farmlands Journal" back link on each post.
   The `/blog` URLs and the internal admin "Blog" label are intentionally unchanged to preserve

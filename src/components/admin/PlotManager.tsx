@@ -87,7 +87,8 @@ export function PlotManager({
     <section data-testid="plot-manager">
       {error ? <p role="alert">{error}</p> : null}
 
-      <table>
+      <div className="overflow-x-auto">
+        <table>
         <thead>
           <tr>
             <th>Plot</th>
@@ -126,7 +127,8 @@ export function PlotManager({
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
 
       <h3>Add plot</h3>
       <form onSubmit={handleCreate}>

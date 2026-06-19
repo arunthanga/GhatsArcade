@@ -9,6 +9,7 @@ import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { publicEnv } from "@/lib/env";
 import { FAQ_ITEMS } from "@/lib/faq-data";
+import { getTranslations } from "@/lib/i18n/server";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import { listPublishedPosts } from "@/server/blog";
 import { listPublicEvents } from "@/server/events";
@@ -118,6 +119,7 @@ export default async function HomePage() {
   const communityEvents = events.slice(0, 3);
   const projectNames = projects.map((p) => p.title);
   const whatsappNumber = publicEnv.NEXT_PUBLIC_WHATSAPP_NUMBER;
+  const { t } = await getTranslations();
 
   return (
     <main>
@@ -128,27 +130,26 @@ export default async function HomePage() {
       <section className="bg-brand-900 text-brand-50">
         <div className="mx-auto max-w-5xl px-4 py-24 text-center sm:py-32">
           <p className="text-sm font-medium uppercase tracking-widest text-brand-300">
-            Managed farmland · Kerala & the Kerala–Tamil Nadu border
+            {t("home.heroEyebrow")}
           </p>
           <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
-            Own a farm. Skip the full-time job.
+            {t("home.heroTitle")}
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg text-brand-100/85">
-            Tranquility meets high yields. You own the land and the produce — our resident team
-            grows and cares for it while you live your life.
+            {t("home.heroSubtitle")}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
               href="/contact#site-visit"
               className="rounded-lg bg-brand-50 px-6 py-3 font-medium text-brand-900 transition-colors hover:bg-white"
             >
-              Schedule a site visit
+              {t("home.heroCtaVisit")}
             </Link>
             <Link
               href="/projects"
               className="rounded-lg border border-brand-200 px-6 py-3 font-medium text-brand-50 transition-colors hover:bg-brand-800"
             >
-              Explore projects
+              {t("home.heroCtaProjects")}
             </Link>
           </div>
         </div>

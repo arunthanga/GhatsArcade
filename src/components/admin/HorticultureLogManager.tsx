@@ -145,8 +145,8 @@ export function HorticultureLogManager({
         </p>
       ) : null}
 
-      <div className="overflow-hidden rounded-xl border border-slate-700">
-        <table className="w-full text-left text-sm">
+      <div className="overflow-x-auto rounded-xl border border-slate-700">
+        <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="bg-slate-800/60 text-xs uppercase tracking-wide text-slate-400">
             <tr>
               <th className="px-4 py-3">Date</th>

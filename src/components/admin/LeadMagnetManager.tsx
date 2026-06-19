@@ -70,7 +70,8 @@ export function LeadMagnetManager({ initialMagnets }: { initialMagnets: AdminLea
     <section data-testid="lead-magnet-manager">
       {error ? <p role="alert">{error}</p> : null}
 
-      <table>
+      <div className="overflow-x-auto">
+        <table>
         <thead>
           <tr>
             <th>Title</th>
@@ -107,7 +108,8 @@ export function LeadMagnetManager({ initialMagnets }: { initialMagnets: AdminLea
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
 
       <h3>Add lead magnet</h3>
       <form onSubmit={handleCreate}>
