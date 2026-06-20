@@ -1,5 +1,5 @@
 # prj.md — Ghats Arcade
-**Version 4** — Brand references anonymised; psychological UX conversion layer added; TDD switched to opt-in
+**Version 4.1** — Lead dedup, saved/compare, owner contact, Resend email, CRM dashboard polish; doc sync
 
 ---
 
@@ -423,6 +423,7 @@ Practical how-to content for buyers who want to understand their land.
 #### About Us Page
 
 - Company origin story: why Eruthempathy, why this model
+- **Primary contact — Arun T.** (`mailarunthangavel@gmail.com`, `9901955667` / WhatsApp `919901955667`), centralised in `src/lib/site-contact.ts` and linked from the "Who we are" section
 - **"Engineered, not just sold"** section: founder's CAE/mechanical engineering background; structural assessment of heritage clubhouse, precision road layout, water system design
 - Team section
 - Values: transparency with buyers = transparency with government. No hidden charges. No hidden problems.
@@ -443,10 +444,20 @@ Practical how-to content for buyers who want to understand their land.
 
 #### Contact Page
 
+- **Owner contact card** — primary contact **Arun T.** (`mailarunthangavel@gmail.com`, `9901955667` / WhatsApp `919901955667`) via `OwnerContactCard`, backed by `src/lib/site-contact.ts`
 - Phone, WhatsApp, email, office hours
 - Primary CTA: "Schedule a Site Visit" (not generic "Contact Us")
 - Response time commitment: "We respond within 4 working hours"
-- Embedded map
+- Embedded map (office location from `NEXT_PUBLIC_OFFICE_LAT`/`_LNG` + optional `_ADDRESS`)
+- All lead forms share the same post-submit acknowledgement: *"We'll contact you on WhatsApp within 24 hours"* (`LeadCaptureSuccess`)
+
+---
+
+#### Saved Listings & Comparison *(no login)*
+
+- **Save** button on listing cards and listing detail — bookmarks slug + snapshot metadata in `localStorage` (`src/lib/saved-listings.ts`)
+- **`/saved`** — revisit bookmarked listings; link to compare selected slugs
+- **`/compare?ids=slug-a,slug-b,slug-c`** — side-by-side table (location, size, price, land type); partial-state message when fewer than two listings resolve
 
 ---
 
@@ -488,10 +499,14 @@ The goal of the website is not to sell land. It is to get the visitor to agree t
 - Filter by: status, lead type, source, buyer type, date range
 - Lead types: `inquiry` | `site_visit_request` | `callback` | `lead_magnet_download`
 - Lead pipeline: New → Contacted → Site Visit Scheduled → Negotiating → Converted / Lost
+- **Colour-coded status badges** (`LeadStatusBadge`) in the lead manager and dashboard
+- **Dashboard summary cards**: Published Listings / New Leads / Leads in Negotiation / Blog Posts Live
+- **Phone deduplication on capture**: repeat submissions from the same normalised phone merge into the existing record (enrich email/WhatsApp, append tagged message history, upgrade `leadType` when a higher-intent capture arrives; phones stored canonically as `+{digits}`)
 - Follow-up notes with contact method: WhatsApp / call / email / in-person / site-visit
-- One-click WhatsApp from lead record (pre-filled with lead name + project)
+- One-click WhatsApp from lead record (pre-filled with lead name + project) — **Phase 2** (not yet built; public `wa.me` links are shipped)
 - Source attribution: which project / listing / page / blog / form generated the lead
 - **"Co-farmer" designation**: once a lead converts, flag as Co-farmer in CRM; enables future community communications
+- **Inquiry confirmation email** (optional): when `RESEND_API_KEY` is set, `POST /api/leads` sends a single acknowledgement via Resend; fails soft when unconfigured
 
 **Events management**: CRUD for Events — title, date, project association, description, photos, status (`upcoming` | `past`)
 
@@ -600,8 +615,8 @@ Both are hard requirements, independently rendered as separate components. Foldi
 - Automated WhatsApp Business API chatbots
 - ~~Multi-language i18n~~ — **now in scope**: English (default) + Tamil & Malayalam UI toggle shipped (see Feature Status). Hindi/Arabic and full content translation remain Phase 2.
 - Mobile native apps (the site is fully web-responsive — mobile/tablet/laptop)
-- Buyer-side accounts/logins
-- Automated email drip sequences
+- ~~Buyer-side accounts/logins~~ — no buyer login; **saved listings via localStorage** (no account) is shipped (`/saved`, `/compare`)
+- ~~Automated email drip sequences~~ — single inquiry confirmation email via Resend is shipped when configured; multi-step drip nurture remains Phase 2
 - Multi-tenant/multi-business support
 - Buyers' Association formation as tracked admin workflow
 - Google Business Profile API integration
@@ -673,7 +688,7 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 | UI interactions | Animated counters via IntersectionObserver (no dep); FAQ via native `<details>`; testimonial carousel via embla-carousel (MIT) only if needed |
 | Testing | Vitest + React Testing Library (installed; used when TDD mode is activated — currently opt-in per Section 6) |
 | Deployment | Docker Compose + Coolify on VPS |
-| SEO tooling | next-sitemap, schema.org JSON-LD via Next.js Metadata API |
+| SEO tooling | next-sitemap, dynamic `robots.txt` (`src/app/robots.ts`), schema.org JSON-LD via Next.js Metadata API (Organization includes founder + contactPoint) |
 
 **License policy:** MIT/Apache-2.0/BSD/ISC preferred; AGPL/SSPL avoided. Verify every new dependency's license before adoption. In active use and all compliant: sanitize-html (MIT), Leaflet + react-leaflet (BSD-2-Clause), sharp (Apache-2.0). (TipTap was evaluated for rich-text authoring but removed from dependencies until a WYSIWYG editor is actually built.)
 
@@ -805,7 +820,7 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 
 | Feature | Status | Notes |
 |---|---|---|
-| prj.md drafted (v4) | Done | Brand refs anonymised; psychological UX layer added; TDD switched to opt-in |
+| prj.md drafted (v4.1) | Done | v4.1 doc sync: lead dedup, saved/compare, owner contact, Resend email, CRM dashboard polish |
 | Tech stack confirmed (v4) | Done | No architectural change; Prisma ≥ 6.2 for SQLite JSON. `sanitize-html` + `sharp` in active use; `leaflet`/`react-leaflet` wired (project-detail map). TipTap removed from dependencies until a WYSIWYG editor is built |
 | Project scaffolding | Done | Structure complete; `pnpm install` + first run happen on the host/deploy machine (not runnable in this environment) |
 | Repo hygiene | Done | — |
@@ -818,12 +833,12 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 | Event CRUD | Done | `event:manage` permission (Owner + Admin); Zod schemas; gated `server/events.ts` (CRUD, sanitized rich-text description, optional project link resolved fail-open, photo gallery); API `GET`(public)/`POST`(gated) `/api/events` + `PATCH`/`DELETE /api/events/[id]`; admin `EventManager` (list/create/status/inline-edit with `GalleryUploader` + project link) + guarded admin page. Automated suite to be run on the host machine |
 | Testimonial CRUD | Done | `testimonial:manage`-gated `server/testimonials.ts` (create/update/delete + active toggle, display order, optional project link + YouTube video) with `/api/testimonials` routes and admin `TestimonialManager`. Separate from the Google Reviews widget. Automated suite to be run on the host machine |
 | Horticulture log CRUD | Done | Internal operational log gated under `project:manage`; `HORTICULTURE_ACTIVITY_TYPES` (plantation/maintenance/harvest/irrigation/pest_control); Zod schemas; `server/horticulture.ts` (CRUD, project existence check, optional plot link resolved fail-open and scoped to the project); API `GET`(auth)/`POST`(gated) `/api/horticulture-logs` + `PATCH`/`DELETE /api/horticulture-logs/[id]`; admin `HorticultureLogManager` (table + create/inline-edit/delete with dependent project→plot dropdowns) + guarded admin page. Automated suite to be run on the host machine |
-| Lead capture + CRM | Done | v4 fields wired (lead_type, source_project/source_blog_post, source_page, is_cofarmer, whatsapp, project/plot interest, preferred_date, site_visit_scheduled status); `lead_magnet_download` gated surface shipped via the lead-magnet gate. Automated suite to be run on the host machine |
+| Lead capture + CRM | Done | v4 fields wired; phone dedup on capture (merge by normalised digits, canonical `+{digits}` storage, leadType upgrade); shared `LeadCaptureSuccess` post-submit copy; colour-coded `LeadStatusBadge`; dashboard summary cards; optional Resend inquiry confirmation when configured. Automated suite to be run on the host machine |
 | Site-visit scheduling form | Done | `SiteVisitForm` (distinct `site_visit_request` type) on /contact; project + event pages deep-link with prefilled project. Automated suite to be run on the host machine |
 | Lead magnet PDF gate | Done | LeadMagnetAsset CRUD (service/API/admin), public `LeadMagnetGate` + `/resources` page, gated download captures `lead_magnet_download` lead + increments download_count; PDF uploaded via the media pipeline (URL paste still supported). Automated suite to be run on the host machine |
 | Media upload pipeline | Done | `lib/uploads.ts` (sharp → WebP, EXIF-stripped, capped) + PDF/video allowlist; auth-gated `POST /api/uploads` to local disk / Docker volume (`UPLOAD_DIR`); assets filed into named **category folders** (`UPLOAD_CATEGORIES`); reusable `MediaUploader` + `GalleryUploader`; wired into Projects, Events, blog, + lead magnets. Object-storage tier is Phase 2. Automated suite to be run on the host machine |
 | Media Library admin page | Done | `/admin/media` browses every stored asset by category (filter, copy URL, open, delete) + inline category-aware uploader; server-only `server/media.ts` (`listMedia`/`deleteMedia`, path-traversal hardened) + auth-gated `GET`/`DELETE /api/media`. Automated suite to be run on the host machine |
-| Admin "Control Room" shell | Done | Dark sidebar shell distinct from the public site; `/admin` → dashboard redirect; overview with live metrics + latest leads; restyled login; nav incl. Projects/Listings/Leads/Blog/Events/Lead Magnets/Media. No login surface anywhere on the public website. Automated suite to be run on the host machine |
+| Admin "Control Room" shell | Done | Dark sidebar shell distinct from the public site; `/admin` → dashboard redirect; overview with summary cards (Published Listings / New Leads / Leads in Negotiation / Blog Posts Live) + latest leads; restyled login; nav incl. Projects/Listings/Leads/Blog/Events/Lead Magnets/Media. No login surface anywhere on the public website. Automated suite to be run on the host machine |
 | Blog/CMS module | Done | Full field set wired end-to-end: `category` (9 editorial buckets incl. `myth_busting`/`farming_guides`), SEO overrides (`metaTitle`/`metaDescription`/`ogImageUrl`), and `estimatedReadMinutes` (auto-estimated from body via `lib/reading-time.ts`, manual override allowed). Admin `BlogManager` has per-post edit + create with all fields; public list/detail show category + read time and honour SEO overrides (with cover-image fallback) incl. JSON-LD `image`/`articleSection`. Automated suite to be run on the host machine |
 | "The Farmlands Journal" naming | Done | Public-facing rename of the blog brand: list page title/`<h1>`, metadata description, footer nav label, and a "← The Farmlands Journal" back link on each post; home Block 12 already reads "From the Farmlands Journal". `/blog` URLs and the internal admin "Blog" label are intentionally unchanged (preserves links/SEO). Automated suite to be run on the host machine |
 | "Farmland — Real or Hype?" myth-busting hub | Done | `/farmland-real-or-hype` lists published `myth_busting` posts via reusable `CategoryHub` (hero + post grid + site-visit/free-guides CTA); in footer nav + sitemap. Automated suite to be run on the host machine |
@@ -845,8 +860,8 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 | Testimonials CMS + carousel | Done | `testimonial:manage` permission (Owner + Admin); Zod schemas; gated `server/testimonials.ts` (CRUD, optional project link resolved fail-open, plain-text quotes); API `GET`(public)/`POST`(gated) `/api/testimonials` + `PATCH`/`DELETE /api/testimonials/[id]`; admin `TestimonialManager` (list/create/inline-edit, display-order, active toggle, optional YouTube video + project link); public `TestimonialCarousel` wired into home Block 9 (real owner stories, falls back to an invite when none). Automated suite to be run on the host machine |
 | "Land That Comes With a Team" section | Done | 7-discipline grid (Agronomy/Civil/Legal/Operations/Survey/Customer Success/Horticulture) on the home page (Block 5). Automated suite to be run on the host machine |
 | WhatsApp floating button (context-aware) | Done | `FloatingWhatsAppButton` + route-aware `PublicWhatsAppFloat` in the public layout: scroll-triggered on home (Block 9 onward), always-on on project-detail + education/region pages, hidden on nav/list/contact pages. Automated suite to be run on the host machine |
-| WhatsApp click-to-chat | Done | Unit-tested `lib/whatsapp.ts` link builder + functional `WhatsAppButton` (used on project/listing detail). Context-aware floating button is tracked separately. Automated suite to be run on the host machine |
-| SEO (sitemap, meta, schema.org) | Done | Home (Organization + WebSite JSON-LD), projects, listings (RealEstateListing JSON-LD), blog (BlogPosting JSON-LD), both content hubs, Events, and all education/static pages are in the sitemap with per-page metadata/OG; `/faq` emits FAQPage JSON-LD. Future pages (gallery/testimonials/resale) auto-extend via `STATIC_PATHS` + dynamic slugs. Automated suite to be run on the host machine |
+| WhatsApp click-to-chat | Done | Unit-tested `lib/whatsapp.ts` link builder + functional `WhatsAppButton` (used on project/listing detail; listing messages pre-fill title, acreage, district, and ₹ price). Context-aware floating button is tracked separately. Automated suite to be run on the host machine |
+| SEO (sitemap, meta, schema.org) | Done | Home (Organization + WebSite JSON-LD with founder/contactPoint), projects, listings (RealEstateListing JSON-LD), blog (BlogPosting JSON-LD), both content hubs, Events, and all education/static pages are in the sitemap with per-page metadata/OG; dynamic `robots.txt` via `src/app/robots.ts`; draft listings/posts excluded (integration test). `/faq` emits FAQPage JSON-LD. Automated suite to be run on the host machine |
 | Public site shell + polish | Done | Header nav + three-column footer (Explore / Learn incl. FAQ / Guidance incl. all education + region pages); home page fully built; consistent brand chrome across every public route. New pages plug into the existing shell. Automated suite to be run on the host machine |
 | Agricultural-land construction disclaimer component | Done | `ConstructionDisclaimer` shipped; rendered on **both** project detail and listing detail (distinct from the FEMA disclaimer). Automated suite to be run on the host machine |
 | Data export (Owner-only) | Done | Leads CSV (all v4 fields + project/blog sources), Listings CSV, Projects CSV (location, classification, road status, plot counts, starting price), and Events CSV (date, status, theme, project, photo count); RFC-4180; Owner-only export page restyled to the Control Room. Automated suite to be run on the host machine |
@@ -855,14 +870,25 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 | WYSIWYG rich-text editor | Not started | Admins author project/event descriptions as raw HTML in a `<textarea>` (sanitised server-side on write); blog bodies are plain text. TipTap was removed from dependencies; a WYSIWYG editor is a future authoring-UX upgrade |
 | Multilingual UI (EN/TA/ML) | Done | Cookie-based i18n (`src/lib/i18n/`): English is the default + source-of-truth catalogue; Tamil (`ta`) & Malayalam (`ml`) are partial catalogues with per-key English fallback. Locale persists in the `NEXT_LOCALE` cookie, read server-side (`getTranslations()`) so Server Components re-render after `router.refresh()`; `<html lang>` tracks the locale. `LanguageSwitcher` in the header. Translations cover UI chrome (nav/footer/CTAs) + home hero; remaining page prose falls back to English and can be translated incrementally. Automated suite to be run on the host machine |
 | Responsive layout (mobile/tablet/laptop) | Done | Public header is a `HeaderNav` with a desktop link row + mobile hamburger panel (language switcher always reachable); public + admin data tables scroll horizontally on small screens (`overflow-x-auto`); admin shell stacks on mobile and becomes a sidebar at `md:`. Layouts use Tailwind `sm/md/lg` breakpoints throughout. Automated suite to be run on the host machine |
+| Owner contact details | Done | `src/lib/site-contact.ts` (Arun T., mailarunthangavel@gmail.com, 9901955667); `OwnerContactCard` on `/contact`; links on `/about`; Organization JSON-LD `founder` + `contactPoint`. Defaults in `.env.example` (`OWNER_*`, `NEXT_PUBLIC_WHATSAPP_NUMBER`). Automated suite to be run on the host machine |
+| Indian price formatting (`formatInr`) | Done | Whole rupees as `₹35,00,000` via `Intl.NumberFormat('en-IN')`; used on listing cards, detail, compare, and WhatsApp pre-fill. Automated suite to be run on the host machine |
+| Saved listings (localStorage) | Done | `SaveListingButton` + `src/lib/saved-listings.ts`; `/saved` page; "Saved" nav link (EN/TA/ML). No login. Automated suite to be run on the host machine |
+| Listing comparison | Done | `/compare?ids=slug-a,slug-b,slug-c` side-by-side table; linked from `/saved`. Automated suite to be run on the host machine |
+| Inquiry confirmation email (Resend) | Done | Optional `src/lib/email.ts` + `RESEND_API_KEY`/`RESEND_FROM_EMAIL`; sent from `POST /api/leads` when lead has email; no-op when unconfigured. Automated suite to be run on the host machine |
+| Lead capture success UX | Done | Shared `LeadCaptureSuccess`: "We'll contact you on WhatsApp within 24 hours" on inquiry, site-visit, callback, and home-visit forms. Automated suite to be run on the host machine |
+| CRM status badges | Done | Colour-coded `LeadStatusBadge` (New=blue, Contacted=yellow, Negotiating=orange, Converted=green, Lost=grey) in lead manager + dashboard. Automated suite to be run on the host machine |
+| Slug collision handling | Done | Auto-generated slugs append `-2`, `-3`, … on title collision; integration test for `wayanad-farm` → `wayanad-farm-2`. Automated suite to be run on the host machine |
+| Dynamic robots.txt | Done | `src/app/robots.ts` replaces static placeholder; Sitemap URL from `NEXT_PUBLIC_SITE_URL`. Automated suite to be run on the host machine |
+| One-click WhatsApp from CRM lead row | Not started | Public `wa.me` links with context pre-fill are shipped; admin CRM one-click deep-link is Phase 2 |
 
 ---
 
 ## 11. Phase 2 / Future Considerations
 
-- **WhatsApp Business API** — automated follow-ups once lead volume justifies
-- **Automated email drip sequences** — lead nurturing for NRI/Gulf segment
+- **WhatsApp Business API** — automated follow-ups once lead volume justifies; **one-click WhatsApp from CRM lead rows** (public context-aware `wa.me` links are shipped)
+- **Automated email drip sequences** — multi-step lead nurturing for NRI/Gulf segment (**single inquiry confirmation email via Resend is shipped** when `RESEND_API_KEY` is configured)
 - **Multi-language support** — Malayalam & Tamil UI toggles shipped (Phase 1.5); remaining: Hindi & Arabic, plus full translation of page prose (currently English-fallback) and optional URL-prefixed locales for SEO
+- ~~Saved listings / comparison~~ — **shipped** (`/saved` via localStorage; `/compare?ids=` side-by-side table; no buyer login)
 - **Owner Portal / Farm Progress Reports** — buyers log in to see plantation updates, harvest logs, maintenance for their specific plot. High-trust, high-retention for NRI buyers who cannot visit frequently.
 - **Buyers' Association formation workflow** — tracked admin state: member list, registration status, formal common-asset handover
 - **Maintenance fee billing tracker** — per-plot monthly ledger; overdue flagging; PDF statements

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { absoluteUrl } from "@/lib/seo";
+import { SITE_OWNER } from "@/lib/site-contact";
 
 export const metadata: Metadata = {
   title: "About",
@@ -14,13 +15,34 @@ export default function AboutPage() {
 
       <section className="mt-6 space-y-4 leading-relaxed text-brand-800">
         <p>
-          Ghats Arcade helps people own and grow productive farmland in Kerala and along the
-          Kerala-Tamil Nadu border - one of South India&apos;s most fertile and scenic regions.
+          Ghats Arcade welcomes families into a co-farming community in Kerala and along the
+          Kerala-Tamil Nadu border — one of South India&apos;s most fertile and scenic regions.
         </p>
         <p>
           We focus on this belt because its climate, soil, and access to water make it well suited
           to long-lived plantation crops, while the surrounding hills offer the tranquility that
           gives our name its meaning.
+        </p>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="text-xl font-semibold text-brand-900">Who we are</h2>
+        <p className="mt-4 leading-relaxed text-brand-800">
+          Ghats Arcade is led by {SITE_OWNER.name}. You can reach him directly at{" "}
+          <a
+            href={`mailto:${SITE_OWNER.email}`}
+            className="font-medium text-brand-700 underline-offset-2 hover:underline"
+          >
+            {SITE_OWNER.email}
+          </a>{" "}
+          or{" "}
+          <a
+            href={`tel:${SITE_OWNER.phoneTel}`}
+            className="font-medium text-brand-700 underline-offset-2 hover:underline"
+          >
+            {SITE_OWNER.phoneDisplay}
+          </a>
+          .
         </p>
       </section>
 
@@ -36,8 +58,8 @@ export default function AboutPage() {
             walk you through eligibility, paperwork, and visits.
           </li>
           <li>
-            <span className="font-medium text-brand-900">3. Own &amp; grow:</span> we can manage
-            cultivation and upkeep so your land stays productive.
+            <span className="font-medium text-brand-900">3. Own &amp; grow:</span> join as a
+            co-farmer — we manage cultivation and upkeep so your land stays productive.
           </li>
         </ol>
       </section>

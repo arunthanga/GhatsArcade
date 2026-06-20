@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ConstructionDisclaimer } from "@/components/public/ConstructionDisclaimer";
 import { LeadInquiryForm } from "@/components/public/LeadInquiryForm";
+import { SaveListingButton } from "@/components/public/SaveListingButton";
+import { TrustProofStrip } from "@/components/public/TrustProofStrip";
 import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { publicEnv } from "@/lib/env";
@@ -71,6 +73,16 @@ export default async function ListingDetailPage({
               Under offer
             </span>
           ) : null}
+          <SaveListingButton
+            listing={{
+              slug,
+              title: listing.title,
+              district: listing.district,
+              sizeAcres: listing.sizeAcres,
+              priceInr: listing.priceInr,
+              status: listing.status,
+            }}
+          />
         </div>
       </header>
 
@@ -91,6 +103,8 @@ export default async function ListingDetailPage({
 
       <p className="mb-8 whitespace-pre-line leading-relaxed text-brand-800">{listing.description}</p>
 
+      <TrustProofStrip className="mb-8 rounded-xl border border-brand-100" compact />
+
       <div className="mb-8">
         <ConstructionDisclaimer />
       </div>
@@ -99,7 +113,12 @@ export default async function ListingDetailPage({
         <div className="mb-8">
           <WhatsAppButton
             phone={whatsappNumber}
-            message={`Hi, I'm interested in "${listing.title}" (${slug}).`}
+            message={[
+              `Hi, I'm interested in ${listing.title}`,
+              `${formatAcres(listing.sizeAcres)} in ${listing.district} at ${formatInr(
+                listing.priceInr,
+              )}. Please contact me.`,
+            ].join(" — ")}
           />
         </div>
       ) : null}

@@ -7,6 +7,17 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- **Owner contact details.** Primary contact is **Arun T.** (`mailarunthangavel@gmail.com`, `9901955667` / WhatsApp `919901955667`), centralised in `src/lib/site-contact.ts`. Shown on `/contact` (`OwnerContactCard`) and `/about`; included in Organization JSON-LD (`founder` + `contactPoint`). Seed defaults in `.env.example`: `OWNER_EMAIL`, `OWNER_NAME`, `NEXT_PUBLIC_WHATSAPP_NUMBER`.
+- **Lead capture UX polish.** Shared `LeadCaptureSuccess` component gives every public form the same post-submit acknowledgement: "We'll contact you on WhatsApp within 24 hours." Listing detail WhatsApp links now pre-fill title, acreage, district, and ₹ price.
+- **Admin dashboard summary cards.** Top row: Published Listings / New Leads / Leads in Negotiation / Blog Posts Live (via `lead.groupBy` + filtered counts).
+- **CRM status badges.** Colour-coded `LeadStatusBadge` in the lead manager and dashboard (New=blue, Contacted=yellow, Negotiating=orange, Converted=green, Lost=grey).
+- **Indian price formatting.** `formatInr()` displays whole rupees as `₹35,00,000` using `Intl.NumberFormat('en-IN')`.
+- **Lead deduplication.** `captureLead` merges repeat submissions from the same phone (normalised digits), enriches missing fields, appends tagged message history, upgrades `leadType` when a higher-intent capture arrives, and stores phones canonically as `+{digits}`.
+- **Slug collision handling.** Auto-generated slugs append `-2`, `-3`, … on title collision; explicit integration test for `wayanad-farm` → `wayanad-farm-2`.
+- **Dynamic robots.txt.** Replaced static `public/robots.txt` placeholder with `src/app/robots.ts` (uses `NEXT_PUBLIC_SITE_URL` for the Sitemap line). Sitemap integration test confirms draft listings/posts are excluded.
+- **Saved listings (no login).** `SaveListingButton` + `localStorage` hook; `/saved` page; "Saved" nav link (EN/TA/ML).
+- **Listing comparison.** `/compare?ids=slug-a,slug-b,slug-c` side-by-side table (location, size, price, land type); linked from `/saved`.
+- **Inquiry confirmation email.** Optional Resend integration (`src/lib/email.ts`, `RESEND_API_KEY` / `RESEND_FROM_EMAIL`); fails soft when unconfigured.
 - **Multilingual site (English / Tamil / Malayalam).** A lightweight, cookie-based i18n layer
   (`src/lib/i18n/`): English is the default and the source-of-truth message catalogue, with Tamil
   (`ta`) and Malayalam (`ml`) partial catalogues that fall back to English per key. The chosen
@@ -39,7 +50,8 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   can be reintroduced when actually built.
 
 ### Documentation
-- **Project audit & doc sync.** Reconciled `prj.md` and `README.md` with the actual code:
+- **Project audit & doc sync (v4.1).** Reconciled README, prj.md, and CHANGELOG with lead dedup, saved/compare, owner contact (`site-contact.ts`), Resend inquiry email, dynamic `robots.ts`, `formatInr`, CRM dashboard cards, and `LeadStatusBadge`.
+- **Project audit & doc sync (v4).** Reconciled `prj.md` and `README.md` with the actual code:
   TipTap (`@tiptap/*`) and Leaflet (`leaflet`/`react-leaflet`) are **installed but not yet wired**,
   so the tech-stack tables now describe rich text as "raw HTML in a `<textarea>`, sanitised
   server-side with `sanitize-html`" (blog bodies are plain text), and maps as a pending Phase-2

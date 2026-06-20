@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Free Guides",
   description:
-    "Download free guides on managed farmland investing, legal due diligence, and life on the Kerala-Tamil Nadu border.",
+    "Download free guides on managed farmland, legal due diligence, and life on the Kerala–Tamil Nadu border for farmland buyers and owners.",
   alternates: { canonical: absoluteUrl("/resources") },
 };
 

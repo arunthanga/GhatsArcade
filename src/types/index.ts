@@ -32,14 +32,22 @@ export type LeadType = (typeof LEAD_TYPES)[number];
 export const BUYER_TYPES = ["resident_indian", "nri", "oci", "foreign_citizen"] as const;
 export type BuyerType = (typeof BUYER_TYPES)[number];
 
+// Public-facing labels for lead forms (internal field remains `buyerType` in the DB).
+export const BUYER_TYPE_LABELS: Record<BuyerType, string> = {
+  resident_indian: "Resident Indian co-farmer",
+  nri: "NRI co-farmer",
+  oci: "OCI co-farmer",
+  foreign_citizen: "Foreign citizen (eligibility check required)",
+};
+
 // Buyer types shown on testimonials (a subset of BUYER_TYPES; keep in sync with the
 // Testimonial.buyerType comment in prisma/schema.prisma).
 export const TESTIMONIAL_BUYER_TYPES = ["resident_indian", "nri", "oci"] as const;
 export type TestimonialBuyerType = (typeof TESTIMONIAL_BUYER_TYPES)[number];
 export const TESTIMONIAL_BUYER_TYPE_LABELS: Record<TestimonialBuyerType, string> = {
-  resident_indian: "Resident Indian",
-  nri: "NRI",
-  oci: "OCI",
+  resident_indian: "Resident Indian co-farmer",
+  nri: "NRI co-farmer",
+  oci: "OCI co-farmer",
 };
 
 export const CONTACT_METHODS = ["whatsapp", "call", "email", "in_person", "site_visit"] as const;
@@ -67,7 +75,7 @@ export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
 // Human-readable labels for admin selects and public badges.
 export const BLOG_CATEGORY_LABELS: Record<BlogCategory, string> = {
   legal_guides: "Legal Guides",
-  investment: "Investment",
+  investment: "Legacy & Land",
   lifestyle: "Lifestyle",
   plantation_farming: "Plantation & Farming",
   location_spotlight: "Location Spotlight",

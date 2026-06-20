@@ -5,6 +5,7 @@ import { LeadInquiryForm } from "@/components/public/LeadInquiryForm";
 import { ProjectCard } from "@/components/public/ProjectCard";
 import { StatCounters } from "@/components/public/StatCounters";
 import { TestimonialCarousel } from "@/components/public/TestimonialCarousel";
+import { TrustProofStrip } from "@/components/public/TrustProofStrip";
 import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { publicEnv } from "@/lib/env";
@@ -59,12 +60,12 @@ const DISCIPLINES = [
 ];
 
 const PILLARS: { title: string; body: string }[] = [
-  { title: "Nutrition", body: "Grow your own food — fruit and produce you can trust." },
-  { title: "Consciousness", body: "Slow down and reconnect with something real." },
-  { title: "Movement", body: "Let the body follow the land's natural rhythm." },
+  { title: "Organic living", body: "Grow closer to food, fruit, and produce your family can trust." },
+  { title: "Peaceful living", body: "Slow down and reconnect with something real." },
+  { title: "Weekend rhythm", body: "Let the body follow the land's natural rhythm on visits and quiet weekends." },
   { title: "Legacy", body: "A place where your family's story continues." },
   { title: "Balance", body: "The seasons set the pace; you simply keep it." },
-  { title: "Presence", body: "On the farm, every moment asks you to just be here." },
+  { title: "Vacation home feeling", body: "On the farm, every moment asks you to just be here — without pretending it is residential land." },
 ];
 
 const STEPS: { title: string; body: string }[] = [
@@ -155,12 +156,15 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <TrustProofStrip />
+
       {/* Block 2 — Reframe the time objection (poetic prose) */}
       <section className="mx-auto max-w-3xl px-4 py-20 text-center">
         <p className="text-2xl font-light leading-relaxed text-brand-800 sm:text-3xl">
           We prepare the soil. We plant the crops. We water, nurture, and maintain. You arrive when
           it matters — to pluck fruit from your own trees, to watch your children run between rows
-          of green, to host slow lunches under open Kerala skies.
+          of green, to host slow lunches under open Kerala skies, and to feel the peace of a weekend
+          home rooted in real farmland.
         </p>
         <p className="mt-6 text-lg font-medium text-brand-900">
           You live the farm life. We manage the farm work.
@@ -179,6 +183,10 @@ export default async function HomePage() {
           <h2 className="text-center text-2xl font-semibold text-brand-900">
             The fears you arrive with — answered
           </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-brand-600">
+            Clean titles, trusted developer guidance, investment security, and honest land-use
+            limits are part of the conversation before any family becomes a co-farmer.
+          </p>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {FEARS.map((item) => (
               <div key={item.fear} className="rounded-xl border border-brand-100 bg-white p-6">
@@ -205,7 +213,8 @@ export default async function HomePage() {
           Land that comes with a team
         </h2>
         <p className="mx-auto mt-2 max-w-2xl text-center text-brand-600">
-          You're not buying a plot. You're buying a system — seven disciplines on every project.
+          You're joining a co-farming community with a full team behind your land — seven disciplines
+          on every project.
         </p>
         <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-7">
           {DISCIPLINES.map((discipline) => (
@@ -226,7 +235,7 @@ export default async function HomePage() {
       <section className="border-y border-brand-100 bg-brand-50/60">
         <div className="mx-auto max-w-5xl px-4 py-16">
           <h2 className="text-center text-2xl font-semibold text-brand-900">
-            More than an investment — a way to live
+            More than land — a way to live together
           </h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {PILLARS.map((pillar) => (
@@ -297,8 +306,8 @@ export default async function HomePage() {
           It's managed for you, not without you
         </h2>
         <p className="mx-auto mt-2 max-w-2xl text-center text-brand-600">
-          Hear it from owners themselves — families and professionals who own here and visit when it
-          suits them.
+          Hear it from co-farmers themselves — families and professionals who own here and visit when
+          it suits them.
         </p>
         <div className="mt-10">
           {testimonials.length > 0 ? (
@@ -314,8 +323,8 @@ export default async function HomePage() {
             />
           ) : (
             <p className="mx-auto max-w-xl rounded-xl border border-brand-100 bg-brand-50 p-6 text-center text-brand-600">
-              Owner stories are being added. In the meantime, ask us to connect you with an existing
-              owner — we're happy to.
+              Co-farmer stories are being added. In the meantime, ask us to connect you with an
+              existing co-farmer — we're happy to.
             </p>
           )}
         </div>
@@ -324,10 +333,10 @@ export default async function HomePage() {
       {/* Block 10 — Google reviews (third-party validation) */}
       <section className="border-y border-brand-100 bg-brand-50/60">
         <div className="mx-auto max-w-3xl px-4 py-14 text-center">
-          <h2 className="text-2xl font-semibold text-brand-900">What owners say on Google</h2>
+          <h2 className="text-2xl font-semibold text-brand-900">What co-farmers say on Google</h2>
           <p className="mt-2 text-brand-600">
             We'd rather you read unfiltered, third-party reviews than only our own words. See what
-            owners say about us on our Google Business profile.
+            co-farmers say about us on our Google Business profile.
           </p>
           <a
             href="https://www.google.com/search?q=Ghats+Arcade+reviews"
@@ -428,7 +437,7 @@ export default async function HomePage() {
       {/* Block 13 — Inline FAQ */}
       <section className="mx-auto max-w-3xl px-4 py-16">
         <h2 className="text-center text-2xl font-semibold text-brand-900">
-          Questions buyers ask us
+          Questions co-farmers ask us
         </h2>
         <div className="mt-8">
           <FaqList items={FAQ_ITEMS} />

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 const TITLE = "Farming Guides / Knowledge Base";
 const DESCRIPTION =
-  "Practical how-to guides for farmland buyers in the Palakkad agroclimatic zone — crop calendars, reading a survey sketch, encumbrance certificates, panchayat permissions, and site-visit checklists.";
+  "Practical how-to guides for farmland owners and buyers in the Palakkad agroclimatic zone — crop calendars, reading a survey sketch, encumbrance certificates, panchayat permissions, and site-visit checklists.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -28,7 +28,7 @@ export default async function FarmingGuidesHubPage() {
     <CategoryHub
       eyebrow="Knowledge base"
       title={TITLE}
-      intro="Own your land with confidence. These practical guides explain the paperwork, the seasons, and the on-the-ground checks every farmland owner in the Palakkad region should know."
+      intro="Own your land with confidence. These practical guides explain the paperwork, the seasons, and the on-the-ground checks every farmland owner or buyer in the Palakkad region should know."
       posts={posts}
       emptyMessage="Our knowledge base is growing. Check back soon, or ask us for guidance directly."
     />

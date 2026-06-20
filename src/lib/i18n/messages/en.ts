@@ -6,6 +6,7 @@ const en = {
     home: "Home",
     projects: "Projects",
     listings: "Listings",
+    saved: "Saved",
     events: "Events",
     about: "About",
     contact: "Contact",
@@ -15,7 +16,7 @@ const en = {
   },
   footer: {
     tagline:
-      "Tranquility meets high-yields - managed farmland in Kerala and the Kerala-Tamil Nadu border region.",
+      "A farmland for your family — clean titles, organic living, and peaceful weekend visits in Kerala.",
     explore: "Explore",
     learn: "Learn",
     guidance: "Guidance",
@@ -33,9 +34,9 @@ const en = {
   },
   home: {
     heroEyebrow: "Managed farmland · Kerala & the Kerala–Tamil Nadu border",
-    heroTitle: "Own a farm. Skip the full-time job.",
+    heroTitle: "A farmland for your family.",
     heroSubtitle:
-      "Tranquility meets high yields. You own the land and the produce — our resident team grows and cares for it while you live your life.",
+      "Where the Western Ghats meet the Palakkad Gap. Clean titles, trusted developer care, organic living, and a peaceful weekend rhythm for co-farmer families.",
     heroCtaVisit: "Schedule a site visit",
     heroCtaProjects: "Explore projects",
   },

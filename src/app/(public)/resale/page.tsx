@@ -5,7 +5,7 @@ import { absoluteUrl } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "Resale & Exit",
   description:
-    "Our commitment to help you resell your managed farmland when the time comes — how resale works step by step, why land in this region appreciates, and liquidity reassurance for NRI owners.",
+    "Our commitment to help registered owners resell managed farmland when the time comes — how resale works step by step, why land in this region appreciates, and liquidity reassurance for NRI owners.",
   alternates: { canonical: absoluteUrl("/resale") },
 };
 
@@ -20,15 +20,15 @@ const STEPS: { title: string; detail: string }[] = [
   },
   {
     title: "We surface it to demand",
-    detail: "Your plot is offered to our incoming buyer enquiries and existing owner network — the same pipeline that fills our projects.",
+    detail: "Your plot is offered to incoming buyer enquiries and our existing owner network — the same pipeline that fills our projects.",
   },
   {
     title: "Due diligence & paperwork",
-    detail: "We support the buyer's due diligence with the title, encumbrance, and survey records we already maintain for the project.",
+    detail: "We support the prospective purchaser's due diligence with the title, encumbrance, and survey records we already maintain for the project.",
   },
   {
     title: "Transfer & registration",
-    detail: "We walk both sides through the sale deed and sub-registrar process, just as we did when you first bought.",
+    detail: "We walk both sides through the sale deed and sub-registrar process, just as we did when you first registered.",
   },
 ];
 
@@ -60,7 +60,7 @@ export default function ResalePage() {
         </span>
         <h1 className="mt-3 text-3xl font-semibold text-brand-900">Resale & exit</h1>
         <p className="mt-2 text-lg text-brand-600">
-          "Who do I sell to later?" is a fair question — and one we answer before you buy. Here's our
+          "Who do I sell to later?" is a fair question — and one we answer before you register. Here's our
           commitment to helping you exit when the time is right.
         </p>
       </header>
@@ -70,7 +70,7 @@ export default function ResalePage() {
         <p className="mt-2 leading-relaxed text-brand-800">
           When you decide to sell, you won't be on your own. We are committed to facilitating the
           resale of your plot — drawing on the same buyer demand, documentation, and registration
-          know-how that we use to sell our projects. We can't guarantee a specific price or timeline,
+          know-how that we use for our projects. We can't guarantee a specific price or timeline,
           but we will actively help you find a buyer and complete the transfer cleanly.
         </p>
       </section>

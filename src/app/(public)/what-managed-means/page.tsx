@@ -86,8 +86,7 @@ export default function WhatManagedMeansPage() {
         <div className="rounded-xl border border-brand-100 bg-white p-6">
           <h2 className="text-lg font-semibold text-brand-900">Association handover</h2>
           <p className="mt-2 text-sm leading-relaxed text-brand-700">
-            Over time, ownership of common-area governance can transition to an association of plot
-            owners. The timeline and process for that handover are defined per project, so the
+            Over time, ownership of common-area governance can transition to an association of plot owners. The timeline and process for that handover are defined per project, so the
             community can eventually steward its own estate.
           </p>
         </div>

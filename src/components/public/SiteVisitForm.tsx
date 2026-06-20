@@ -1,6 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { LeadCaptureSuccess } from "@/components/public/LeadCaptureSuccess";
+import {
+  appendLeadQualification,
+  BUDGET_RANGES,
+  VISIT_READINESS,
+} from "@/lib/lead-qualification";
 
 // Standalone "Schedule a Site Visit" form (prj.md Section 3 / lead-capture surfaces).
 // Posts as a distinct `site_visit_request` lead type. Project pages deep-link here with
@@ -18,6 +24,8 @@ function makeInitial(projectInterest?: string) {
     whatsapp: "",
     preferredDate: "",
     projectInterest: projectInterest ?? "",
+    budgetRange: "",
+    visitReadiness: "",
     company: "",
   };
 }
@@ -42,6 +50,10 @@ export function SiteVisitForm({
         whatsapp: form.whatsapp || undefined,
         preferredDate: form.preferredDate || undefined,
         projectInterest: form.projectInterest || undefined,
+        message: appendLeadQualification(undefined, {
+          budgetRange: form.budgetRange,
+          visitReadiness: form.visitReadiness,
+        }),
         company: form.company,
         leadType: "site_visit_request",
         ...(sourceProjectId ? { sourceProjectId } : {}),
@@ -58,9 +70,12 @@ export function SiteVisitForm({
 
   if (status === "success") {
     return (
-      <p data-testid="site-visit-success" className="text-brand-800">
-        Thanks - we have your site-visit request and will confirm a time shortly.
-      </p>
+      <LeadCaptureSuccess
+        testId="site-visit-success"
+        title="Site visit request received"
+        resetLabel="Send another request"
+        onReset={() => setStatus("idle")}
+      />
     );
   }
 
@@ -70,6 +85,10 @@ export function SiteVisitForm({
   return (
     <form onSubmit={handleSubmit} data-testid="site-visit-form" className="flex flex-col gap-3">
       <h2 className="text-lg font-semibold text-brand-900">Schedule a site visit</h2>
+      <p className="text-sm text-brand-600">
+        We will help you verify the facts on-site: title basics, access, water source, and what
+        ongoing management really includes.
+      </p>
       <input
         placeholder="Your name"
         value={form.name}
@@ -105,6 +124,30 @@ export function SiteVisitForm({
         onChange={(e) => setForm({ ...form, projectInterest: e.target.value })}
         className={fieldClass}
       />
+      <select
+        value={form.visitReadiness}
+        onChange={(e) => setForm({ ...form, visitReadiness: e.target.value })}
+        className={fieldClass}
+      >
+        <option value="">What would help before the visit? (optional)</option>
+        {VISIT_READINESS.map((readiness) => (
+          <option key={readiness} value={readiness}>
+            {readiness}
+          </option>
+        ))}
+      </select>
+      <select
+        value={form.budgetRange}
+        onChange={(e) => setForm({ ...form, budgetRange: e.target.value })}
+        className={fieldClass}
+      >
+        <option value="">Budget range (optional)</option>
+        {BUDGET_RANGES.map((range) => (
+          <option key={range} value={range}>
+            {range}
+          </option>
+        ))}
+      </select>
       {/* Honeypot */}
       <input
         type="text"

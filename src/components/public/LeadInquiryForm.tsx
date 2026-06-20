@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { BUYER_TYPES } from "@/types";
+import { LeadCaptureSuccess } from "@/components/public/LeadCaptureSuccess";
+import {
+  appendLeadQualification,
+  BUDGET_RANGES,
+  BUYING_TIMELINES,
+} from "@/lib/lead-qualification";
+import { BUYER_TYPE_LABELS, BUYER_TYPES } from "@/types";
 
 type LeadInquiryFormProps = {
   heading?: string;
@@ -24,6 +30,9 @@ function makeInitial() {
     whatsapp: "",
     email: "",
     buyerType: BUYER_TYPES[0] as string,
+    buyingTimeline: "",
+    budgetRange: "",
+    wantsProofPack: true,
     message: "",
     company: "", // honeypot - must stay empty
   };
@@ -54,7 +63,11 @@ export function LeadInquiryForm({
         whatsapp: form.whatsapp || undefined,
         email: form.email || undefined,
         buyerType: form.buyerType,
-        message: form.message || undefined,
+        message: appendLeadQualification(form.message, {
+          buyingTimeline: form.buyingTimeline,
+          budgetRange: form.budgetRange,
+          wantsProofPack: form.wantsProofPack,
+        }),
         company: form.company,
         leadType: "inquiry",
         ...(projectInterest ? { projectInterest } : {}),
@@ -74,9 +87,12 @@ export function LeadInquiryForm({
 
   if (status === "success") {
     return (
-      <p data-testid="inquiry-success" className="text-brand-800">
-        Thanks - we have received your enquiry and will be in touch.
-      </p>
+      <LeadCaptureSuccess
+        testId="inquiry-success"
+        title="Enquiry received"
+        resetLabel="Send another enquiry"
+        onReset={() => setStatus("idle")}
+      />
     );
   }
 
@@ -86,6 +102,10 @@ export function LeadInquiryForm({
   return (
     <form onSubmit={handleSubmit} data-testid="inquiry-form" className="flex flex-col gap-3">
       <h2 className="text-lg font-semibold text-brand-900">{heading}</h2>
+      <p className="text-sm text-brand-600">
+        We can share the project factsheet first — title checklist, land classification, road
+        access, water source, and maintenance scope — before asking you to decide anything.
+      </p>
       <input
         placeholder="Your name"
         value={form.name}
@@ -115,17 +135,53 @@ export function LeadInquiryForm({
         onChange={(e) => setForm({ ...form, email: e.target.value })}
         className={fieldClass}
       />
+      <label className="text-sm text-brand-600">
+        Which best describes you?
+        <select
+          value={form.buyerType}
+          onChange={(e) => setForm({ ...form, buyerType: e.target.value })}
+          className={`${fieldClass} mt-1`}
+        >
+          {BUYER_TYPES.map((type) => (
+            <option key={type} value={type}>
+              {BUYER_TYPE_LABELS[type]}
+            </option>
+          ))}
+        </select>
+      </label>
       <select
-        value={form.buyerType}
-        onChange={(e) => setForm({ ...form, buyerType: e.target.value })}
+        value={form.buyingTimeline}
+        onChange={(e) => setForm({ ...form, buyingTimeline: e.target.value })}
         className={fieldClass}
       >
-        {BUYER_TYPES.map((type) => (
-          <option key={type} value={type}>
-            {type}
+        <option value="">When would you like to join? (optional)</option>
+        {BUYING_TIMELINES.map((timeline) => (
+          <option key={timeline} value={timeline}>
+            {timeline}
           </option>
         ))}
       </select>
+      <select
+        value={form.budgetRange}
+        onChange={(e) => setForm({ ...form, budgetRange: e.target.value })}
+        className={fieldClass}
+      >
+        <option value="">Budget range (optional)</option>
+        {BUDGET_RANGES.map((range) => (
+          <option key={range} value={range}>
+            {range}
+          </option>
+        ))}
+      </select>
+      <label className="flex items-start gap-2 text-xs leading-relaxed text-brand-600">
+        <input
+          type="checkbox"
+          checked={form.wantsProofPack}
+          onChange={(e) => setForm({ ...form, wantsProofPack: e.target.checked })}
+          className="mt-0.5"
+        />
+        Send me the factsheet/proof pack before the sales call.
+      </label>
       <textarea
         placeholder="Message (optional)"
         value={form.message}

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { LeadInquiryForm } from "@/components/public/LeadInquiryForm";
 import { LocationMap } from "@/components/public/LocationMap";
+import { OwnerContactCard } from "@/components/public/OwnerContactCard";
 import { SiteVisitForm } from "@/components/public/SiteVisitForm";
+import { TrustProofStrip } from "@/components/public/TrustProofStrip";
 import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { publicEnv } from "@/lib/env";
 import { absoluteUrl } from "@/lib/seo";
@@ -42,6 +44,9 @@ export default async function ContactPage({
           <WhatsAppButton phone={whatsappNumber} label="Chat with us on WhatsApp" />
         </div>
       ) : null}
+
+      <OwnerContactCard />
+      <TrustProofStrip className="mt-8 rounded-xl border border-brand-100" compact />
 
       <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2">
         <section id="site-visit" className="scroll-mt-24 rounded-xl border border-brand-100 bg-brand-50 p-6">

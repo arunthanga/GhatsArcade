@@ -5,7 +5,7 @@ import { absoluteUrl } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "What is Managed Farmland?",
   description:
-    "A plain-English explanation of managed farmland: what you own, what the team does, what you experience as an owner — and who it is honestly not suitable for.",
+    "A plain-English explanation of managed farmland: clean titles, trusted developer support, organic living, peaceful weekend visits, what the team does, and what you experience as a co-farmer.",
   alternates: { canonical: absoluteUrl("/what-is-managed-farmland") },
 };
 
@@ -14,14 +14,14 @@ const TEAM_DOES = [
   "Irrigation and water management suited to the Palakkad zone",
   "Common-area upkeep — roads, fencing, clubhouse, shared infrastructure",
   "Plantation management and (optionally) plot-level horticulture as a paid add-on",
-  "Coordinating harvests and keeping owners updated",
+  "Coordinating harvests and keeping co-farmers updated",
 ];
 
 const YOU_EXPERIENCE = [
-  "Clear, registered ownership of a demarcated plot in your name",
+  "Clean-title, registered ownership of a demarcated plot in your name",
   "Land that stays productive without you living on-site",
-  "A weekend retreat and a tangible, appreciating asset",
-  "The produce and the lifestyle — without the daily labour",
+  "A peaceful weekend retreat and a tangible, appreciating asset",
+  "Organic living, produce, and a vacation-home feeling — without the daily labour",
 ];
 
 const NOT_SUITABLE = [
@@ -48,14 +48,17 @@ export default function WhatIsManagedFarmlandPage() {
       <section className="space-y-4 leading-relaxed text-brand-800">
         <p>
           Owning farmland used to mean either living on it or watching it sit idle. Managed farmland
-          removes that trade-off. You buy a clearly demarcated, registered plot of agricultural
-          land, and an on-ground team handles the cultivation and upkeep on your behalf — so the
-          land stays alive and productive whether you visit every weekend or once a year.
+          removes that trade-off. You register as a co-farmer with a clearly demarcated, registered
+          plot of agricultural land, and an on-ground team handles the cultivation and upkeep on your
+          behalf — so the land stays alive and productive whether you visit every weekend or once a
+          year.
         </p>
         <p>
           It's a model built for people whose time and home are elsewhere — busy professionals, NRIs
           working in the Gulf, families who want a productive legacy — but who still want the
-          grounding, the produce, and the long-term value of real agricultural land.
+          grounding, the produce, peaceful living, and the long-term value of real agricultural land.
+          The aim is simple: investment growth with investment security, supported by clean titles
+          and a trusted developer you can speak to directly.
         </p>
       </section>
 
@@ -94,8 +97,8 @@ export default function WhatIsManagedFarmlandPage() {
           Who managed farmland is honestly not for
         </h2>
         <p className="mt-1 text-sm text-amber-800">
-          We'd rather you walk away informed than buy something that doesn't fit. This may not be
-          right for you if:
+          We'd rather you walk away informed than register for something that doesn't fit. This may
+          not be right for you if:
         </p>
         <ul className="mt-3 space-y-2 text-sm text-amber-900">
           {NOT_SUITABLE.map((item) => (

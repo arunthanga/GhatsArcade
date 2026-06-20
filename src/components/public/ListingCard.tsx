@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { formatAcres, formatInr } from "@/lib/format";
+import { SaveListingButton } from "./SaveListingButton";
 
 export type ListingCardData = {
   slug: string;
@@ -33,6 +34,9 @@ export function ListingCard({ listing }: { listing: ListingCardData }) {
             Under offer
           </span>
         ) : null}
+      </div>
+      <div className="mt-3">
+        <SaveListingButton listing={listing} />
       </div>
     </article>
   );

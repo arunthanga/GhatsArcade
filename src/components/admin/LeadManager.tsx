@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CONTACT_METHODS, LEAD_STATUSES } from "@/types";
+import { BUYER_TYPE_LABELS, CONTACT_METHODS, LEAD_STATUSES, type BuyerType } from "@/types";
+import { LeadStatusBadge } from "./LeadStatusBadge";
 
 export type AdminLeadNote = {
   id: string;
@@ -98,7 +99,7 @@ export function LeadManager({ initialLeads }: { initialLeads: AdminLeadRow[] }) 
             <p>
               <strong>{LEAD_TYPE_LABEL[lead.leadType] ?? lead.leadType}</strong>
               {" - "}
-              {lead.buyerType}
+              {BUYER_TYPE_LABELS[lead.buyerType as BuyerType] ?? lead.buyerType}
               {lead.email ? ` - ${lead.email}` : ""}
               {lead.sourceTitle ? ` - re: ${lead.sourceTitle}` : ""}
             </p>
@@ -109,6 +110,8 @@ export function LeadManager({ initialLeads }: { initialLeads: AdminLeadRow[] }) 
                 {lead.preferredDate ? `Preferred visit: ${lead.preferredDate}.` : ""}
               </p>
             ) : null}
+
+            <LeadStatusBadge status={lead.status} />
 
             <label>
               Status

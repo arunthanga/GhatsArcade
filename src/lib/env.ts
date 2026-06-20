@@ -20,6 +20,10 @@ const serverSchema = z.object({
   MAX_IMAGE_UPLOAD_MB: z.coerce.number().int().positive().default(15),
   MAX_PDF_UPLOAD_MB: z.coerce.number().int().positive().default(25),
   MAX_VIDEO_UPLOAD_MB: z.coerce.number().int().positive().default(200),
+  // Transactional email (Resend). Optional: when RESEND_API_KEY is unset, the mailer
+  // no-ops so local/dev and tests never attempt to send.
+  RESEND_API_KEY: z.string().optional(),
+  RESEND_FROM_EMAIL: z.string().default("Ghats Arcade <onboarding@resend.dev>"),
 });
 
 // Treat an empty string env var as "unset" so `NEXT_PUBLIC_OFFICE_LAT=""` doesn't coerce to 0.

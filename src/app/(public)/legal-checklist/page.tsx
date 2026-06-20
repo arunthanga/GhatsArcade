@@ -8,14 +8,14 @@ import { absoluteUrl } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "Legal Checklist & Due Diligence",
   description:
-    "The legal due diligence we complete on every project — title history, encumbrance, boundary, survey, road access, and classification — plus the full registration process.",
+    "Clean titles and legal due diligence for farmland buyers — title history, encumbrance, boundary, survey, road access, classification, and registration process.",
   alternates: { canonical: absoluteUrl("/legal-checklist") },
 };
 
 const CHECKS: { title: string; body: string }[] = [
   {
-    title: "Title history",
-    body: "We trace the chain of ownership to confirm the seller has a clear, marketable title with no breaks or disputes in the record.",
+    title: "Clean title history",
+    body: "We trace the chain of ownership to support clean titles and confirm the seller has a clear, marketable title with no breaks or disputes in the record.",
   },
   {
     title: "Encumbrance certificate",
@@ -23,7 +23,7 @@ const CHECKS: { title: string; body: string }[] = [
   },
   {
     title: "Boundary & survey",
-    body: "Survey numbers and physical boundaries are verified against revenue records so the plot you buy is exactly the plot on paper.",
+    body: "Survey numbers and physical boundaries are verified against revenue records so the plot you register is exactly the plot on paper.",
   },
   {
     title: "Road access",
@@ -31,7 +31,7 @@ const CHECKS: { title: string; body: string }[] = [
   },
   {
     title: "Land classification",
-    body: "We review the revenue classification of the land so you know precisely what you're buying and what is (and isn't) permitted on it.",
+    body: "We review the revenue classification of the land so you know precisely what you're registering for and what is (and isn't) permitted on it.",
   },
 ];
 
@@ -46,8 +46,9 @@ export default function LegalChecklistPage() {
         </span>
         <h1 className="mt-3 text-3xl font-semibold text-brand-900">Legal checklist</h1>
         <p className="mt-2 text-lg text-brand-600">
-          The horror stories about buying land in India are almost always about skipped due
-          diligence. Here's exactly what we verify before a project ever goes live.
+          The horror stories about registering land in India are almost always about skipped due
+          diligence. Here's exactly what we verify before a project ever goes live, so investment
+          security begins with documents, not promises.
         </p>
       </header>
 
@@ -62,8 +63,9 @@ export default function LegalChecklistPage() {
 
       <p className="mt-6 text-sm text-brand-600">
         Each project page carries its own legal checklist section documenting what was verified for
-        that specific land. We encourage every buyer — especially NRIs — to review the documents and
-        take independent legal advice before committing.
+        that specific land. We encourage every prospective buyer — especially NRIs — to review the documents and
+        take independent legal advice before committing. That is what a trusted developer should make
+        easy, not avoid.
       </p>
 
       <div className="mt-12">

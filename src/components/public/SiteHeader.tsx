@@ -8,6 +8,7 @@ export async function SiteHeader() {
     { href: "/", label: t("nav.home") },
     { href: "/projects", label: t("nav.projects") },
     { href: "/listings", label: t("nav.listings") },
+    { href: "/saved", label: t("nav.saved") },
     { href: "/events", label: t("nav.events") },
     { href: "/about", label: t("nav.about") },
     { href: "/contact", label: t("nav.contact") },

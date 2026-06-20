@@ -7,11 +7,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(absoluteUrl("/")),
   title: {
-    default: "Ghats Arcade - Tranquility meets high-yields",
+    default: "Ghats Arcade — A farmland for your family",
     template: "%s | Ghats Arcade",
   },
   description:
-    "Managed farmland and agricultural land investment opportunities in Kerala and the Kerala-Tamil Nadu border region.",
+    "Managed farmland for families and co-farmers in Kerala and the Kerala–Tamil Nadu border region — clean titles, trusted developer guidance, organic living, peaceful weekend homes, and long-term land growth.",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

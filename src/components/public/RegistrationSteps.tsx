@@ -6,7 +6,7 @@ const STEPS: { title: string; detail: string }[] = [
   {
     title: "KYC & eligibility",
     detail:
-      "Share your ID and address proof. We confirm eligibility for your buyer type (resident, NRI, or OCI).",
+      "Share your ID and address proof. We confirm buyer eligibility (resident, NRI, or OCI) before registration.",
   },
   {
     title: "Booking",
@@ -28,7 +28,7 @@ const STEPS: { title: string; detail: string }[] = [
   },
   {
     title: "Ownership",
-    detail: "You receive the registered deed and join the managed-farmland community.",
+    detail: "You receive the registered deed and become the registered owner of your plot.",
   },
 ];
 

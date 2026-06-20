@@ -66,6 +66,16 @@ describe("organization/website JSON-LD", () => {
     expect(organizationJsonLd()["@type"]).toBe("Organization");
     expect(websiteJsonLd()["@type"]).toBe("WebSite");
   });
+
+  it("includes the owner contact details", () => {
+    const org = organizationJsonLd() as {
+      founder: { name: string };
+      contactPoint: { email: string; telephone: string };
+    };
+    expect(org.founder.name).toBe("Arun T.");
+    expect(org.contactPoint.email).toBe("mailarunthangavel@gmail.com");
+    expect(org.contactPoint.telephone).toBe("+919901955667");
+  });
 });
 
 describe("faqPageJsonLd", () => {

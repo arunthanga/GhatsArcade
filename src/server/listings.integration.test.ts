@@ -60,10 +60,46 @@ describe("createListing", () => {
   });
 
   it("generates unique slugs for duplicate titles", async () => {
-    const first = await createListing({ actorRole: "OWNER", createdById: ownerId, data: baseData });
-    const second = await createListing({ actorRole: "OWNER", createdById: ownerId, data: baseData });
+    const first = await createListing({
+      actorRole: "OWNER",
+      createdById: ownerId,
+      data: baseData,
+    });
+    const second = await createListing({
+      actorRole: "OWNER",
+      createdById: ownerId,
+      data: baseData,
+    });
     expect(first.slug).toBe("5-acre-cardamom-estate");
     expect(second.slug).toBe("5-acre-cardamom-estate-2");
+  });
+
+  // Collision strategy: identical titles must append -2, -3, ... and never throw a
+  // Prisma unique-constraint error on the `slug` column.
+  it("appends an incrementing suffix for repeated title collisions", async () => {
+    const titleData = { ...baseData, title: "Wayanad Farm" };
+    const a = await createListing({
+      actorRole: "OWNER",
+      createdById: ownerId,
+      data: titleData,
+    });
+    const b = await createListing({
+      actorRole: "OWNER",
+      createdById: ownerId,
+      data: titleData,
+    });
+    const c = await createListing({
+      actorRole: "OWNER",
+      createdById: ownerId,
+      data: titleData,
+    });
+
+    expect(a.slug).toBe("wayanad-farm");
+    expect(b.slug).toBe("wayanad-farm-2");
+    expect(c.slug).toBe("wayanad-farm-3");
+
+    const slugs = await prisma.listing.findMany({ select: { slug: true } });
+    expect(new Set(slugs.map((s) => s.slug)).size).toBe(3);
   });
 });
 

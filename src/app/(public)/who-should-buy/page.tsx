@@ -3,20 +3,20 @@ import Link from "next/link";
 import { absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Who Should Buy Managed Farmland?",
+  title: "Who Becomes a Co-farmer?",
   description:
-    "Six kinds of people who tend to thrive as managed-farmland owners — from Gulf NRIs to legacy-minded families. See which one sounds like you.",
+    "Six kinds of families who tend to thrive as managed-farmland co-farmers — from Gulf NRIs to legacy-minded parents. See which one sounds like you.",
   alternates: { canonical: absoluteUrl("/who-should-buy") },
 };
 
 const PROFILES: { title: string; body: string }[] = [
   {
-    title: "The Gulf NRI",
+    title: "The Gulf NRI co-farmer",
     body: "You've built savings abroad and want to put down roots back home — a real, productive asset that someone trustworthy looks after while you're away. Farmland gives you that anchor without needing you on the ground.",
   },
   {
     title: "The diversifying professional",
-    body: "Your money is in equities, mutual funds, and maybe an apartment. You want something tangible and uncorrelated that balances the volatility — land you can stand on and pass down.",
+    body: "Your money is in equities, mutual funds, and maybe an apartment. You want something tangible and uncorrelated that balances the volatility — land your family can stand on and pass down.",
   },
   {
     title: "The legacy-minded parent",
@@ -27,11 +27,11 @@ const PROFILES: { title: string; body: string }[] = [
     body: "You want a low-volatility, real asset and a peaceful weekend retreat in the hills — the grounding of farmland without the labour of farming it yourself.",
   },
   {
-    title: "The wellness-conscious buyer",
+    title: "The wellness-conscious family",
     body: "You care where your food comes from. Owning a managed plot means produce you can trust and a tangible connection to the land — on your terms, on your schedule.",
   },
   {
-    title: "The cautious first-time land buyer",
+    title: "The cautious first-time co-farmer",
     body: "You like the idea of land but you've read the horror stories — unclear titles, encroachment, paperwork you don't understand. You want the upside with the due diligence already done and documented.",
   },
 ];
@@ -41,14 +41,14 @@ export default function WhoShouldBuyPage() {
     <main className="mx-auto max-w-3xl px-4 py-12">
       <header className="mb-10">
         <span className="inline-block rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-700">
-          Is this you?
+          Is this your family?
         </span>
         <h1 className="mt-3 text-3xl font-semibold text-brand-900">
-          Who should buy managed farmland?
+          Who becomes a co-farmer?
         </h1>
         <p className="mt-2 text-lg text-brand-600">
-          Our owners don't fit one mould — but most see themselves in one of these. Read on and see
-          which one feels like you.
+          Our co-farmers don't fit one mould — but most see themselves in one of these. Read on and
+          see which one feels like you.
         </p>
       </header>
 

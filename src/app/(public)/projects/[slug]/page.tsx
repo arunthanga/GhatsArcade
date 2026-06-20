@@ -8,6 +8,7 @@ import { PlotHoldForm } from "@/components/public/PlotHoldForm";
 import { LocationMap } from "@/components/public/LocationMap";
 import { RegistrationSteps } from "@/components/public/RegistrationSteps";
 import { StickyProjectCta } from "@/components/public/StickyProjectCta";
+import { TrustProofStrip } from "@/components/public/TrustProofStrip";
 import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { publicEnv } from "@/lib/env";
 import { formatAcres, formatInr } from "@/lib/format";
@@ -110,6 +111,8 @@ export default async function ProjectDetailPage({
           className="mb-8 h-72 w-full rounded-xl object-cover"
         />
       ) : null}
+
+      <TrustProofStrip className="mb-10 rounded-xl border border-brand-100" compact />
 
       {/* About (rich text — sanitized on write) */}
       <section className="mb-10">

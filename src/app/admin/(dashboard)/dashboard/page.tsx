@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LeadStatusBadge } from "@/components/admin/LeadStatusBadge";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/server/session";
 
@@ -19,27 +20,41 @@ function MetricCard({ label, value, href }: { label: string; value: number; href
 export default async function AdminDashboardPage() {
   const user = await requireUser();
 
-  const [projects, listings, blogPosts, leadMagnets, newLeads, totalLeads, recentLeads] =
-    await Promise.all([
-      prisma.project.count(),
-      prisma.listing.count(),
-      prisma.blogPost.count(),
-      prisma.leadMagnetAsset.count(),
-      prisma.lead.count({ where: { status: "new" } }),
-      prisma.lead.count(),
-      prisma.lead.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 5,
-        select: {
-          id: true,
-          name: true,
-          phone: true,
-          leadType: true,
-          status: true,
-          createdAt: true,
-        },
-      }),
-    ]);
+  const [
+    leadsByStatus,
+    publishedListings,
+    publishedBlogPosts,
+    projects,
+    totalListings,
+    leadMagnets,
+    totalLeads,
+    recentLeads,
+  ] = await Promise.all([
+    prisma.lead.groupBy({ by: ["status"], _count: { _all: true } }),
+    prisma.listing.count({ where: { status: "published" } }),
+    prisma.blogPost.count({ where: { status: "published" } }),
+    prisma.project.count(),
+    prisma.listing.count(),
+    prisma.leadMagnetAsset.count(),
+    prisma.lead.count(),
+    prisma.lead.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        leadType: true,
+        status: true,
+        createdAt: true,
+      },
+    }),
+  ]);
+
+  const leadCountByStatus = (status: string) =>
+    leadsByStatus.find((row) => row.status === status)?._count._all ?? 0;
+  const newLeads = leadCountByStatus("new");
+  const negotiatingLeads = leadCountByStatus("negotiating");
 
   return (
     <div className="space-y-8">
@@ -51,11 +66,16 @@ export default async function AdminDashboardPage() {
       </div>
 
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <MetricCard label="Published listings" value={publishedListings} href="/admin/listings" />
         <MetricCard label="New leads" value={newLeads} href="/admin/leads" />
+        <MetricCard label="Leads in negotiation" value={negotiatingLeads} href="/admin/leads" />
+        <MetricCard label="Blog posts live" value={publishedBlogPosts} href="/admin/blog" />
+      </section>
+
+      <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <MetricCard label="Total leads" value={totalLeads} href="/admin/leads" />
         <MetricCard label="Projects" value={projects} href="/admin/projects" />
-        <MetricCard label="Listings" value={listings} href="/admin/listings" />
-        <MetricCard label="Blog posts" value={blogPosts} href="/admin/blog" />
+        <MetricCard label="All listings" value={totalListings} href="/admin/listings" />
         <MetricCard label="Lead magnets" value={leadMagnets} href="/admin/lead-magnets" />
       </section>
 
@@ -74,9 +94,7 @@ export default async function AdminDashboardPage() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="rounded-full bg-slate-700 px-2.5 py-0.5 text-xs text-slate-200">
-                    {lead.status.replace(/_/g, " ")}
-                  </span>
+                  <LeadStatusBadge status={lead.status} />
                   <p className="mt-1 text-xs text-slate-500">
                     {lead.createdAt.toLocaleDateString("en-IN")}
                   </p>

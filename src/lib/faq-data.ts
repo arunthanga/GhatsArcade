@@ -18,7 +18,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Can I build a house or farmhouse on my plot?",
     answer:
-      "These are agricultural plots. Construction is governed by Kerala's land-use and panchayat rules, which generally restrict permanent structures on agricultural land. We never promise construction approvals — please see our agricultural-land construction disclaimer and verify independently before buying.",
+      "These are agricultural plots. Construction is governed by Kerala's land-use and panchayat rules, which generally restrict permanent structures on agricultural land. We never promise construction approvals — please see our agricultural-land construction disclaimer and verify independently before registering.",
   },
   {
     question: "Who is managed farmland NOT suitable for?",
@@ -28,7 +28,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Can I sell the land in the future? Will Ghats Arcade help?",
     answer:
-      "Yes — you can resell at any time as the registered owner. We offer resale and exit facilitation support to help connect you with interested buyers, though we cannot guarantee a sale price or timeline.",
+      "Yes — you can resell at any time as the registered owner. We offer resale and exit facilitation support to help connect you with prospective buyers, though we cannot guarantee a sale price or timeline.",
   },
   {
     question: "How does Ghats Arcade ensure clear titles and approvals?",
@@ -48,12 +48,12 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Can I visit my farm anytime?",
     answer:
-      "Yes. It's your land. We also run scheduled site visits and farm-visit days to make travel easy, especially for NRI and out-of-state owners — see our Events page or schedule a visit directly.",
+      "Yes. It's your land. We also run scheduled site visits and farm-visit days to make travel easy, especially for NRI and out-of-state co-farmers — see our Events page or schedule a visit directly.",
   },
   {
-    question: "Who can buy farmland? Are there restrictions for NRIs?",
+    question: "Who can own farmland here? Are there restrictions for NRIs?",
     answer:
-      "Resident Indians can buy agricultural land subject to state rules. Acquisition of agricultural land by NRIs/OCIs/foreign citizens is restricted under FEMA and may require specific eligibility or RBI approval. Please read our NRI/FEMA eligibility disclaimer and take independent legal advice for your situation.",
+      "Resident Indians can own agricultural land subject to state rules. Acquisition of agricultural land by NRIs/OCIs/foreign citizens is restricted under FEMA and may require specific eligibility or RBI approval. Please read our NRI/FEMA eligibility disclaimer and take independent legal advice for your situation.",
   },
   {
     question: "What happens to maintenance if I don't use the land for years?",
@@ -63,6 +63,6 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "What is the registration process step-by-step?",
     answer:
-      "KYC and eligibility check → booking your plot with an advance → choosing a payment option → sale-deed preparation → registration at the sub-registrar's office → you receive the registered deed and ownership. Each project page lays this out in a 'How to register' section.",
+      "KYC and buyer eligibility check → booking your plot with an advance → choosing a payment option → sale-deed preparation → registration at the sub-registrar's office → you receive the registered deed and become the registered owner. Each project page lays this out in a 'How to register' section.",
   },
 ];

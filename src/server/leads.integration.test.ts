@@ -35,6 +35,7 @@ describe("captureLead", () => {
   it("creates a lead with status new (no source listing)", async () => {
     const lead = await captureLead(inquiry);
     expect(lead.status).toBe("new");
+    expect(lead.phone).toBe("+919876543210");
     expect(lead.sourceListingId).toBeNull();
     expect(lead.email).toBeNull();
   });
@@ -61,6 +62,58 @@ describe("captureLead", () => {
   it("stores a null source when the listing id does not exist", async () => {
     const lead = await captureLead({ ...inquiry, sourceListingId: "missing-id" });
     expect(lead.sourceListingId).toBeNull();
+  });
+});
+
+describe("captureLead deduplication", () => {
+  it("merges a second enquiry from the same phone instead of creating a duplicate", async () => {
+    const first = await captureLead({ ...inquiry, email: "", message: "First message." });
+    const second = await captureLead({
+      ...inquiry,
+      email: "asha@example.com",
+      message: "Second message.",
+    });
+
+    expect(second.id).toBe(first.id);
+    expect(await prisma.lead.count()).toBe(1);
+    // Missing contact detail is enriched, history is appended (never overwritten).
+    expect(second.email).toBe("asha@example.com");
+    expect(second.message).toContain("First message.");
+    expect(second.message).toContain("Second message.");
+    expect(second.message).toContain("Repeat enquiry");
+  });
+
+  it("keeps separate leads for different phone numbers", async () => {
+    await captureLead(inquiry);
+    await captureLead({ ...inquiry, phone: "+919999999999" });
+    expect(await prisma.lead.count()).toBe(2);
+  });
+
+  it("deduplicates matching phone digits even when formatting differs", async () => {
+    const first = await captureLead({ ...inquiry, phone: "+91 98765 43210" });
+    const second = await captureLead({ ...inquiry, phone: "+919876543210" });
+
+    expect(second.id).toBe(first.id);
+    expect(await prisma.lead.count()).toBe(1);
+  });
+
+  it("does not clobber an existing lead's pipeline status", async () => {
+    const first = await captureLead(inquiry);
+    await updateLeadStatus({
+      actorRole: "ADMIN",
+      id: first.id,
+      status: "contacted",
+    });
+    const merged = await captureLead({ ...inquiry, message: "Following up." });
+    expect(merged.status).toBe("contacted");
+  });
+
+  it("upgrades leadType when a higher-intent capture arrives from the same phone", async () => {
+    const first = await captureLead({ ...inquiry, leadType: "callback" });
+    const second = await captureLead({ ...inquiry, leadType: "inquiry" });
+
+    expect(second.id).toBe(first.id);
+    expect(second.leadType).toBe("inquiry");
   });
 });
 

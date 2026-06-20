@@ -17,7 +17,7 @@ describe("ListingCard", () => {
     expect(screen.getByText("5 Acre Estate")).toBeInTheDocument();
     expect(screen.getByText("Idukki")).toBeInTheDocument();
     expect(screen.getByText("5 acres")).toBeInTheDocument();
-    expect(screen.getByText("Rs 75,00,000")).toBeInTheDocument();
+    expect(screen.getByText("₹75,00,000")).toBeInTheDocument();
     expect(screen.getByRole("link")).toHaveAttribute("href", "/listings/5-acre-estate");
   });
 

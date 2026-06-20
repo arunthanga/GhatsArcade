@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "The Farmlands Journal",
   description:
-    "The Farmlands Journal — guides and updates on managed farmland investing in Kerala and the Kerala-Tamil Nadu border region.",
+    "The Farmlands Journal — guides and stories for co-farmer families on managed farmland in Kerala and the Kerala–Tamil Nadu border region.",
   alternates: { canonical: absoluteUrl("/blog") },
 };
 
@@ -29,7 +29,7 @@ export default async function BlogPage() {
     <main className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="text-3xl font-semibold text-brand-900">The Farmlands Journal</h1>
       <p className="mt-2 text-brand-700">
-        Guides and updates on managed farmland investing in the Kerala-Tamil Nadu border region.
+        Guides and stories for co-farmer families on managed farmland in the Kerala–Tamil Nadu border region.
       </p>
 
       {posts.length === 0 ? (

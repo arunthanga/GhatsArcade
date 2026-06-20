@@ -1,10 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { LeadCaptureSuccess } from "@/components/public/LeadCaptureSuccess";
+import {
+  appendLeadQualification,
+  BUDGET_RANGES,
+  VISIT_READINESS,
+} from "@/lib/lead-qualification";
 
 // Block 8 — first home-page lead capture (prj.md Section 3.1): "Schedule a Visit".
-// Deliberately low-friction: Name, Phone, WhatsApp (consent pre-ticked), Project interest.
-// No email at this stage. Posts as a `site_visit_request` lead from sourcePage "/".
+// Deliberately low-friction: no email at this stage, just contact details plus
+// optional qualification signals so the CRM can prioritise serious buyers.
+// Posts as a `site_visit_request` lead from sourcePage "/".
 type HomeVisitFormProps = {
   projects: string[];
 };
@@ -14,6 +21,8 @@ const makeInitial = () => ({
   phone: "",
   whatsapp: "",
   projectInterest: "",
+  budgetRange: "",
+  visitReadiness: "",
   whatsappConsent: true,
   company: "",
 });
@@ -33,6 +42,10 @@ export function HomeVisitForm({ projects }: HomeVisitFormProps) {
         phone: form.phone,
         whatsapp: form.whatsappConsent ? form.whatsapp || form.phone : undefined,
         projectInterest: form.projectInterest || undefined,
+        message: appendLeadQualification(undefined, {
+          budgetRange: form.budgetRange,
+          visitReadiness: form.visitReadiness,
+        }),
         company: form.company,
         leadType: "site_visit_request",
         sourcePage: "/",
@@ -48,9 +61,12 @@ export function HomeVisitForm({ projects }: HomeVisitFormProps) {
 
   if (status === "success") {
     return (
-      <p data-testid="home-visit-success" className="text-brand-800">
-        Thanks — we have your details and will reach out to set up your visit.
-      </p>
+      <LeadCaptureSuccess
+        testId="home-visit-success"
+        title="Visit request received"
+        resetLabel="Send another request"
+        onReset={() => setStatus("idle")}
+      />
     );
   }
 
@@ -88,6 +104,30 @@ export function HomeVisitForm({ projects }: HomeVisitFormProps) {
         {projects.map((title) => (
           <option key={title} value={title}>
             {title}
+          </option>
+        ))}
+      </select>
+      <select
+        value={form.visitReadiness}
+        onChange={(e) => setForm({ ...form, visitReadiness: e.target.value })}
+        className={fieldClass}
+      >
+        <option value="">What would help first? (optional)</option>
+        {VISIT_READINESS.map((readiness) => (
+          <option key={readiness} value={readiness}>
+            {readiness}
+          </option>
+        ))}
+      </select>
+      <select
+        value={form.budgetRange}
+        onChange={(e) => setForm({ ...form, budgetRange: e.target.value })}
+        className={fieldClass}
+      >
+        <option value="">Budget range (optional)</option>
+        {BUDGET_RANGES.map((range) => (
+          <option key={range} value={range}>
+            {range}
           </option>
         ))}
       </select>

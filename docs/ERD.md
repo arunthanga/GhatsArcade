@@ -158,3 +158,4 @@ erDiagram
   and event descriptions are sanitised HTML, while blog bodies are rendered as plain text.
 - `HorticultureLog` is gated under the `project:manage` permission (it is a project sub-record).
 - Auth tables (`Session`, `Account`, `Verification`) follow Better Auth's expected shape.
+- **Lead phone deduplication** is enforced in application code (`captureLead` in `src/server/leads.ts`), not via a DB unique index: repeat submissions from the same normalised phone merge into the existing row (canonical storage as `+{digits}`).

@@ -2,10 +2,11 @@
 // Pure and dependency-light so the shapes are unit-tested in seo.test.ts. Pages stay thin.
 
 import { publicEnv } from "@/lib/env";
+import { SITE_OWNER } from "@/lib/site-contact";
 
 const SITE_NAME = "Ghats Arcade";
 const SITE_DESCRIPTION =
-  "Managed farmland and agricultural land investment opportunities in Kerala and the Kerala-Tamil Nadu border region.";
+  "Managed farmland for families and co-farmers in Kerala and the Kerala–Tamil Nadu border region — clean titles, trusted developer guidance, organic living, peaceful weekend homes, and long-term land growth.";
 
 // Trailing-slash-safe base URL.
 function siteUrl(): string {
@@ -101,6 +102,14 @@ export function organizationJsonLd(): Record<string, unknown> {
     name: SITE_NAME,
     description: SITE_DESCRIPTION,
     url: absoluteUrl("/"),
+    founder: { "@type": "Person", name: SITE_OWNER.name },
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: SITE_OWNER.phoneTel,
+      email: SITE_OWNER.email,
+      contactType: "customer service",
+      areaServed: "IN",
+    },
   };
 }
 

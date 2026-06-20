@@ -2,15 +2,16 @@ import { describe, expect, it } from "vitest";
 import { formatAcres, formatInr } from "./format";
 
 describe("formatInr", () => {
-  it("uses Indian digit grouping", () => {
-    expect(formatInr(7500000)).toBe("Rs 75,00,000");
-    expect(formatInr(1000)).toBe("Rs 1,000");
-    expect(formatInr(100000)).toBe("Rs 1,00,000");
+  it("uses Indian (lakh) digit grouping with a rupee symbol", () => {
+    expect(formatInr(7500000)).toBe("₹75,00,000");
+    expect(formatInr(3500000)).toBe("₹35,00,000");
+    expect(formatInr(1000)).toBe("₹1,000");
+    expect(formatInr(100000)).toBe("₹1,00,000");
   });
 
   it("rounds and handles zero", () => {
-    expect(formatInr(0)).toBe("Rs 0");
-    expect(formatInr(99.6)).toBe("Rs 100");
+    expect(formatInr(0)).toBe("₹0");
+    expect(formatInr(99.6)).toBe("₹100");
   });
 });
 

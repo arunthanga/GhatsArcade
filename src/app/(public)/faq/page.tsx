@@ -20,7 +20,7 @@ export default function FaqPage() {
       <header className="mb-8">
         <h1 className="text-3xl font-semibold text-brand-900">Frequently asked questions</h1>
         <p className="mt-2 text-brand-700">
-          The questions buyers ask us most — answered plainly. Still unsure about something? We're
+          The questions co-farmers ask us most — answered plainly. Still unsure about something? We're
           happy to talk it through.
         </p>
       </header>

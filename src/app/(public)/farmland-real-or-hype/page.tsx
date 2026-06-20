@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 const TITLE = "Farmland — Real or Hype?";
 const DESCRIPTION =
-  "Honest answers to the most common myths and objections about managed farmland investment in Kerala — title, fees, buildability, and whether it's a real investment.";
+  "Honest answers to the most common myths and objections about managed farmland in Kerala — title, fees, buildability, and whether it's the right fit for your family.";
 
 export const metadata: Metadata = {
   title: TITLE,

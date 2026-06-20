@@ -5,7 +5,7 @@ import { absoluteUrl } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "Horticulture & Plantation",
   description:
-    "The crops and trees suited to the Eruthempathy / Palakkad agroclimatic zone, a seasonal harvest calendar, and your options as an owner.",
+    "The crops and trees suited to the Eruthempathy / Palakkad agroclimatic zone, a seasonal harvest calendar, and your options as a co-farmer.",
   alternates: { canonical: absoluteUrl("/horticulture") },
 };
 
@@ -33,7 +33,7 @@ const OPTIONS: { title: string; body: string }[] = [
   },
   {
     title: "Plot-level horticulture management",
-    body: "An optional paid add-on for owners who want dedicated cultivation and care of their own plot, with produce rights.",
+    body: "An optional paid add-on for co-farmers who want dedicated cultivation and care of their own plot, with produce rights.",
   },
 ];
 
@@ -90,7 +90,7 @@ export default function HorticulturePage() {
       </section>
 
       <section className="mt-10">
-        <h2 className="text-xl font-semibold text-brand-900">Your options as an owner</h2>
+        <h2 className="text-xl font-semibold text-brand-900">Your options as a co-farmer</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {OPTIONS.map((option) => (
             <div key={option.title} className="rounded-xl border border-brand-100 bg-white p-6">

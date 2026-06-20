@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sendInquiryConfirmationEmail } from "@/lib/email";
 import { AuthorizationError } from "@/lib/errors";
 import { can } from "@/lib/roles";
 import { isLeadStatus } from "@/lib/lead-status";
@@ -23,6 +24,13 @@ export async function POST(request: Request) {
   }
 
   const lead = await captureLead(inquiry);
+
+  // Best-effort confirmation email. Awaited so serverless functions don't drop the
+  // request before it sends; failures are swallowed inside the mailer.
+  if (lead.email) {
+    await sendInquiryConfirmationEmail({ to: lead.email, name: lead.name });
+  }
+
   return NextResponse.json({ lead: { id: lead.id } }, { status: 201 });
 }
 

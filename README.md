@@ -58,22 +58,24 @@ The site's job is to showcase land listings attractively, rank well in search en
 ### Public-facing website
 - **Home page** — hero, value proposition, featured listings, trust signals
 - **Listings page** — browse/filter by location, size, price range, land type
-- **Listing detail** — photos, description, location (text), price, land classification, buyer-eligibility disclaimer, inquiry form, WhatsApp click-to-chat *(embedded map is a Phase-2 enhancement)*
-- **About** and **Contact** pages (phone, email, WhatsApp, address, hours; the Contact page shows an embedded OpenStreetMap of the office when `NEXT_PUBLIC_OFFICE_LAT`/`_LNG` are configured)
+- **Listing detail** — photos, description, location (text), price (Indian ₹ lakh formatting), land classification, buyer-eligibility disclaimer, inquiry form with a clear post-submit acknowledgement ("We'll contact you on WhatsApp within 24 hours"), WhatsApp click-to-chat with listing context pre-filled (title, acres, district, price), and a Save button for bookmarking
+- **About** and **Contact** pages — owner contact details (Arun T., email, phone), site-visit + inquiry forms, WhatsApp; the Contact page shows an embedded OpenStreetMap of the office when `NEXT_PUBLIC_OFFICE_LAT`/`_LNG` are configured
+- **Saved listings** — visitors bookmark listings in `localStorage` (no login) via `/saved`; compare 2–3 saved listings side-by-side at `/compare?ids=slug-a,slug-b`
 - **Blog / CMS** — SEO articles (investment guides, region spotlights, legal FAQs), admin-publishable
 - **Legal disclaimer** — prominent and persistent (footer + listing pages + inquiry form), covering NRI/FEMA eligibility caveats
-- **Lead capture** — inquiry forms on listings, contact page, and a general "request a callback" form
-- **WhatsApp integration** — `wa.me` click-to-chat links with pre-filled message context
-- **SEO fundamentals** — meta tags, Open Graph, `sitemap.xml`, `robots.txt`, semantic HTML, fast loads, schema.org JSON-LD (`RealEstateListing` / `Article`)
+- **Lead capture** — inquiry, site-visit, callback, and home-visit forms; all show a consistent post-submit acknowledgement ("We'll contact you on WhatsApp within 24 hours"); optional inquiry confirmation email via Resend when `RESEND_API_KEY` is set
+- **Lead deduplication** — repeat submissions from the same phone number merge into the existing CRM record (enriching contact details, appending message history, upgrading lead type when higher-intent)
+- **WhatsApp integration** — `wa.me` click-to-chat links with context-specific pre-filled messages (listing detail includes title, acreage, district, and price)
+- **SEO fundamentals** — meta tags, Open Graph, dynamic `robots.txt` (`src/app/robots.ts`), `sitemap.xml`, semantic HTML, fast loads, schema.org JSON-LD (`RealEstateListing` / `Article` / `Organization` with owner contactPoint)
 
 ### Admin / CRM backend
 - **Authentication** — email/password login for Owner and Admins
 - **Role-based access** — Owner (Super Admin) vs Admin (see [Roles & Permissions](#roles--permissions))
 - **Listings management** — CRUD with status: Draft / Published / Under Offer / Sold
-- **Lead / CRM management** — view captured leads with source, update status (New → Contacted → Negotiating → Converted/Lost), add follow-up notes, log WhatsApp/call contact attempts
+- **Lead / CRM management** — view captured leads with source, colour-coded status badges (New / Contacted / Negotiating / Converted / Lost), update status (New → Contacted → Negotiating → Converted/Lost), add follow-up notes, log WhatsApp/call contact attempts; dashboard summary cards (Published Listings / New Leads / Leads in Negotiation / Blog Posts Live)
 - **Data export** — CSV export of leads/listings, **Owner-only**
 - **Blog / CMS management** — create/edit/delete/publish posts with an editorial category, per-post SEO overrides (meta title/description, social image), cover-image upload, and auto-estimated reading time (overridable)
-- **Multilingual UI** — English (default), Tamil, and Malayalam, switchable from the header. Cookie-based (`NEXT_LOCALE`), read server-side so pages re-render in the chosen language; missing translations fall back to English per key. Currently covers UI chrome (nav/footer/CTAs) + the home hero, extensible via `src/lib/i18n/messages/`
+- **Multilingual UI** — English (default), Tamil, and Malayalam, switchable from the header. Cookie-based (`NEXT_LOCALE`), read server-side so pages re-render in the chosen language; missing translations fall back to English per key. Currently covers UI chrome (nav/footer/CTAs incl. Saved) + the home hero, extensible via `src/lib/i18n/messages/`
 - **Responsive design** — mobile, tablet, and laptop friendly: hamburger nav on mobile, horizontally scrollable data tables, and Tailwind `sm/md/lg` breakpoints throughout
 
 ---
@@ -87,7 +89,7 @@ The site's job is to showcase land listings attractively, rank well in search en
 - ~~Multi-language i18n~~ — now shipped for the UI: English (default) + Tamil & Malayalam toggle (see Features). Hindi/Arabic and full page-prose translation remain Phase 2.
 - Mobile native apps (the site is fully web-responsive — mobile, tablet, laptop)
 - Buyer-side accounts/logins (only Owner/Admin log in)
-- Automated drip-email / marketing-automation sequences (Phase 2)
+- Automated drip-email / marketing-automation sequences (Phase 2) — a single inquiry confirmation email via Resend is shipped when configured
 - Multi-tenant / multi-business support (single business only)
 
 ---
@@ -163,7 +165,7 @@ GhatsArcade/
 ├─ prisma/
 │  ├─ schema.prisma              # User, Project, Plot, Listing, Lead, BlogPost, Event, Testimonial, HorticultureLog, LeadMagnetAsset, FollowUpNote
 │  ├─ migrations/
-│  └─ seed.ts                    # seeds the single OWNER account
+│  └─ seed.ts                    # seeds the single OWNER account (see OWNER_* env vars)
 │
 ├─ public/
 │  ├─ uploads/                   # >>> ADMIN-UPLOADED MEDIA (gitignored), one folder per content type:
@@ -174,7 +176,8 @@ GhatsArcade/
 │  │  ├─ lead-magnets/           #     gated PDFs
 │  │  ├─ misc/                   #     uncategorised fallback
 │  │  └─ .gitkeep
-│  ├─ robots.txt · favicon.ico
+│  # robots.txt is generated dynamically by src/app/robots.ts (not a static file here)
+│  favicon.ico
 │
 ├─ src/
 │  ├─ app/
@@ -183,6 +186,8 @@ GhatsArcade/
 │  │  │  ├─ page.tsx             # Home — full 14-block sequence + 3 lead-capture moments
 │  │  │  ├─ projects/            # list + [slug] detail (plots-remaining, gallery, disclaimers)
 │  │  │  ├─ listings/            # list + [slug] detail
+│  │  │  ├─ saved/               # localStorage bookmarks (no login)
+│  │  │  ├─ compare/             # side-by-side comparison ?ids=slug-a,slug-b
 │  │  │  ├─ blog/                # list + [slug]
 │  │  │  ├─ events/              # list (upcoming + past) + [slug] detail
 │  │  │  ├─ farmland-real-or-hype/ # myth-busting hub (CMS category myth_busting)
@@ -193,14 +198,14 @@ GhatsArcade/
 │  │  │  ├─ horticulture/ · in-and-around/ # region pages
 │  │  │  ├─ gallery/page.tsx     # tag-filtered photo gallery (project + event photos)
 │  │  │  ├─ faq/page.tsx         # 12-question FAQ (FAQPage JSON-LD)
-│  │  │  ├─ about/ · contact/    # contact has the site-visit + message forms (#site-visit anchor)
+│  │  │  ├─ about/ · contact/    # owner contact card + site-visit + message forms (#site-visit anchor)
 │  │  │
 │  │  ├─ admin/                  # the dark "Control Room" — separate from the public site
 │  │  │  ├─ page.tsx             # /admin → redirect to dashboard
 │  │  │  ├─ login/page.tsx       # standalone staff sign-in
 │  │  │  └─ (dashboard)/         # session/role-guarded group (sidebar shell)
 │  │  │     ├─ layout.tsx        # guard + AdminNav + sign-out
-│  │  │     ├─ dashboard/        # overview: live metrics + latest leads
+│  │  │     ├─ dashboard/        # summary cards + latest leads
 │  │  │     ├─ projects/         # list + [id] details/media/plots editor
 │  │  │     ├─ horticulture/     # internal plantation/maintenance/harvest log
 │  │  │     ├─ listings/ · leads/ · blog/ · events/ · testimonials/ · lead-magnets/
@@ -219,12 +224,12 @@ GhatsArcade/
 │  │  │  ├─ lead-magnets/        # admin CRUD + public [id]/download (gated capture)
 │  │  │  ├─ admins/ · export/    # Owner-only
 │  │  │
-│  │  ├─ sitemap.ts · layout.tsx · globals.css
+│  │  ├─ sitemap.ts · robots.ts · layout.tsx · globals.css
 │  │
 │  ├─ components/
-│  │  ├─ public/                 # Hero/cards, forms (Inquiry, PlotHold, SiteVisit, LeadMagnetGate), disclaimers, WhatsApp, HeaderNav
-│  │  ├─ admin/                  # managers (Project/Plot/Listing/Blog/Lead/LeadMagnet/Horticulture/Admin),
-│  │  │                          #   AdminNav, ProjectEditor, MediaUploader, GalleryUploader
+│  │  ├─ public/                 # Hero/cards, forms (Inquiry, PlotHold, SiteVisit, LeadMagnetGate),
+│  │  │                          #   LeadCaptureSuccess, OwnerContactCard, SaveListingButton, disclaimers, WhatsApp, HeaderNav
+│  │  ├─ admin/                  # managers + LeadStatusBadge, AdminNav, ProjectEditor, MediaUploader, GalleryUploader
 │  │  ├─ i18n/                   # LocaleProvider (client context) + LanguageSwitcher
 │  │  └─ seo/                    # JsonLd
 │  │
@@ -235,7 +240,8 @@ GhatsArcade/
 │  │  ├─ sanitize.ts             # sanitize-html for rich-text on write
 │  │  ├─ i18n/                   # locale config + en/ta/ml message catalogues, translate(), server getTranslations()
 │  │  ├─ auth.ts · auth-client.ts · db.ts · errors.ts
-│  │  ├─ csv.ts · seo.ts · slug.ts · format.ts · whatsapp.ts
+│  │  ├─ csv.ts · seo.ts · slug.ts · format.ts · whatsapp.ts · email.ts
+│  │  ├─ site-contact.ts · saved-listings.ts
 │  │  ├─ *-status.ts             # pure status rules: listing/project/plot/lead/blog
 │  │  └─ validation/             # zod schemas for forms/inputs/uploads
 │  │
@@ -337,8 +343,13 @@ DATABASE_URL="file:./dev.db"
 BETTER_AUTH_SECRET="<random-secret>"
 BETTER_AUTH_URL="http://localhost:3000"
 
+# Owner account (used by prisma db seed)
+OWNER_EMAIL="mailarunthangavel@gmail.com"
+OWNER_NAME="Arun T."
+OWNER_PASSWORD="<choose-a-strong-password>"
+
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"
-NEXT_PUBLIC_WHATSAPP_NUMBER="<country-code-and-number>"
+NEXT_PUBLIC_WHATSAPP_NUMBER="919901955667"
 
 # Contact-page map (optional — set both lat & lng to show it; address line is optional)
 NEXT_PUBLIC_OFFICE_LAT="10.7867"
@@ -353,6 +364,10 @@ UPLOAD_PUBLIC_BASE="/uploads"
 MAX_IMAGE_UPLOAD_MB="15"
 MAX_PDF_UPLOAD_MB="25"
 MAX_VIDEO_UPLOAD_MB="200"
+
+# Transactional email (optional — inquiry confirmation via Resend)
+RESEND_API_KEY=""
+RESEND_FROM_EMAIL="Ghats Arcade <onboarding@resend.dev>"
 ```
 
 > **Admin is private and separate.** The public website has no login link or auth surface.
@@ -438,7 +453,7 @@ Full v4 model (see [prj.md](prj.md) Section 8 and the ERD in [docs/ERD.md](docs/
 - **Project** *(parent land parcel → many Plots)* — `id, title, slug, tagline, theme, description (rich text), location_*, latitude?, longitude?, kerala_tn_border, location_distances (JSON), total_area_acres, land_revenue_classification (nilam | purayidam | converted), road_status/spec, clubhouse/water/plantation descriptions, maintenance_fee_*, common_asset_handover_status, road_handover_to_panchayat_status, nearby_attractions (JSON), legal_checklist_summary, status (draft | published | sold_out | coming_soon), cover_photo_url, video_embed_url, photos[], created_by, ...`
 - **Plot** *(sub-unit of a Project)* — `id, project_id, plot_number, size_cents, price_per_cent, total_price, position_notes, status (available | reserved | sold)`
 - **Listing** *(standalone)* — `id, title, slug, description, district, nearest_town, kerala_tn_border, land_type, land_revenue_classification, size_acres, price, status (draft | published | under_offer | sold), photos[], created_by, ...`
-- **Lead** — `id, name, email, phone, whatsapp, buyer_type (resident_indian | nri | oci | foreign_citizen), lead_type (inquiry | site_visit_request | callback | lead_magnet_download), message, status (new | contacted | site_visit_scheduled | negotiating | converted | lost), is_cofarmer, preferred_date, project_interest, plot_interest, source_page, source_listing?, source_project?, source_blog_post?, follow_up_notes[], ...`
+- **Lead** — `id, name, email, phone, whatsapp, buyer_type (resident_indian | nri | oci | foreign_citizen), lead_type (inquiry | site_visit_request | callback | lead_magnet_download), message, status (new | contacted | site_visit_scheduled | negotiating | converted | lost), is_cofarmer, preferred_date, project_interest, plot_interest, source_page, source_listing?, source_project?, source_blog_post?, follow_up_notes[], ...` *(repeat captures from the same normalised phone merge in app code — see `captureLead`)*
 - **BlogPost** — `id, title, slug, body (plain text, line breaks preserved on render), cover_image, category (legal_guides | investment | lifestyle | plantation_farming | location_spotlight | nri_corner | community_stories | myth_busting | farming_guides), meta_title, meta_description, og_image_url, estimated_read_minutes, status (draft | published), author, published_at, ...`
 - **Event** — `id, title, slug, description (rich text), event_date, theme, status (upcoming | past), project_id?, photos[], created_by, ...`
 - **Testimonial** — `id, buyer_name, buyer_city, buyer_type (resident_indian | nri | oci), quote_text, video_url?, display_order, is_active, project_id?, created_by, ...`
@@ -473,8 +488,9 @@ The final application code is intended to remain **private/proprietary**. Techno
 
 - **WYSIWYG rich-text editor** (e.g. TipTap) to replace the raw-HTML textarea for project/event descriptions
 - WhatsApp Business API (open-source gateway or official Cloud API free tier) for templated/automated follow-ups
-- Automated email drip sequences for lead nurturing
-- Multi-language support — Malayalam & Tamil UI toggles **shipped** (English default, cookie-based, per-key English fallback). Remaining: Hindi/Arabic, translating the rest of the page prose (currently English-fallback), and optional URL-prefixed locales (`/ta`, `/ml`) for stronger multilingual SEO
+- Automated email drip sequences for lead nurturing (single inquiry confirmation email via Resend is shipped when configured)
+- Multi-language support — Malayalam & Tamil UI toggles **shipped** (English default, cookie-based, per-key English fallback). Remaining: Hindi/Arabic, translating the rest of the page prose, and optional URL-prefixed locales (`/ta`, `/ml`) for stronger multilingual SEO
+- ~~Saved listings / comparison~~ — **shipped** (`/saved` bookmarks via localStorage; `/compare?ids=` side-by-side table)
 - Multiple Admins / regional agents with finer-grained permissions
 - Playwright E2E test suite
 - Possible company/share-based investment structure for NRI buyers (pending legal advice)

@@ -99,12 +99,12 @@ export async function SiteFooter() {
                 </li>
                 <li>
                   <Link href="/why-invest" className="hover:text-brand-900">
-                    Why Invest in Farmland?
+                    Why Farmland for Your Family?
                   </Link>
                 </li>
                 <li>
                   <Link href="/who-should-buy" className="hover:text-brand-900">
-                    Who Should Buy?
+                    Who Becomes a Co-farmer?
                   </Link>
                 </li>
                 <li>

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { LeadCaptureSuccess } from "@/components/public/LeadCaptureSuccess";
+import { appendLeadQualification, VISIT_READINESS } from "@/lib/lead-qualification";
 
 // Low-friction "request a callback" form: Name + Phone only (prj.md Section 3.4 — the
 // "What is Managed Farmland?" page ends with a 10-minute-call CTA). Posts as a `callback`
@@ -12,7 +14,7 @@ type CallbackFormProps = {
   sourcePage?: string;
 };
 
-const initial = { name: "", phone: "", company: "" };
+const initial = { name: "", phone: "", visitReadiness: "", company: "" };
 
 export function CallbackForm({
   heading = "Prefer to talk it through?",
@@ -32,6 +34,7 @@ export function CallbackForm({
       body: JSON.stringify({
         name: form.name,
         phone: form.phone,
+        message: appendLeadQualification(undefined, { visitReadiness: form.visitReadiness }),
         company: form.company,
         leadType: "callback",
         ...(sourcePage ? { sourcePage } : {}),
@@ -47,9 +50,12 @@ export function CallbackForm({
 
   if (status === "success") {
     return (
-      <p data-testid="callback-success" className="text-brand-800">
-        Thanks — we have your number and will call you back shortly.
-      </p>
+      <LeadCaptureSuccess
+        testId="callback-success"
+        title="Callback request received"
+        resetLabel="Send another request"
+        onReset={() => setStatus("idle")}
+      />
     );
   }
 
@@ -74,6 +80,18 @@ export function CallbackForm({
         required
         className={fieldClass}
       />
+      <select
+        value={form.visitReadiness}
+        onChange={(e) => setForm({ ...form, visitReadiness: e.target.value })}
+        className={fieldClass}
+      >
+        <option value="">What should we help with? (optional)</option>
+        {VISIT_READINESS.map((readiness) => (
+          <option key={readiness} value={readiness}>
+            {readiness}
+          </option>
+        ))}
+      </select>
       {/* Honeypot */}
       <input
         type="text"
