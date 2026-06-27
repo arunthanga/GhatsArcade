@@ -16,4 +16,12 @@ describe("LeadStatusBadge", () => {
     const badge = screen.getByTestId("lead-status-badge");
     expect(badge).toHaveTextContent("some new state");
   });
+
+  it("renders the site-visit-requested stage distinctly", () => {
+    render(<LeadStatusBadge status="site_visit_requested" />);
+    const badge = screen.getByTestId("lead-status-badge");
+    expect(badge).toHaveTextContent("Site visit requested");
+    expect(badge).toHaveAttribute("data-status", "site_visit_requested");
+    expect(badge.className).toContain("purple");
+  });
 });

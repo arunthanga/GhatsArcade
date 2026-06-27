@@ -3,6 +3,10 @@
 const STATUS_STYLES: Record<string, { className: string; label: string }> = {
   new: { className: "bg-blue-100 text-blue-800", label: "New" },
   contacted: { className: "bg-yellow-100 text-yellow-800", label: "Contacted" },
+  site_visit_requested: {
+    className: "bg-purple-100 text-purple-800",
+    label: "Site visit requested",
+  },
   site_visit_scheduled: {
     className: "bg-indigo-100 text-indigo-800",
     label: "Site visit scheduled",

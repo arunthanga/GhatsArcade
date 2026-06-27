@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { type GalleryImage, GalleryUploader } from "@/components/admin/GalleryUploader";
 import { MediaUploader } from "@/components/admin/MediaUploader";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { LAND_REVENUE_CLASSIFICATIONS, PROJECT_PHOTO_TAGS, ROAD_STATUSES } from "@/types";
 
 export type ProjectEditorInitial = {
@@ -123,16 +124,14 @@ export function ProjectEditor({
           Tagline
           <input className={input} value={form.tagline} onChange={(e) => set("tagline", e.target.value)} />
         </label>
-        <label className={`${labelClass} md:col-span-2`}>
-          Description (sanitised HTML)
-          <textarea
-            className={input}
-            rows={6}
+        <div className="md:col-span-2">
+          <RichTextEditor
+            label="Description"
             value={form.description}
-            onChange={(e) => set("description", e.target.value)}
+            onChange={(value) => set("description", value)}
             required
           />
-        </label>
+        </div>
         <label className={labelClass}>
           District
           <input

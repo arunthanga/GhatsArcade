@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { sanitizeRichText } from "@/lib/sanitize";
 import { absoluteUrl } from "@/lib/seo";
 import { getPublicEventBySlug } from "@/server/events";
 
@@ -72,11 +73,11 @@ export default async function EventDetailPage({
         ) : null}
       </header>
 
-      {/* Description (rich text — sanitized on write) */}
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitised in src/lib/sanitize.ts before persistence */}
+      {/* Description (rich text — sanitized on write, re-sanitized on render for defense-in-depth) */}
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitised via sanitizeRichText before render */}
       <div
         className="prose prose-brand max-w-none leading-relaxed text-brand-800"
-        dangerouslySetInnerHTML={{ __html: event.description }}
+        dangerouslySetInnerHTML={{ __html: sanitizeRichText(event.description) }}
       />
 
       {event.photos.length > 0 ? (

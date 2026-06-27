@@ -2,7 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { BUYER_TYPE_LABELS, CONTACT_METHODS, LEAD_STATUSES, type BuyerType } from "@/types";
+import { buildWhatsAppLink } from "@/lib/whatsapp";
+import {
+  BUYER_TYPE_LABELS,
+  CONTACT_METHODS,
+  LEAD_STATUSES,
+  PREFERRED_CALL_SLOT_LABELS,
+  type BuyerType,
+  type PreferredCallSlot,
+} from "@/types";
 import { LeadStatusBadge } from "./LeadStatusBadge";
 
 export type AdminLeadNote = {
@@ -25,6 +33,8 @@ export type AdminLeadRow = {
   projectInterest: string | null;
   plotInterest: string | null;
   preferredDate: string | null;
+  preferredCallSlot: string | null;
+  preferredTimezone: string | null;
   sourceTitle: string | null;
   notes: AdminLeadNote[];
 };
@@ -35,6 +45,34 @@ const LEAD_TYPE_LABEL: Record<string, string> = {
   callback: "Callback",
   lead_magnet_download: "Guide download",
 };
+
+const LEAD_STATUS_LABEL: Record<string, string> = {
+  new: "New",
+  contacted: "Contacted",
+  site_visit_requested: "Site visit requested",
+  site_visit_scheduled: "Site visit scheduled",
+  negotiating: "Negotiating",
+  converted: "Converted",
+  lost: "Lost",
+};
+
+function leadWhatsAppLink(lead: AdminLeadRow): string | null {
+  const phone = lead.whatsapp ?? lead.phone;
+  try {
+    return buildWhatsAppLink(
+      phone,
+      [
+        `Hi ${lead.name}, this is Ghats Arcade.`,
+        lead.sourceTitle ? `I'm following up about ${lead.sourceTitle}.` : null,
+        "How can we help you with the farmland details?",
+      ]
+        .filter(Boolean)
+        .join(" "),
+    );
+  } catch {
+    return null;
+  }
+}
 
 export function LeadManager({ initialLeads }: { initialLeads: AdminLeadRow[] }) {
   const router = useRouter();
@@ -90,6 +128,7 @@ export function LeadManager({ initialLeads }: { initialLeads: AdminLeadRow[] }) 
 
       {initialLeads.map((lead) => {
         const draft = draftFor(lead.id);
+        const whatsappLink = leadWhatsAppLink(lead);
         return (
           <article key={lead.id} data-testid="lead-row">
             <h3>
@@ -103,11 +142,34 @@ export function LeadManager({ initialLeads }: { initialLeads: AdminLeadRow[] }) 
               {lead.email ? ` - ${lead.email}` : ""}
               {lead.sourceTitle ? ` - re: ${lead.sourceTitle}` : ""}
             </p>
-            {lead.projectInterest || lead.plotInterest || lead.preferredDate ? (
+            {whatsappLink ? (
+              <p>
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  data-testid="crm-whatsapp-link"
+                >
+                  Message on WhatsApp
+                </a>
+              </p>
+            ) : null}
+            {lead.projectInterest ||
+            lead.plotInterest ||
+            lead.preferredDate ||
+            lead.preferredCallSlot ||
+            lead.preferredTimezone ? (
               <p>
                 {lead.projectInterest ? `Project: ${lead.projectInterest}. ` : ""}
                 {lead.plotInterest ? `Plot: ${lead.plotInterest}. ` : ""}
                 {lead.preferredDate ? `Preferred visit: ${lead.preferredDate}.` : ""}
+                {lead.preferredCallSlot
+                  ? `Preferred call: ${
+                      PREFERRED_CALL_SLOT_LABELS[lead.preferredCallSlot as PreferredCallSlot] ??
+                      lead.preferredCallSlot
+                    }. `
+                  : ""}
+                {lead.preferredTimezone ? `Timezone: ${lead.preferredTimezone}.` : ""}
               </p>
             ) : null}
 
@@ -122,7 +184,7 @@ export function LeadManager({ initialLeads }: { initialLeads: AdminLeadRow[] }) 
               >
                 {LEAD_STATUSES.map((status) => (
                   <option key={status} value={status}>
-                    {status}
+                    {LEAD_STATUS_LABEL[status] ?? status}
                   </option>
                 ))}
               </select>

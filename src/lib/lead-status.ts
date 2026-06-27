@@ -16,11 +16,12 @@ export function isTerminalLeadStatus(status: unknown): boolean {
 }
 
 // Forward pipeline plus "lost" reachable from any non-terminal state. A site visit can
-// be scheduled straight from `new` or `contacted`, and after the visit the lead moves on
-// to negotiating or converts directly.
+// be requested after contact, scheduled straight from `new`/`contacted`, and after the
+// visit the lead moves on to negotiating or converts directly.
 const ALLOWED_TRANSITIONS: Record<LeadStatus, readonly LeadStatus[]> = {
   new: ["contacted", "site_visit_scheduled", "lost"],
-  contacted: ["site_visit_scheduled", "negotiating", "lost"],
+  contacted: ["site_visit_requested", "site_visit_scheduled", "negotiating", "lost"],
+  site_visit_requested: ["site_visit_scheduled", "negotiating", "converted", "lost"],
   site_visit_scheduled: ["negotiating", "converted", "lost"],
   negotiating: ["converted", "lost"],
   converted: [],

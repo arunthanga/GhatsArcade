@@ -1,5 +1,5 @@
 # prj.md — Ghats Arcade
-**Version 4.1** — Lead dedup, saved/compare, owner contact, Resend email, CRM dashboard polish; doc sync
+**Version 4.2** — Synced with `prj-1.md` suggestions: call scheduling, eligibility note, persona guidance, contextual articles, CRM visit-request stage, and clearer home "How it works" backlog
 
 ---
 
@@ -101,7 +101,7 @@ CTA: "See How It Works" (links to "What is Managed Farmland?" page)
 1. Unclear or disputed land titles → Individual freehold titles, verified by us before we acquire
 2. No one to manage land in my absence → Resident team on-site; monthly maintenance; structured management
 3. Developers who sell and disappear → We live near this land. Our phone number doesn't change after you register.
-4. Can I put a structure on it? → Heritage clubhouse is the shared facility. Individual panchayat permission pathway explained honestly.
+4. Can I put a structure on it? → Some projects may include a shared clubhouse, and Ghats Arcade can support architecture/construction coordination for a small farmhouse or farm-use structure. Ghats Arcade does not take legal responsibility to convert agricultural land, make it residential, or secure approvals; permissions and compliance remain with the owner. We guide co-farmers to keep permanent concrete structures within 20% of their total holding, leaving at least 80% open for trees, soil, water, and farm life.
 5. Plot sizes don't fit my budget → 10-cent to 50-cent plots; you choose what suits your family
 6. Hidden charges → Transparent pricing: land price + maintenance fee + registration charges. That's it.
 
@@ -327,7 +327,7 @@ These pages are not primary conversion pages. They serve the Researcher who is d
 **"What is Managed Farmland?" Page**
 - Full explanation of the model, what the team does, what the owner experiences
 - Honest section: who managed farmland is NOT suitable for (credibility signal)
-- End CTA: "Still have questions? Our team can answer them on a 10-minute call." → callback form (Name + Phone only)
+- End CTA: "Still have questions? Our team can answer them on a 10-minute call." → Schedule a call form (Name, Phone, preferred call slot, timezone)
 
 **"Why Invest in Farmland?" Page**
 - Land appreciation argument, tax benefits, diversification, legacy
@@ -503,7 +503,7 @@ The goal of the website is not to sell land. It is to get the visitor to agree t
 - **Dashboard summary cards**: Published Listings / New Leads / Leads in Negotiation / Blog Posts Live
 - **Phone deduplication on capture**: repeat submissions from the same normalised phone merge into the existing record (enrich email/WhatsApp, append tagged message history, upgrade `leadType` when a higher-intent capture arrives; phones stored canonically as `+{digits}`)
 - Follow-up notes with contact method: WhatsApp / call / email / in-person / site-visit
-- One-click WhatsApp from lead record (pre-filled with lead name + project) — **Phase 2** (not yet built; public `wa.me` links are shipped)
+- One-click WhatsApp from lead record (pre-filled with lead name + project/listing/source context) — shipped in the admin CRM lead row
 - Source attribution: which project / listing / page / blog / form generated the lead
 - **"Co-farmer" designation**: once a lead converts, flag as Co-farmer in CRM; enables future community communications
 - **Inquiry confirmation email** (optional): when `RESEND_API_KEY` is set, `POST /api/leads` sends a single acknowledgement via Resend; fails soft when unconfigured
@@ -529,7 +529,7 @@ The goal of the website is not to sell land. It is to get the visitor to agree t
 | Disclaimer | Where | Content |
 |---|---|---|
 | NRI/FEMA eligibility disclaimer | Footer (persistent), every listing/project detail page, every inquiry form | FEMA caveat: NRIs and OCIs may purchase agricultural land subject to applicable RBI/FEMA regulations; foreign citizens (non-OCI) may not; buyers are responsible for confirming their own eligibility |
-| Agricultural-land construction disclaimer | Every listing detail page, every Project detail page | *"All plots are sold as agricultural land (purayidam/dryland classification unless otherwise stated). No conversion to residential use is included in or implied by this sale. Buyers are solely responsible for obtaining any construction or land-use permission from the relevant panchayat or authority. Ghats Arcade makes no representation on individual plot buildability. The shared clubhouse is the only permitted structure constructed by the developer."* |
+| Agricultural-land construction disclaimer | Every listing detail page, every Project detail page | *"All plots are sold as agricultural land (purayidam/dryland classification unless otherwise stated). Ghats Arcade does not undertake any legal obligation to convert agricultural land to residential use or secure construction approvals. If a registered owner wants a small farmhouse or farm-use structure, we may support architecture, construction coordination, and guidance, but permissions, conversion, compliance, and legal responsibility remain with the owner and their chosen professionals. To protect the farmland character of the project, we help keep permanent concrete structures within 20% of each owner's total land holding, leaving at least 80% open for trees, soil, water, and farm life."* |
 
 Both are hard requirements, independently rendered as separate components. Folding one into the other is a defect.
 
@@ -602,6 +602,7 @@ Both are hard requirements, independently rendered as separate components. Foldi
 | "Why Invest?" page — end | Name, Phone, Email | Gated PDF download ("7 Things to Verify") |
 | Blog article — inline + end | Name, Phone, Email | Gated PDF download |
 | Education pages — end | Name, Phone | Callback / WhatsApp deep-link |
+| "Schedule a call" form | Name, Phone, Preferred call slot, Timezone | Replaces passive callback copy where the visitor is not ready for a site visit but is ready to commit to a conversation |
 | Events page | Name, Phone | RSVP / register interest for upcoming events |
 | General callback form | Name, Phone | Everywhere as fallback |
 
@@ -680,7 +681,7 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 | Database | SQLite + Turso/libSQL (Prisma ≥ 6.2 for native `Json` columns: `location_distances`, `nearby_attractions`); scale-up: PostgreSQL via Neon/Supabase |
 | ORM | Prisma ≥ 6.2 (Apache-2.0) |
 | Auth | Better Auth (MIT) |
-| Rich-text CMS editor | **As built:** admins author HTML in a plain `<textarea>`; project + event descriptions are sanitised with `sanitize-html` (MIT) on write and rendered via `dangerouslySetInnerHTML`. Blog bodies are stored/rendered as plain text with preserved line breaks (`whitespace-pre-line`). A WYSIWYG editor (e.g. TipTap) is a possible future upgrade — **not currently a dependency** |
+| Rich-text CMS editor | **As built:** admins author project + event descriptions with a lightweight in-app WYSIWYG editor that stores sanitised HTML. Blog bodies remain plain text with preserved line breaks (`whitespace-pre-line`). TipTap is not a dependency. |
 | Image/Media | UI-only upload for non-dev admins (`MediaUploader`/`GalleryUploader` → `POST /api/uploads`); processed with `sharp` (Apache-2.0, images → WebP, EXIF-stripped, capped) and stored on local disk / Docker volume in **named category folders** (`public/uploads/{projects,listings,blog,events,testimonials,lead-magnets,misc}`, allowlist in `lib/uploads.ts`); lead-magnet PDF + gallery + video uploads; scale-up: SeaweedFS or Cloudflare R2 (not MinIO — AGPL) — swap touches only `lib/uploads.ts` |
 | Maps | Leaflet + react-leaflet (BSD-2-Clause) with OpenStreetMap tiles — free, no API key, no Google billing account. **Wired** on the project-detail page (renders when a project has `latitude` + `longitude`) and the contact page (via `NEXT_PUBLIC_OFFICE_LAT`/`_LNG`/`_ADDRESS`) |
 | Blog/CMS | Built into Next.js app |
@@ -690,9 +691,9 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 | Deployment | Docker Compose + Coolify on VPS |
 | SEO tooling | next-sitemap, dynamic `robots.txt` (`src/app/robots.ts`), schema.org JSON-LD via Next.js Metadata API (Organization includes founder + contactPoint) |
 
-**License policy:** MIT/Apache-2.0/BSD/ISC preferred; AGPL/SSPL avoided. Verify every new dependency's license before adoption. In active use and all compliant: sanitize-html (MIT), Leaflet + react-leaflet (BSD-2-Clause), sharp (Apache-2.0). (TipTap was evaluated for rich-text authoring but removed from dependencies until a WYSIWYG editor is actually built.)
+**License policy:** MIT/Apache-2.0/BSD/ISC preferred; AGPL/SSPL avoided. Verify every new dependency's license before adoption. In active use and all compliant: sanitize-html (MIT), Leaflet + react-leaflet (BSD-2-Clause), sharp (Apache-2.0). TipTap was evaluated for rich-text authoring but removed; the shipped editor is a lightweight in-app component.
 
-**Stack note (v4):** No architectural change from v3. Next.js + Prisma + SQLite/Turso + Better Auth + Docker/Coolify hold for the Phase-1 scale in Section 4. `sanitize-html` and `sharp` are **in active use** (rich-text sanitisation, media/PDF processing); `leaflet`/`react-leaflet` is **wired** for the project-detail and contact-page location maps. TipTap was removed from dependencies until a WYSIWYG editor is built. Prisma is pinned ≥ 6.2 so JSON columns work on SQLite.
+**Stack note (v4):** No architectural change from v3. Next.js + Prisma + SQLite/Turso + Better Auth + Docker/Coolify hold for the Phase-1 scale in Section 4. `sanitize-html` and `sharp` are **in active use** (rich-text sanitisation, media/PDF processing); `leaflet`/`react-leaflet` is **wired** for the project-detail and contact-page location maps. TipTap was removed from dependencies; rich-text authoring is handled by the shipped lightweight editor. Prisma is pinned ≥ 6.2 so JSON columns work on SQLite.
 
 ---
 
@@ -748,7 +749,9 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 - source_project (nullable FK), source_listing (nullable FK), source_blog_post (nullable FK)
 - source_page (string)
 - message (text, optional)
-- status (`new` | `contacted` | `site_visit_scheduled` | `negotiating` | `converted` | `lost`)
+- status (`new` | `contacted` | `site_visit_requested` | `site_visit_scheduled` | `negotiating` | `converted` | `lost`)
+- preferred_call_slot (`morning` | `afternoon` | `evening`, for "Schedule a call")
+- preferred_timezone (optional IANA-ish label such as `Asia/Kolkata`, `Asia/Dubai`, `Europe/London`)
 - is_cofarmer (boolean, default false)
 - follow_up_notes[] (see FollowUpNote)
 - created_at, updated_at
@@ -820,8 +823,8 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 
 | Feature | Status | Notes |
 |---|---|---|
-| prj.md drafted (v4.1) | Done | v4.1 doc sync: lead dedup, saved/compare, owner contact, Resend email, CRM dashboard polish |
-| Tech stack confirmed (v4) | Done | No architectural change; Prisma ≥ 6.2 for SQLite JSON. `sanitize-html` + `sharp` in active use; `leaflet`/`react-leaflet` wired (project-detail map). TipTap removed from dependencies until a WYSIWYG editor is built |
+| prj.md drafted (v4.2) | Done | v4.2 doc sync: merged the actionable suggestions from `c:\Users\aruthang\Downloads\prj-1.md` into the current, newer spec without reverting shipped features |
+| Tech stack confirmed (v4) | Done | No architectural change; Prisma ≥ 6.2 for SQLite JSON. `sanitize-html` + `sharp` in active use; `leaflet`/`react-leaflet` wired (project-detail map). TipTap removed; lightweight in-app WYSIWYG editor shipped |
 | Project scaffolding | Done | Structure complete; `pnpm install` + first run happen on the host/deploy machine (not runnable in this environment) |
 | Repo hygiene | Done | — |
 | Roles/permissions module | Done | Pure RBAC module + unit tests (incl. `event:manage`); single-Owner invariant. Automated suite to be run on the host machine |
@@ -854,8 +857,8 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 | Resale / Exit facilitation public page | Done | `/resale`: explicit resale commitment, 5-step resale process, "why land here appreciates", NRI liquidity reassurance, honest no-guarantee note, and a `CallbackForm` end CTA; in footer Guidance nav + sitemap + always-on floating WhatsApp. Automated suite to be run on the host machine |
 | FAQ page + inline home FAQ | Done | Standalone `/faq` (12 Q&A via reusable `FaqList` + shared `lib/faq-data.ts`, FAQPage JSON-LD) **and** inline FAQ on the home page (Block 13) from the same shared data. Automated suite to be run on the host machine |
 | Gallery page | Done | `/gallery` aggregates public project photos (by `ProjectPhoto.tag` taxonomy) + event photos (`events` tag) into a client-filtered `GalleryGrid` (tag chips + lazy-loaded grid, hover caption/tag, click-to-open); in footer Explore nav + sitemap. Automated suite to be run on the host machine |
-| Project detail page — full layout | Done | Full layout shipped: plots-remaining, plot table, specs, distances/attractions, an embedded OpenStreetMap/Leaflet location map (when lat/lng are set), mid-page `PlotHoldForm` capture, `RegistrationSteps` (KYC→ownership), bottom inquiry form, both disclaimers, metadata/OG, and a mobile-only `StickyProjectCta`. Automated suite to be run on the host machine |
-| Home page — full layout | Done | All 14 blocks per Section 3.1: hero, time-reframe prose, 6-panel fear grid, animated counters (`StatCounters`), 7-discipline team grid, 6-pillar holistic living, featured projects (live), how-to-own 4 steps, video-testimonial strip (placeholder until CMS), Google-reviews block, community events strip (live), blog preview (live), inline FAQ (`FaqList`), final CTA. Automated suite to be run on the host machine |
+| Project detail page — full layout | Done | Full layout shipped: plots-remaining, plot table, specs, distances/attractions, optional clubhouse/farmhouse support note (including the 20% permanent-structure / 80% open-land guidance and owner-side legal responsibility), an embedded OpenStreetMap/Leaflet location map (when lat/lng are set), mid-page `PlotHoldForm` capture, `RegistrationSteps` (KYC→ownership), bottom inquiry form, both disclaimers, metadata/OG, and a mobile-only `StickyProjectCta`. Automated suite to be run on the host machine |
+| Home page — full layout | Done | All 14 blocks per Section 3.1: hero, time-reframe prose, 6-panel fear grid, animated counters (`StatCounters`), 7-discipline team grid, 6-pillar holistic living, featured projects (live), how-to-own 4 steps, owner-testimonial strip (`TestimonialCarousel`, live from the CMS with an invite fallback when none), Google-reviews block (configurable `NEXT_PUBLIC_GOOGLE_REVIEWS_URL`), community events strip (live), blog preview (live), inline FAQ (`FaqList`), final CTA. Automated suite to be run on the host machine |
 | Home page — psychological conversion sequence | Done | 3 capture moments wired: Block 8 `HomeVisitForm` (name/phone/WhatsApp/project, `site_visit_request`), Block 9 `FloatingWhatsAppButton` (appears on scroll), Block 14 full `LeadInquiryForm` + call/WhatsApp CTAs. Automated suite to be run on the host machine |
 | Testimonials CMS + carousel | Done | `testimonial:manage` permission (Owner + Admin); Zod schemas; gated `server/testimonials.ts` (CRUD, optional project link resolved fail-open, plain-text quotes); API `GET`(public)/`POST`(gated) `/api/testimonials` + `PATCH`/`DELETE /api/testimonials/[id]`; admin `TestimonialManager` (list/create/inline-edit, display-order, active toggle, optional YouTube video + project link); public `TestimonialCarousel` wired into home Block 9 (real owner stories, falls back to an invite when none). Automated suite to be run on the host machine |
 | "Land That Comes With a Team" section | Done | 7-discipline grid (Agronomy/Civil/Legal/Operations/Survey/Customer Success/Horticulture) on the home page (Block 5). Automated suite to be run on the host machine |
@@ -867,7 +870,7 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 | Data export (Owner-only) | Done | Leads CSV (all v4 fields + project/blog sources), Listings CSV, Projects CSV (location, classification, road status, plot counts, starting price), and Events CSV (date, status, theme, project, photo count); RFC-4180; Owner-only export page restyled to the Control Room. Automated suite to be run on the host machine |
 | Legal disclaimer component (NRI/FEMA) | Done | `LegalDisclaimer` in SiteFooter + project detail; construction disclaimer is a separate component. Automated suite to be run on the host machine |
 | Embedded location maps | Done | Reusable `LocationMap` (client-only OpenStreetMap/Leaflet via `next/dynamic` `ssr:false`, marker + "View larger map" link). **Project detail**: renders when a project has `latitude`/`longitude` (admin `ProjectEditor` has lat/lng inputs). **Contact page**: renders the office location from `NEXT_PUBLIC_OFFICE_LAT`/`_LNG` (+ optional `_ADDRESS`). Automated suite to be run on the host machine |
-| WYSIWYG rich-text editor | Not started | Admins author project/event descriptions as raw HTML in a `<textarea>` (sanitised server-side on write); blog bodies are plain text. TipTap was removed from dependencies; a WYSIWYG editor is a future authoring-UX upgrade |
+| WYSIWYG rich-text editor | Done | `RichTextEditor` gives admins paragraph/heading/bold/italic/list controls for project and event descriptions while preserving the existing sanitised-HTML storage/rendering path. Component test added |
 | Multilingual UI (EN/TA/ML) | Done | Cookie-based i18n (`src/lib/i18n/`): English is the default + source-of-truth catalogue; Tamil (`ta`) & Malayalam (`ml`) are partial catalogues with per-key English fallback. Locale persists in the `NEXT_LOCALE` cookie, read server-side (`getTranslations()`) so Server Components re-render after `router.refresh()`; `<html lang>` tracks the locale. `LanguageSwitcher` in the header. Translations cover UI chrome (nav/footer/CTAs) + home hero; remaining page prose falls back to English and can be translated incrementally. Automated suite to be run on the host machine |
 | Responsive layout (mobile/tablet/laptop) | Done | Public header is a `HeaderNav` with a desktop link row + mobile hamburger panel (language switcher always reachable); public + admin data tables scroll horizontally on small screens (`overflow-x-auto`); admin shell stacks on mobile and becomes a sidebar at `md:`. Layouts use Tailwind `sm/md/lg` breakpoints throughout. Automated suite to be run on the host machine |
 | Owner contact details | Done | `src/lib/site-contact.ts` (Arun T., mailarunthangavel@gmail.com, 9901955667); `OwnerContactCard` on `/contact`; links on `/about`; Organization JSON-LD `founder` + `contactPoint`. Defaults in `.env.example` (`OWNER_*`, `NEXT_PUBLIC_WHATSAPP_NUMBER`). Automated suite to be run on the host machine |
@@ -879,13 +882,20 @@ When the project moves from solo vibe-coding to a formal development team, enabl
 | CRM status badges | Done | Colour-coded `LeadStatusBadge` (New=blue, Contacted=yellow, Negotiating=orange, Converted=green, Lost=grey) in lead manager + dashboard. Automated suite to be run on the host machine |
 | Slug collision handling | Done | Auto-generated slugs append `-2`, `-3`, … on title collision; integration test for `wayanad-farm` → `wayanad-farm-2`. Automated suite to be run on the host machine |
 | Dynamic robots.txt | Done | `src/app/robots.ts` replaces static placeholder; Sitemap URL from `NEXT_PUBLIC_SITE_URL`. Automated suite to be run on the host machine |
-| One-click WhatsApp from CRM lead row | Not started | Public `wa.me` links with context pre-fill are shipped; admin CRM one-click deep-link is Phase 2 |
+| Inline eligibility note on listing detail | Done | `EligibilityServiceNote` renders above the listing `LeadInquiryForm`, supplementing the persistent NRI/FEMA disclaimer with legally precise service copy. Component test added |
+| "Schedule a call" form with time slot | Done | `CallbackForm` now uses active Schedule a call copy, captures `preferredCallSlot` + `preferredTimezone`, stores both on Lead, shows them in CRM/export, and validates accepted slots. Validation and lead-service tests added |
+| Buyer-type personalisation widget | Done | `BuyerTypeSelector` renders on `/listings`, persists visitor type in `localStorage`, and `BuyerTrustSnippet` appears on listing cards/detail with resident/NRI/OCI/foreign-citizen trust copy. Component/card tests added |
+| Contextual blog links on listing detail | Done | `RelatedArticles` renders below the listing inquiry form using `listRelatedPostsForListing`, which returns published district/category-relevant posts and excludes drafts. Component and blog-service tests added |
+| `site_visit_requested` lead status stage | Done | Added to lead status types, Prisma status comment, transition rules, admin badge/dropdown labels, and server update path. Unit/integration/badge tests added |
+| Home page "How it works" clarity section | Done | `HomeHowItWorks` renders a concise three-step explainer near the hero while keeping the deeper ownership journey later in the page. Component test added |
+| One-click WhatsApp from CRM lead row | Done | Admin `LeadManager` renders a `wa.me` link per lead using WhatsApp number or phone, pre-filled with lead name and source project/listing/blog context. Component test added |
 
 ---
 
 ## 11. Phase 2 / Future Considerations
 
-- **WhatsApp Business API** — automated follow-ups once lead volume justifies; **one-click WhatsApp from CRM lead rows** (public context-aware `wa.me` links are shipped)
+- **Lead-quality improvements from `prj-1.md` shipped:** inline listing eligibility note, active "Schedule a call" form with time slot/timezone, buyer-type personalisation widget, contextual blog links on listing detail, explicit `site_visit_requested` CRM status stage, and a simpler home "How it works" explainer above the deeper ownership journey.
+- **WhatsApp Business API** — automated follow-ups once lead volume justifies; public/context-aware `wa.me` links and admin CRM one-click WhatsApp links are shipped
 - **Automated email drip sequences** — multi-step lead nurturing for NRI/Gulf segment (**single inquiry confirmation email via Resend is shipped** when `RESEND_API_KEY` is configured)
 - **Multi-language support** — Malayalam & Tamil UI toggles shipped (Phase 1.5); remaining: Hindi & Arabic, plus full translation of page prose (currently English-fallback) and optional URL-prefixed locales for SEO
 - ~~Saved listings / comparison~~ — **shipped** (`/saved` via localStorage; `/compare?ids=` side-by-side table; no buyer login)

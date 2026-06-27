@@ -29,6 +29,23 @@ describe("leadCaptureSchema", () => {
     const parsed = leadCaptureSchema.parse({ ...validInquiry, company: "spam corp" });
     expect(parsed.company).toBe("spam corp");
   });
+
+  it("accepts schedule-call slot and timezone fields", () => {
+    const parsed = leadCaptureSchema.parse({
+      ...validInquiry,
+      leadType: "callback",
+      preferredCallSlot: "morning",
+      preferredTimezone: "Asia/Dubai",
+    });
+    expect(parsed.preferredCallSlot).toBe("morning");
+    expect(parsed.preferredTimezone).toBe("Asia/Dubai");
+  });
+
+  it("rejects an unknown schedule-call slot", () => {
+    expect(
+      leadCaptureSchema.safeParse({ ...validInquiry, preferredCallSlot: "midnight" }).success,
+    ).toBe(false);
+  });
 });
 
 describe("leadStatusUpdateSchema", () => {

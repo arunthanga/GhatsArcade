@@ -30,7 +30,7 @@ const ml: DeepPartial<Messages> = {
     chatWhatsApp: "ഞങ്ങളോട് ചാറ്റ് ചെയ്യൂ",
     bookVisit: "സന്ദർശനം ബുക്ക് ചെയ്യൂ",
     scheduleVisit: "സൈറ്റ് സന്ദർശനം ഷെഡ്യൂൾ ചെയ്യൂ",
-    requestCallback: "തിരികെ വിളിക്കാൻ അഭ്യർത്ഥിക്കൂ",
+    requestCallback: "കോൾ ഷെഡ്യൂൾ ചെയ്യൂ",
     sendMessage: "സന്ദേശം അയയ്ക്കൂ",
     readMore: "കൂടുതൽ വായിക്കൂ",
     readAllArticles: "എല്ലാ ലേഖനങ്ങളും വായിക്കൂ",

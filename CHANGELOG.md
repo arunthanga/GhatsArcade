@@ -7,6 +7,10 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- **Admin WYSIWYG rich-text editor.** Project and event descriptions now use a lightweight in-app rich-text editor with paragraph, heading, bold, italic, and bullet-list controls while preserving the existing sanitised-HTML storage path.
+- **One-click WhatsApp from CRM leads.** Each admin lead row now includes a pre-filled `wa.me` link using the lead's WhatsApp/phone and source context for faster follow-up.
+- **Clubhouse and farmhouse support messaging.** Project detail pages now include a soft co-farmer support note for project-specific optional clubhouse spaces and optional farmhouse architecture/construction coordination. The copy frames the 20% permanent-structure / 80% open-land principle as preserving farmland character, while clarifying that conversion, residential permissions, approvals, compliance, and legal responsibility remain with the owner.
+- **Trust-led lead-quality backlog from `prj-1.md`.** Listing detail pages now show an inline NRI/OCI eligibility service note above the inquiry form, contextual related blog links below it, and persona-aware trust snippets. `/listings` adds a localStorage-backed buyer-type selector. `CallbackForm` is now an active "Schedule a call" form with preferred call slot/timezone stored on Lead and included in CRM/export. The CRM pipeline gains `site_visit_requested`, and the home page gains a concise three-step "How managed farmland works" explainer near the hero.
 - **Owner contact details.** Primary contact is **Arun T.** (`mailarunthangavel@gmail.com`, `9901955667` / WhatsApp `919901955667`), centralised in `src/lib/site-contact.ts`. Shown on `/contact` (`OwnerContactCard`) and `/about`; included in Organization JSON-LD (`founder` + `contactPoint`). Seed defaults in `.env.example`: `OWNER_EMAIL`, `OWNER_NAME`, `NEXT_PUBLIC_WHATSAPP_NUMBER`.
 - **Lead capture UX polish.** Shared `LeadCaptureSuccess` component gives every public form the same post-submit acknowledgement: "We'll contact you on WhatsApp within 24 hours." Listing detail WhatsApp links now pre-fill title, acreage, district, and ₹ price.
 - **Admin dashboard summary cards.** Top row: Published Listings / New Leads / Leads in Negotiation / Blog Posts Live (via `lead.groupBy` + filtered counts).
@@ -44,20 +48,37 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     rendered under a "Where to find us" heading. Empty values are treated as unset so the map simply
     hides.
 
+### Security
+- **Rate-limited public lead capture.** `POST /api/leads` now enforces a per-client fixed-window
+  limit (5/minute via `src/lib/rate-limit.ts`) before parsing or sending any confirmation email,
+  returning `429` with a `Retry-After` header. Layered on top of the existing honeypot.
+- **Defense-in-depth HTML sanitisation.** Project and event descriptions are now re-sanitised with
+  `sanitizeRichText` on render (in addition to on write), so any legacy or out-of-band content is
+  cleaned before `dangerouslySetInnerHTML`.
+
+### Changed
+- **Capped lead message history.** Repeat enquiries from the same phone no longer grow a lead's
+  `message` without bound; merged history is trimmed to the most recent ~4000 characters.
+- **More relevant related-article links.** `listRelatedPostsForListing` now prefers genuine
+  district matches and only fills remaining slots with general trust/guide posts.
+- **Buyer-type personalisation store.** Replaced per-component `localStorage` reads and window
+  listeners with a shared `useSyncExternalStore`-backed store (one cross-tab listener), so listing
+  grids with many cards stay in sync efficiently.
+- **Configurable Google reviews link.** The home-page reviews CTA now reads
+  `NEXT_PUBLIC_GOOGLE_REVIEWS_URL` (defaults to a brand search) so the real Business Profile URL can
+  be set without a code change.
+
 ### Removed
 - Dropped the unused **TipTap** dependencies (`@tiptap/pm`, `@tiptap/react`, `@tiptap/starter-kit`).
-  They were never wired; rich-text authoring remains a sanitised-HTML `<textarea>`. A WYSIWYG editor
-  can be reintroduced when actually built.
+  They were never wired; rich-text authoring is handled by the shipped lightweight in-app editor.
 
 ### Documentation
 - **Project audit & doc sync (v4.1).** Reconciled README, prj.md, and CHANGELOG with lead dedup, saved/compare, owner contact (`site-contact.ts`), Resend inquiry email, dynamic `robots.ts`, `formatInr`, CRM dashboard cards, and `LeadStatusBadge`.
 - **Project audit & doc sync (v4).** Reconciled `prj.md` and `README.md` with the actual code:
-  TipTap (`@tiptap/*`) and Leaflet (`leaflet`/`react-leaflet`) are **installed but not yet wired**,
-  so the tech-stack tables now describe rich text as "raw HTML in a `<textarea>`, sanitised
-  server-side with `sanitize-html`" (blog bodies are plain text), and maps as a pending Phase-2
-  enhancement. Added explicit "Embedded location maps" and "WYSIWYG rich-text editor" rows to the
-  Feature Status table (Not started) and to the README roadmap. Filled in the README permissions
-  table (lead magnets, horticulture logs).
+  TipTap (`@tiptap/*`) was removed after evaluation, Leaflet maps are wired, and the tech-stack
+  tables now reflect the shipped lightweight WYSIWYG editor plus server-side sanitisation with
+  `sanitize-html` (blog bodies remain plain text). Filled in the README permissions table
+  (lead magnets, horticulture logs).
 
 ### Changed
 - **Mobile/tablet friendliness.** Admin data tables now scroll horizontally on small screens

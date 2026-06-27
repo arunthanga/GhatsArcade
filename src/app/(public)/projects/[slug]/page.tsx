@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ConstructionDisclaimer } from "@/components/public/ConstructionDisclaimer";
+import { FarmhouseSupportNote } from "@/components/public/FarmhouseSupportNote";
 import { LeadInquiryForm } from "@/components/public/LeadInquiryForm";
 import { LegalDisclaimer } from "@/components/public/LegalDisclaimer";
 import { PlotHoldForm } from "@/components/public/PlotHoldForm";
@@ -13,6 +14,7 @@ import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { publicEnv } from "@/lib/env";
 import { formatAcres, formatInr } from "@/lib/format";
 import { countAvailablePlots } from "@/lib/plot-status";
+import { sanitizeRichText } from "@/lib/sanitize";
 import { absoluteUrl } from "@/lib/seo";
 import { getPublicProjectBySlug } from "@/server/projects";
 
@@ -114,13 +116,13 @@ export default async function ProjectDetailPage({
 
       <TrustProofStrip className="mb-10 rounded-xl border border-brand-100" compact />
 
-      {/* About (rich text — sanitized on write) */}
+      {/* About (rich text — sanitized on write, re-sanitized on render for defense-in-depth) */}
       <section className="mb-10">
         <h2 className="mb-3 text-xl font-semibold text-brand-900">About this project</h2>
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitised in src/lib/sanitize.ts before persistence */}
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitised via sanitizeRichText before render */}
         <div
           className="prose prose-brand max-w-none leading-relaxed text-brand-800"
-          dangerouslySetInnerHTML={{ __html: project.description }}
+          dangerouslySetInnerHTML={{ __html: sanitizeRichText(project.description) }}
         />
       </section>
 
@@ -173,6 +175,10 @@ export default async function ProjectDetailPage({
           ) : null}
         </dl>
       </section>
+
+      <div className="mb-10">
+        <FarmhouseSupportNote />
+      </div>
 
       {/* Plot availability */}
       {project.plots.length > 0 ? (

@@ -146,6 +146,51 @@ export async function listPublishedPostsByCategory(category: string) {
   });
 }
 
+// Contextual blog links for a listing/project detail page. Genuine district matches are
+// preferred so the "Read before you decide" block feels relevant; general trust/guide
+// posts only fill any remaining slots as a fallback.
+//
+// Note: on SQLite, Prisma `contains` is case-sensitive, so the district string should be
+// stored/passed in the same casing used in post copy (e.g. "Idukki").
+const RELATED_GUIDE_CATEGORIES = ["legal_guides", "nri_corner", "farming_guides"];
+
+export async function listRelatedPostsForListing(args: { district: string; limit?: number }) {
+  const take = args.limit ?? 2;
+  const district = args.district.trim();
+
+  const districtMatches = district
+    ? await prisma.blogPost.findMany({
+        where: {
+          status: "published",
+          OR: [
+            { title: { contains: district } },
+            { body: { contains: district } },
+            { metaDescription: { contains: district } },
+          ],
+        },
+        orderBy: { publishedAt: "desc" },
+        take,
+      })
+    : [];
+
+  if (districtMatches.length >= take) {
+    return districtMatches;
+  }
+
+  const seen = new Set(districtMatches.map((post) => post.id));
+  const fallback = await prisma.blogPost.findMany({
+    where: {
+      status: "published",
+      category: { in: RELATED_GUIDE_CATEGORIES },
+      id: { notIn: [...seen] },
+    },
+    orderBy: { publishedAt: "desc" },
+    take,
+  });
+
+  return [...districtMatches, ...fallback].slice(0, take);
+}
+
 // --- Admin reads ----------------------------------------------------------
 
 export async function listAllPosts(args: { actorRole: unknown }) {

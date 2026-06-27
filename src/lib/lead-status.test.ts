@@ -37,12 +37,17 @@ describe("canTransitionLeadStatus", () => {
   it("allows lost from any non-terminal state", () => {
     expect(canTransitionLeadStatus("new", "lost")).toBe(true);
     expect(canTransitionLeadStatus("contacted", "lost")).toBe(true);
+    expect(canTransitionLeadStatus("site_visit_requested", "lost")).toBe(true);
     expect(canTransitionLeadStatus("site_visit_scheduled", "lost")).toBe(true);
     expect(canTransitionLeadStatus("negotiating", "lost")).toBe(true);
   });
 
   it("routes a lead through a scheduled site visit", () => {
     expect(canTransitionLeadStatus("new", "site_visit_scheduled")).toBe(true);
+    expect(canTransitionLeadStatus("contacted", "site_visit_requested")).toBe(true);
+    expect(canTransitionLeadStatus("site_visit_requested", "site_visit_scheduled")).toBe(true);
+    expect(canTransitionLeadStatus("site_visit_requested", "negotiating")).toBe(true);
+    expect(canTransitionLeadStatus("site_visit_requested", "converted")).toBe(true);
     expect(canTransitionLeadStatus("contacted", "site_visit_scheduled")).toBe(true);
     expect(canTransitionLeadStatus("site_visit_scheduled", "negotiating")).toBe(true);
     expect(canTransitionLeadStatus("site_visit_scheduled", "converted")).toBe(true);
@@ -62,6 +67,7 @@ describe("canTransitionLeadStatus", () => {
   it("rejects illegal jumps", () => {
     expect(canTransitionLeadStatus("new", "converted")).toBe(false);
     expect(canTransitionLeadStatus("new", "negotiating")).toBe(false);
+    expect(canTransitionLeadStatus("new", "site_visit_requested")).toBe(false);
     expect(canTransitionLeadStatus("contacted", "converted")).toBe(false);
   });
 

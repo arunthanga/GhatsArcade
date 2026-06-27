@@ -30,7 +30,7 @@ const ta: DeepPartial<Messages> = {
     chatWhatsApp: "எங்களுடன் அரட்டையடிக்கவும்",
     bookVisit: "வருகையைப் பதிவு செய்யுங்கள்",
     scheduleVisit: "நிலத்தைப் பார்வையிட திட்டமிடுங்கள்",
-    requestCallback: "திரும்ப அழைக்கக் கோருங்கள்",
+    requestCallback: "அழைப்பை திட்டமிடுங்கள்",
     sendMessage: "செய்தி அனுப்பு",
     readMore: "மேலும் படிக்க",
     readAllArticles: "அனைத்துக் கட்டுரைகளையும் படிக்க",

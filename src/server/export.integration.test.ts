@@ -16,7 +16,7 @@ const EVENT_HEADER = "id,title,slug,event_date,status,theme,project,photo_count,
 let ownerId: string;
 
 const LEAD_HEADER =
-  "id,name,email,phone,whatsapp,buyer_type,lead_type,status,is_cofarmer,project_interest,plot_interest,preferred_date,source_page,source_listing,source_project,source_blog_post,created_at";
+  "id,name,email,phone,whatsapp,buyer_type,lead_type,status,is_cofarmer,project_interest,plot_interest,preferred_date,preferred_call_slot,preferred_timezone,source_page,source_listing,source_project,source_blog_post,created_at";
 
 beforeEach(async () => {
   await resetDb();

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BuyerTypeSelector } from "@/components/public/BuyerTypePersonalization";
 import { ListingCard } from "@/components/public/ListingCard";
 import { absoluteUrl } from "@/lib/seo";
 import { listingFilterSchema } from "@/lib/validation";
@@ -29,6 +30,8 @@ export default async function ListingsPage({
   return (
     <main className="mx-auto max-w-5xl px-4 py-12">
       <h1 className="text-3xl font-semibold text-brand-900">Listings</h1>
+
+      <BuyerTypeSelector />
 
       <form method="get" className="mt-6 flex flex-wrap items-center gap-3">
         <input

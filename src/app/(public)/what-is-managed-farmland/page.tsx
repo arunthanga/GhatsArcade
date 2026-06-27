@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 const TEAM_DOES = [
   "Soil preparation, planting, and crop care across the estate",
   "Irrigation and water management suited to the Palakkad zone",
-  "Common-area upkeep — roads, fencing, clubhouse, shared infrastructure",
+  "Common-area upkeep — roads, fencing, optional clubhouse spaces, shared infrastructure",
+  "Architecture and construction coordination when a co-farmer wants guidance for a small farmhouse or farm-use structure",
   "Plantation management and (optionally) plot-level horticulture as a paid add-on",
   "Coordinating harvests and keeping co-farmers updated",
 ];
@@ -26,7 +27,7 @@ const YOU_EXPERIENCE = [
 
 const NOT_SUITABLE = [
   "You need guaranteed, short-term financial returns.",
-  "You expect to build a permanent home on the plot right away.",
+  "You want a conventional full-size residence instead of a small farm-life footprint with most land kept open.",
   "You want a highly liquid asset you can exit at a moment's notice.",
   "You're not comfortable with a long ownership horizon.",
 ];
@@ -59,6 +60,14 @@ export default function WhatIsManagedFarmlandPage() {
           grounding, the produce, peaceful living, and the long-term value of real agricultural land.
           The aim is simple: investment growth with investment security, supported by clean titles
           and a trusted developer you can speak to directly.
+        </p>
+        <p>
+          Some projects may include a clubhouse as a shared place to gather. If a co-farmer wants a
+          small farmhouse or farm-use structure, we can support architecture and construction
+          coordination while keeping the permanent footprint within 20% of the holding so at least
+          80% remains open, green, and true to the land. We do not take legal responsibility to
+          convert agricultural land or make it residential; those permissions and compliance choices
+          remain with the registered owner.
         </p>
       </section>
 
@@ -113,8 +122,8 @@ export default function WhatIsManagedFarmlandPage() {
       <section className="mt-10 rounded-xl border border-brand-100 bg-brand-50 p-6">
         <CallbackForm
           heading="Still have questions? Our team can answer them on a 10-minute call."
-          blurb="Leave your name and number — no pressure, no sales script. Just answers."
-          submitLabel="Request a callback"
+          blurb="Choose a comfortable time — no pressure, no sales script. Just answers."
+          submitLabel="Schedule a call"
           sourcePage="/what-is-managed-farmland"
         />
       </section>

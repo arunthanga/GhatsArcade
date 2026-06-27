@@ -26,7 +26,7 @@ const en = {
     chatWhatsApp: "Chat with us",
     bookVisit: "Book a visit",
     scheduleVisit: "Schedule a site visit",
-    requestCallback: "Request a callback",
+    requestCallback: "Schedule a call",
     sendMessage: "Send message",
     readMore: "Read more",
     readAllArticles: "Read all articles",

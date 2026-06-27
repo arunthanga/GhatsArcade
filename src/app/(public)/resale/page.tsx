@@ -115,12 +115,12 @@ export default function ResalePage() {
         </p>
       </section>
 
-      {/* End CTA: callback to discuss exit options */}
+      {/* End CTA: scheduled call to discuss exit options */}
       <section className="mt-10 rounded-xl border border-brand-100 bg-brand-50 p-6">
         <CallbackForm
           heading="Planning your exit? Let's talk it through."
-          blurb="Leave your number and we'll call to discuss your plot, current demand, and the resale process — no obligation."
-          submitLabel="Request a callback"
+          blurb="Choose a comfortable call time to discuss your plot, current demand, and the resale process — no obligation."
+          submitLabel="Schedule a call"
           sourcePage="/resale"
         />
       </section>

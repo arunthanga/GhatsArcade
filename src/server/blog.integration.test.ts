@@ -9,6 +9,7 @@ import {
   getPublicPostBySlug,
   listAllPosts,
   listPublishedPosts,
+  listRelatedPostsForListing,
   updateBlogPost,
 } from "./blog";
 
@@ -74,6 +75,28 @@ describe("public reads", () => {
 
     expect(await getPublicPostBySlug("live-one")).not.toBeNull();
     expect(await getPublicPostBySlug("draft-one")).toBeNull();
+  });
+
+  it("returns only published related posts for listing detail pages", async () => {
+    await createBlogPost({
+      actorRole: "OWNER",
+      authorId,
+      data: { ...base, title: "Idukki Title Guide", body: "Idukki land basics", status: "published" },
+    });
+    await createBlogPost({
+      actorRole: "OWNER",
+      authorId,
+      data: {
+        ...base,
+        title: "Draft Idukki Guide",
+        body: "Idukki draft",
+        status: "draft",
+      },
+    });
+
+    const related = await listRelatedPostsForListing({ district: "Idukki" });
+    expect(related).toHaveLength(1);
+    expect(related[0]?.title).toBe("Idukki Title Guide");
   });
 });
 

@@ -10,11 +10,14 @@ export function ConstructionDisclaimer() {
       className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-xs leading-relaxed text-amber-900"
     >
       All plots are sold as agricultural land (purayidam/dryland classification unless
-      otherwise stated). No conversion to residential use is included in or implied by this
-      sale. Buyers are solely responsible for obtaining any construction or land-use
-      permission from the relevant panchayat or authority. Ghats Arcade makes no
-      representation on individual plot buildability. The shared clubhouse is the only
-      permitted structure constructed by the developer.
+      otherwise stated). Ghats Arcade does not undertake any legal obligation to convert
+      agricultural land to residential use or secure construction approvals. If a registered
+      owner wants a small farmhouse or farm-use structure, we may support architecture,
+      construction coordination, and guidance, but permissions, conversion, compliance, and
+      legal responsibility remain with the owner and their chosen professionals. To protect
+      the farmland character of the project, we help keep permanent concrete structures
+      within 20% of each owner's total land holding, leaving at least 80% open for trees,
+      soil, water, and farm life.
     </p>
   );
 }

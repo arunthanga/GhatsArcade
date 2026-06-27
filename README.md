@@ -1,8 +1,8 @@
 # Ghats Arcade
 
-> **Tranquility meets high-yields**
+> **A farmland for your family**
 
-A marketing and lead-generation website for a managed farmland business that lists agricultural land properties (primarily in Kerala, also the Kerala–Tamil Nadu border region) for sale/investment.
+A marketing and lead-generation website for a managed farmland business that helps families and future co-farmers discover clean-title agricultural land in Kerala and the Kerala–Tamil Nadu border region.
 
 > This is **not** an e-commerce or transactional property marketplace. There are no online payments, escrow, or legal title transfers. Ghats Arcade is a lead-generation and content-marketing platform with an admin/CRM backend for managing listings, leads, and follow-ups — including direct WhatsApp contact.
 
@@ -35,9 +35,9 @@ The canonical, always-up-to-date project specification lives in [prj.md](prj.md)
 The site's job is to showcase land listings attractively, rank well in search engines via fresh content (blog/CMS), capture visitor/lead information, and feed that data into a CRM-style admin panel so the business owner can follow up and convert deals.
 
 **Audience:**
-- Buyers from metro cities in India
-- NRIs (Non-Resident Indians) in Europe, the Gulf, and the US
-- Foreign citizens / OCI cardholders interested in Indian agri-land investment
+- Families and professionals from metro cities in India seeking peaceful weekend farmland and long-term land growth
+- NRIs (Non-Resident Indians) in Europe, the Gulf, and the US who need remote follow-up, legal clarity, and trusted on-ground management
+- Foreign citizens / OCI cardholders interested in Indian agri-land, with extra legal-eligibility caution
 
 ---
 
@@ -45,7 +45,7 @@ The site's job is to showcase land listings attractively, rank well in search en
 
 | Segment | Primary Need |
 |---|---|
-| Metro India buyers | Browse listings, compare, inquire, schedule visits |
+| Metro India families / future co-farmers | Browse listings, compare, inquire, schedule visits |
 | NRIs (Europe, Gulf, US) | Remote browsing, WhatsApp/video contact, eligibility clarity |
 | Foreign citizens / OCI | Same as NRIs, with extra legal-eligibility caution |
 | Site Owner (Super Admin) | Manage listings, leads, admins, content, exports |
@@ -59,12 +59,14 @@ The site's job is to showcase land listings attractively, rank well in search en
 - **Home page** — hero, value proposition, featured listings, trust signals
 - **Listings page** — browse/filter by location, size, price range, land type
 - **Listing detail** — photos, description, location (text), price (Indian ₹ lakh formatting), land classification, buyer-eligibility disclaimer, inquiry form with a clear post-submit acknowledgement ("We'll contact you on WhatsApp within 24 hours"), WhatsApp click-to-chat with listing context pre-filled (title, acres, district, price), and a Save button for bookmarking
+- **Project detail** — project specs, plot availability, optional clubhouse information, and a soft farmhouse-support note: Ghats Arcade can guide architecture/construction coordination while permanent structures stay within 20% of the holding and at least 80% remains open farmland; conversion, residential permissions, approvals, and legal responsibility remain with the owner
 - **About** and **Contact** pages — owner contact details (Arun T., email, phone), site-visit + inquiry forms, WhatsApp; the Contact page shows an embedded OpenStreetMap of the office when `NEXT_PUBLIC_OFFICE_LAT`/`_LNG` are configured
 - **Saved listings** — visitors bookmark listings in `localStorage` (no login) via `/saved`; compare 2–3 saved listings side-by-side at `/compare?ids=slug-a,slug-b`
 - **Blog / CMS** — SEO articles (investment guides, region spotlights, legal FAQs), admin-publishable
 - **Legal disclaimer** — prominent and persistent (footer + listing pages + inquiry form), covering NRI/FEMA eligibility caveats
-- **Lead capture** — inquiry, site-visit, callback, and home-visit forms; all show a consistent post-submit acknowledgement ("We'll contact you on WhatsApp within 24 hours"); optional inquiry confirmation email via Resend when `RESEND_API_KEY` is set
+- **Lead capture** — inquiry, site-visit, Schedule a call, and home-visit forms; all show a consistent post-submit acknowledgement ("We'll contact you on WhatsApp within 24 hours"); optional inquiry confirmation email via Resend when `RESEND_API_KEY` is set
 - **Lead deduplication** — repeat submissions from the same phone number merge into the existing CRM record (enriching contact details, appending message history, upgrading lead type when higher-intent)
+- **Lead-quality improvements from `prj-1.md`** — inline eligibility note on listing details, active "Schedule a call" form with time slot/timezone, buyer-type personalisation on listings, contextual blog links below listing inquiries, explicit `site_visit_requested` CRM stage, and a clearer home "How it works" explainer
 - **WhatsApp integration** — `wa.me` click-to-chat links with context-specific pre-filled messages (listing detail includes title, acreage, district, and price)
 - **SEO fundamentals** — meta tags, Open Graph, dynamic `robots.txt` (`src/app/robots.ts`), `sitemap.xml`, semantic HTML, fast loads, schema.org JSON-LD (`RealEstateListing` / `Article` / `Organization` with owner contactPoint)
 
@@ -72,7 +74,7 @@ The site's job is to showcase land listings attractively, rank well in search en
 - **Authentication** — email/password login for Owner and Admins
 - **Role-based access** — Owner (Super Admin) vs Admin (see [Roles & Permissions](#roles--permissions))
 - **Listings management** — CRUD with status: Draft / Published / Under Offer / Sold
-- **Lead / CRM management** — view captured leads with source, colour-coded status badges (New / Contacted / Negotiating / Converted / Lost), update status (New → Contacted → Negotiating → Converted/Lost), add follow-up notes, log WhatsApp/call contact attempts; dashboard summary cards (Published Listings / New Leads / Leads in Negotiation / Blog Posts Live)
+- **Lead / CRM management** — view captured leads with source, colour-coded status badges (New / Contacted / Site Visit Requested / Site Visit Scheduled / Negotiating / Converted / Lost), update status through the allowed pipeline, add follow-up notes, log WhatsApp/call contact attempts, and open one-click pre-filled WhatsApp links from each lead row; dashboard summary cards (Published Listings / New Leads / Leads in Negotiation / Blog Posts Live)
 - **Data export** — CSV export of leads/listings, **Owner-only**
 - **Blog / CMS management** — create/edit/delete/publish posts with an editorial category, per-post SEO overrides (meta title/description, social image), cover-image upload, and auto-estimated reading time (overridable)
 - **Multilingual UI** — English (default), Tamil, and Malayalam, switchable from the header. Cookie-based (`NEXT_LOCALE`), read server-side so pages re-render in the chosen language; missing translations fall back to English per key. Currently covers UI chrome (nav/footer/CTAs incl. Saved) + the home hero, extensible via `src/lib/i18n/messages/`
@@ -96,7 +98,7 @@ The site's job is to showcase land listings attractively, rank well in search en
 
 ## Tech Stack
 
-> The stack is **provisional** and may be revised. All dependencies are free and permissively licensed — see the [License Policy](#license-policy). v4 added server-side HTML sanitisation, media/PDF upload, and open-source maps (Leaflet, wired on the project-detail page) — all in active use. A rich-text WYSIWYG editor (TipTap) was evaluated but removed from dependencies until it is actually built (no architectural change).
+> The stack is **provisional** and may be revised. All dependencies are free and permissively licensed — see the [License Policy](#license-policy). v4 added server-side HTML sanitisation, media/PDF upload, open-source maps (Leaflet), and a lightweight in-app rich-text editor for project/event descriptions — all in active use. TipTap was evaluated and removed; no extra editor dependency is used.
 
 | Layer | Choice | License |
 |---|---|---|
@@ -109,7 +111,7 @@ The site's job is to showcase land listings attractively, rank well in search en
 | Validation | **Zod** | MIT |
 | Styling / UI | **Tailwind CSS** + **shadcn/ui** | MIT |
 | Forms | **React Hook Form** | MIT |
-| Rich text | **As built:** project + event descriptions authored as HTML in a `<textarea>`, sanitised with **sanitize-html** on write, rendered as HTML. Blog bodies are plain text (line breaks preserved). A WYSIWYG editor (TipTap) is a future upgrade — *not a current dependency* | MIT |
+| Rich text | **As built:** project + event descriptions authored with a lightweight in-app WYSIWYG editor, sanitised with **sanitize-html** on write, rendered as HTML. Blog bodies are plain text (line breaks preserved). TipTap is not a current dependency | MIT |
 | Maps | **Leaflet + react-leaflet** with OpenStreetMap tiles (free, no API key) — *wired on the project-detail page (per-project lat/lng) and the contact page (office location via env)* | BSD-2-Clause |
 | Media storage | Upload to **local disk / Docker volume**, processed with **sharp**; lead-magnet PDF + gallery uploads (SeaweedFS / object-storage tier later) | Apache-2.0 |
 | Testing | **Vitest**, **React Testing Library**, **Playwright** (E2E, Phase 2) | MIT / Apache-2.0 |
@@ -450,10 +452,10 @@ pnpm test:report          # generate test/coverage report into tests/reports/
 Full v4 model (see [prj.md](prj.md) Section 8 and the ERD in [docs/ERD.md](docs/ERD.md); authoritative schema is [prisma/schema.prisma](prisma/schema.prisma)):
 
 - **User** — `id, name, email, role (OWNER | ADMIN), is_active, ...`
-- **Project** *(parent land parcel → many Plots)* — `id, title, slug, tagline, theme, description (rich text), location_*, latitude?, longitude?, kerala_tn_border, location_distances (JSON), total_area_acres, land_revenue_classification (nilam | purayidam | converted), road_status/spec, clubhouse/water/plantation descriptions, maintenance_fee_*, common_asset_handover_status, road_handover_to_panchayat_status, nearby_attractions (JSON), legal_checklist_summary, status (draft | published | sold_out | coming_soon), cover_photo_url, video_embed_url, photos[], created_by, ...`
+- **Project** *(parent land parcel → many Plots)* — `id, title, slug, tagline, theme, description (rich text), location_*, latitude?, longitude?, kerala_tn_border, location_distances (JSON), total_area_acres, land_revenue_classification (nilam | purayidam | converted), road_status/spec, clubhouse/water/plantation descriptions, maintenance_fee_*, common_asset_handover_status, road_handover_to_panchayat_status, nearby_attractions (JSON), legal_checklist_summary, status (draft | published | sold_out | coming_soon), cover_photo_url, video_embed_url, photos[], created_by, ...` *(project pages also explain optional clubhouse/farmhouse support, the 20% permanent-structure / 80% open-land principle, and owner-side legal responsibility for conversion/approvals)*
 - **Plot** *(sub-unit of a Project)* — `id, project_id, plot_number, size_cents, price_per_cent, total_price, position_notes, status (available | reserved | sold)`
 - **Listing** *(standalone)* — `id, title, slug, description, district, nearest_town, kerala_tn_border, land_type, land_revenue_classification, size_acres, price, status (draft | published | under_offer | sold), photos[], created_by, ...`
-- **Lead** — `id, name, email, phone, whatsapp, buyer_type (resident_indian | nri | oci | foreign_citizen), lead_type (inquiry | site_visit_request | callback | lead_magnet_download), message, status (new | contacted | site_visit_scheduled | negotiating | converted | lost), is_cofarmer, preferred_date, project_interest, plot_interest, source_page, source_listing?, source_project?, source_blog_post?, follow_up_notes[], ...` *(repeat captures from the same normalised phone merge in app code — see `captureLead`)*
+- **Lead** — `id, name, email, phone, whatsapp, buyer_type (resident_indian | nri | oci | foreign_citizen), lead_type (inquiry | site_visit_request | callback | lead_magnet_download), message, status (new | contacted | site_visit_requested | site_visit_scheduled | negotiating | converted | lost), is_cofarmer, preferred_date, preferred_call_slot, preferred_timezone, project_interest, plot_interest, source_page, source_listing?, source_project?, source_blog_post?, follow_up_notes[], ...` *(repeat captures from the same normalised phone merge in app code — see `captureLead`)*
 - **BlogPost** — `id, title, slug, body (plain text, line breaks preserved on render), cover_image, category (legal_guides | investment | lifestyle | plantation_farming | location_spotlight | nri_corner | community_stories | myth_busting | farming_guides), meta_title, meta_description, og_image_url, estimated_read_minutes, status (draft | published), author, published_at, ...`
 - **Event** — `id, title, slug, description (rich text), event_date, theme, status (upcoming | past), project_id?, photos[], created_by, ...`
 - **Testimonial** — `id, buyer_name, buyer_city, buyer_type (resident_indian | nri | oci), quote_text, video_url?, display_order, is_active, project_id?, created_by, ...`
@@ -486,7 +488,7 @@ The final application code is intended to remain **private/proprietary**. Techno
 
 ## Roadmap (Phase 2)
 
-- **WYSIWYG rich-text editor** (e.g. TipTap) to replace the raw-HTML textarea for project/event descriptions
+- Lead-quality improvements from `prj-1.md` shipped: inline listing eligibility note, active "Schedule a call" form with time slot/timezone, buyer-type personalisation on `/listings`, contextual blog links on listing detail pages, explicit `site_visit_requested` CRM status stage, and a simpler home "How it works" explainer above the deeper ownership journey
 - WhatsApp Business API (open-source gateway or official Cloud API free tier) for templated/automated follow-ups
 - Automated email drip sequences for lead nurturing (single inquiry confirmation email via Resend is shipped when configured)
 - Multi-language support — Malayalam & Tamil UI toggles **shipped** (English default, cookie-based, per-key English fallback). Remaining: Hindi/Arabic, translating the rest of the page prose, and optional URL-prefixed locales (`/ta`, `/ml`) for stronger multilingual SEO
@@ -501,4 +503,4 @@ The final application code is intended to remain **private/proprietary**. Techno
 ## License & Branding
 
 - **Project license:** **proprietary / all rights reserved** — see [LICENSE](LICENSE). `package.json` is marked `"private": true` and `"license": "UNLICENSED"` so it is never accidentally published. This applies to the project's own code; third-party dependencies remain under their permissive licenses (see [License Policy](#license-policy)).
-- **Domain & branding:** not yet acquired — **TBD**. Placeholder branding (name "Ghats Arcade", tagline "Tranquility meets high-yields") is used until real assets are provided. This is a known gap to revisit before public launch.
+- **Domain & branding:** not yet acquired — **TBD**. Placeholder branding (name "Ghats Arcade", tagline "A farmland for your family") is used until real assets are provided. This is a known gap to revisit before public launch.

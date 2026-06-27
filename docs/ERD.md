@@ -85,9 +85,11 @@ erDiagram
         string whatsapp
         string buyerType "resident_indian | nri | oci | foreign_citizen"
         string leadType "inquiry | site_visit_request | callback | lead_magnet_download"
-        string status "new | contacted | site_visit_scheduled | negotiating | converted | lost"
+        string status "new | contacted | site_visit_requested | site_visit_scheduled | negotiating | converted | lost"
         boolean isCofarmer
         datetime preferredDate
+        string preferredCallSlot "morning | afternoon | evening"
+        string preferredTimezone
         string sourceListingId FK
         string sourceProjectId FK
         string sourceBlogPostId FK

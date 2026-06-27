@@ -226,9 +226,11 @@ model Lead {
   buyerType       String    @default("resident_indian") // resident_indian | nri | oci | foreign_citizen
   leadType        String    @default("inquiry") // inquiry | site_visit_request | callback | lead_magnet_download
   message         String?
-  status          String    @default("new") // new | contacted | site_visit_scheduled | negotiating | converted | lost
+  status          String    @default("new") // new | contacted | site_visit_requested | site_visit_scheduled | negotiating | converted | lost
   isCofarmer      Boolean   @default(false)
   preferredDate   DateTime? // for site_visit_request
+  preferredCallSlot String?  // morning | afternoon | evening; for schedule-call callbacks
+  preferredTimezone String?  // e.g. Asia/Kolkata, Asia/Dubai, Europe/London
   projectInterest String? // free-text / dropdown selection from a capture form
   plotInterest    String? // which plot number/size the buyer asked about
   sourcePage      String?

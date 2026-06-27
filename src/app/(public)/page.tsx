@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FaqList } from "@/components/public/FaqList";
+import { HomeHowItWorks } from "@/components/public/HomeHowItWorks";
 import { HomeVisitForm } from "@/components/public/HomeVisitForm";
 import { LeadInquiryForm } from "@/components/public/LeadInquiryForm";
 import { ProjectCard } from "@/components/public/ProjectCard";
@@ -37,7 +38,8 @@ const FEARS: { fear: string; answer: string }[] = [
   },
   {
     fear: "Can I put a structure on it?",
-    answer: "A shared heritage clubhouse, plus the panchayat permission pathway explained honestly.",
+    answer:
+      "Some projects may include a clubhouse, and we can guide co-farmers on small farm-use structures while the legal permissions remain with the owner.",
   },
   {
     fear: "Plot sizes don't fit my budget",
@@ -157,6 +159,8 @@ export default async function HomePage() {
       </section>
 
       <TrustProofStrip />
+
+      <HomeHowItWorks />
 
       {/* Block 2 — Reframe the time objection (poetic prose) */}
       <section className="mx-auto max-w-3xl px-4 py-20 text-center">
@@ -339,7 +343,7 @@ export default async function HomePage() {
             co-farmers say about us on our Google Business profile.
           </p>
           <a
-            href="https://www.google.com/search?q=Ghats+Arcade+reviews"
+            href={publicEnv.NEXT_PUBLIC_GOOGLE_REVIEWS_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-5 inline-block rounded-lg border border-brand-300 px-5 py-2.5 text-sm font-medium text-brand-800 transition-colors hover:bg-white"

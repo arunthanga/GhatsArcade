@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { type GalleryImage, GalleryUploader } from "@/components/admin/GalleryUploader";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { EVENT_STATUSES } from "@/types";
 
 export type AdminEventRow = {
@@ -356,15 +357,12 @@ function EventFields({
         </select>
       </label>
 
-      <label className="flex flex-col gap-1 text-sm text-slate-300">
-        Description
-        <textarea
-          className={`${inputClass} min-h-32`}
-          value={form.description}
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
-          required
-        />
-      </label>
+      <RichTextEditor
+        label="Description"
+        value={form.description}
+        onChange={(description) => setForm({ ...form, description })}
+        required
+      />
 
       <div className="flex flex-col gap-2 text-sm text-slate-300">
         <span>Photos</span>

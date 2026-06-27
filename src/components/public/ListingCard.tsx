@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { formatAcres, formatInr } from "@/lib/format";
+import { BuyerTrustSnippet } from "./BuyerTypePersonalization";
 import { SaveListingButton } from "./SaveListingButton";
 
 export type ListingCardData = {
@@ -24,6 +25,7 @@ export function ListingCard({ listing }: { listing: ListingCardData }) {
       </Link>
       <p className="mt-1 text-sm text-brand-600">{listing.district}</p>
       <p className="mt-1 text-sm text-brand-600">{formatAcres(listing.sizeAcres)}</p>
+      <BuyerTrustSnippet className="mt-3" />
       <div className="mt-3 flex items-center justify-between">
         <p className="text-base font-bold text-brand-800">{formatInr(listing.priceInr)}</p>
         {listing.status === "under_offer" ? (

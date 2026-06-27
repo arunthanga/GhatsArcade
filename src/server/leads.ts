@@ -65,13 +65,31 @@ function preferredLeadType(existing: string, incoming: LeadType): LeadType {
   return incomingRank < existingRank ? incoming : (existing as LeadType);
 }
 
+// Repeat enquiries append to (never overwrite) the lead message history, so a frequent
+// re-submitter could otherwise grow this field without bound. Cap the stored history and
+// keep the most recent entries — older context is dropped from the front, which is where
+// the least relevant detail lives.
+const MAX_MERGED_MESSAGE_LENGTH = 4000;
+
+function capMessageHistory(message: string): string {
+  if (message.length <= MAX_MERGED_MESSAGE_LENGTH) {
+    return message;
+  }
+  const truncated = message.slice(message.length - MAX_MERGED_MESSAGE_LENGTH);
+  // Drop the partial first line so the kept history starts on a clean entry.
+  const firstBreak = truncated.indexOf("\n");
+  const body = firstBreak >= 0 ? truncated.slice(firstBreak + 1) : truncated;
+  return `[Earlier history trimmed]\n${body}`;
+}
+
 // Build the merged `message` when a repeat enquiry arrives from a known phone.
 // The new enquiry is appended (never overwrites history) and tagged so the CRM
 // can see it was a follow-up rather than the original.
 function mergeMessage(existing: string | null, incoming: string | null): string | null {
   const stamp = new Date().toISOString().slice(0, 10);
   const addition = `[Repeat enquiry ${stamp}]${incoming ? ` ${incoming}` : ""}`;
-  return existing ? `${existing}\n${addition}` : addition;
+  const merged = existing ? `${existing}\n${addition}` : addition;
+  return capMessageHistory(merged);
 }
 
 async function findExistingLeadByPhone(phone: string) {
@@ -134,6 +152,9 @@ export async function captureLead(data: LeadInquiryInput) {
         email: existing.email ?? (data.email ? data.email : null),
         whatsapp: existing.whatsapp ?? (data.whatsapp ? data.whatsapp : null),
         preferredDate: existing.preferredDate ?? data.preferredDate ?? null,
+        preferredCallSlot: existing.preferredCallSlot ?? data.preferredCallSlot ?? null,
+        preferredTimezone:
+          existing.preferredTimezone ?? (data.preferredTimezone ? data.preferredTimezone : null),
         projectInterest:
           existing.projectInterest ?? (data.projectInterest ? data.projectInterest : null),
         plotInterest: existing.plotInterest ?? (data.plotInterest ? data.plotInterest : null),
@@ -159,6 +180,8 @@ export async function captureLead(data: LeadInquiryInput) {
       message: data.message ? data.message : null,
       isCofarmer: data.isCofarmer,
       preferredDate: data.preferredDate ?? null,
+      preferredCallSlot: data.preferredCallSlot ?? null,
+      preferredTimezone: data.preferredTimezone ? data.preferredTimezone : null,
       projectInterest: data.projectInterest ? data.projectInterest : null,
       plotInterest: data.plotInterest ? data.plotInterest : null,
       sourcePage: data.sourcePage ? data.sourcePage : null,

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BuyerTrustSnippet } from "@/components/public/BuyerTypePersonalization";
 import { ConstructionDisclaimer } from "@/components/public/ConstructionDisclaimer";
+import { EligibilityServiceNote } from "@/components/public/EligibilityServiceNote";
 import { LeadInquiryForm } from "@/components/public/LeadInquiryForm";
+import { RelatedArticles } from "@/components/public/RelatedArticles";
 import { SaveListingButton } from "@/components/public/SaveListingButton";
 import { TrustProofStrip } from "@/components/public/TrustProofStrip";
 import { WhatsAppButton } from "@/components/public/WhatsAppButton";
@@ -9,6 +12,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { publicEnv } from "@/lib/env";
 import { formatAcres, formatInr } from "@/lib/format";
 import { absoluteUrl, listingJsonLd } from "@/lib/seo";
+import { listRelatedPostsForListing } from "@/server/blog";
 import { getPublicListingBySlug } from "@/server/listings";
 
 export const dynamic = "force-dynamic";
@@ -49,6 +53,7 @@ export default async function ListingDetailPage({
   if (!listing) {
     notFound();
   }
+  const relatedArticles = await listRelatedPostsForListing({ district: listing.district });
 
   const whatsappNumber = publicEnv.NEXT_PUBLIC_WHATSAPP_NUMBER;
 
@@ -105,6 +110,8 @@ export default async function ListingDetailPage({
 
       <TrustProofStrip className="mb-8 rounded-xl border border-brand-100" compact />
 
+      <BuyerTrustSnippet className="mb-8 border border-brand-100 bg-white p-4 text-sm" />
+
       <div className="mb-8">
         <ConstructionDisclaimer />
       </div>
@@ -124,8 +131,13 @@ export default async function ListingDetailPage({
       ) : null}
 
       <div className="rounded-xl border border-brand-100 bg-brand-50 p-6">
+        <div className="mb-4">
+          <EligibilityServiceNote />
+        </div>
         <LeadInquiryForm sourceListingId={listing.id} />
       </div>
+
+      <RelatedArticles articles={relatedArticles} />
     </main>
   );
 }

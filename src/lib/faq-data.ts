@@ -18,12 +18,12 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Can I build a house or farmhouse on my plot?",
     answer:
-      "These are agricultural plots. Construction is governed by Kerala's land-use and panchayat rules, which generally restrict permanent structures on agricultural land. We never promise construction approvals — please see our agricultural-land construction disclaimer and verify independently before registering.",
+      "These are agricultural plots, so any farmhouse or farm-use structure must respect Kerala's land-use and panchayat rules. If you would like help, Ghats Arcade can support architecture and construction planning, or coordinate with your own team. We do not take legal responsibility to convert the land, make it residential, or secure approvals; permissions, conversion, and compliance remain with the registered owner. We guide every co-farmer to keep permanent concrete structures within 20% of their total holding, leaving at least 80% open for trees, soil, water, and the farm character of the project.",
   },
   {
     question: "Who is managed farmland NOT suitable for?",
     answer:
-      "It is not a fit if you need guaranteed short-term returns, expect to build a residence immediately, or want a liquid asset you can exit overnight. Farmland is a long-horizon, appreciation-and-lifestyle asset. We'd rather tell you that upfront than oversell it.",
+      "It is not a fit if you need guaranteed short-term returns, want a conventional full-size residence, or need a liquid asset you can exit overnight. It is a better fit when you want land, open space, trees, and a small farm-life footprint supported with honest construction guidance. Farmland is a long-horizon, appreciation-and-lifestyle asset. We'd rather tell you that upfront than oversell it.",
   },
   {
     question: "Can I sell the land in the future? Will Ghats Arcade help?",

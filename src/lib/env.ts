@@ -40,6 +40,12 @@ const publicSchema = z.object({
     z.coerce.number().min(-180).max(180).optional(),
   ),
   NEXT_PUBLIC_OFFICE_ADDRESS: z.string().optional(),
+  // Public link behind the "Read our Google reviews" CTA. Set this to the real Google
+  // Business Profile / Maps reviews URL; defaults to a Google search for the brand.
+  NEXT_PUBLIC_GOOGLE_REVIEWS_URL: z.preprocess(
+    emptyToUndefined,
+    z.string().url().default("https://www.google.com/search?q=Ghats+Arcade+reviews"),
+  ),
 });
 
 function parse<T extends z.ZodTypeAny>(schema: T, source: NodeJS.ProcessEnv): z.infer<T> {

@@ -13,6 +13,7 @@ export type LandType = (typeof LAND_TYPES)[number];
 export const LEAD_STATUSES = [
   "new",
   "contacted",
+  "site_visit_requested",
   "site_visit_scheduled",
   "negotiating",
   "converted",
@@ -28,6 +29,22 @@ export const LEAD_TYPES = [
   "lead_magnet_download",
 ] as const;
 export type LeadType = (typeof LEAD_TYPES)[number];
+
+export const PREFERRED_CALL_SLOTS = ["morning", "afternoon", "evening"] as const;
+export type PreferredCallSlot = (typeof PREFERRED_CALL_SLOTS)[number];
+export const PREFERRED_CALL_SLOT_LABELS: Record<PreferredCallSlot, string> = {
+  morning: "Morning",
+  afternoon: "Afternoon",
+  evening: "Evening",
+};
+
+export const COMMON_LEAD_TIMEZONES = [
+  "Asia/Kolkata",
+  "Asia/Dubai",
+  "Asia/Riyadh",
+  "Europe/London",
+  "America/New_York",
+] as const;
 
 export const BUYER_TYPES = ["resident_indian", "nri", "oci", "foreign_citizen"] as const;
 export type BuyerType = (typeof BUYER_TYPES)[number];

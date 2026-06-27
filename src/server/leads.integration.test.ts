@@ -63,6 +63,18 @@ describe("captureLead", () => {
     const lead = await captureLead({ ...inquiry, sourceListingId: "missing-id" });
     expect(lead.sourceListingId).toBeNull();
   });
+
+  it("stores preferred call slot and timezone for scheduled calls", async () => {
+    const lead = await captureLead({
+      ...inquiry,
+      leadType: "callback",
+      preferredCallSlot: "morning",
+      preferredTimezone: "Asia/Dubai",
+    });
+
+    expect(lead.preferredCallSlot).toBe("morning");
+    expect(lead.preferredTimezone).toBe("Asia/Dubai");
+  });
 });
 
 describe("captureLead deduplication", () => {
@@ -81,6 +93,20 @@ describe("captureLead deduplication", () => {
     expect(second.message).toContain("First message.");
     expect(second.message).toContain("Second message.");
     expect(second.message).toContain("Repeat enquiry");
+  });
+
+  it("caps the merged message history so repeat enquiries cannot grow it unbounded", async () => {
+    const longMessage = "x".repeat(900);
+    let lead = await captureLead({ ...inquiry, message: longMessage });
+    for (let i = 0; i < 10; i += 1) {
+      lead = await captureLead({ ...inquiry, message: `${longMessage} round ${i}` });
+    }
+
+    expect(lead.message).not.toBeNull();
+    expect(lead.message!.length).toBeLessThanOrEqual(4000);
+    // The most recent enquiry is retained; the oldest history is trimmed away.
+    expect(lead.message).toContain("round 9");
+    expect(lead.message).toContain("Earlier history trimmed");
   });
 
   it("keeps separate leads for different phone numbers", async () => {
@@ -106,6 +132,20 @@ describe("captureLead deduplication", () => {
     });
     const merged = await captureLead({ ...inquiry, message: "Following up." });
     expect(merged.status).toBe("contacted");
+  });
+
+  it("enriches missing schedule-call fields during deduplication", async () => {
+    const first = await captureLead(inquiry);
+    const second = await captureLead({
+      ...inquiry,
+      leadType: "callback",
+      preferredCallSlot: "evening",
+      preferredTimezone: "Europe/London",
+    });
+
+    expect(second.id).toBe(first.id);
+    expect(second.preferredCallSlot).toBe("evening");
+    expect(second.preferredTimezone).toBe("Europe/London");
   });
 
   it("upgrades leadType when a higher-intent capture arrives from the same phone", async () => {
@@ -134,6 +174,26 @@ describe("updateLeadStatus", () => {
     const lead = await captureLead(inquiry);
     const updated = await updateLeadStatus({ actorRole: "ADMIN", id: lead.id, status: "contacted" });
     expect(updated.status).toBe("contacted");
+  });
+
+  it("allows site_visit_requested after contact but not directly from new", async () => {
+    const lead = await captureLead(inquiry);
+
+    await expect(
+      updateLeadStatus({
+        actorRole: "ADMIN",
+        id: lead.id,
+        status: "site_visit_requested",
+      }),
+    ).rejects.toBeInstanceOf(ValidationError);
+
+    await updateLeadStatus({ actorRole: "ADMIN", id: lead.id, status: "contacted" });
+    const requested = await updateLeadStatus({
+      actorRole: "ADMIN",
+      id: lead.id,
+      status: "site_visit_requested",
+    });
+    expect(requested.status).toBe("site_visit_requested");
   });
 
   it("rejects an illegal jump", async () => {

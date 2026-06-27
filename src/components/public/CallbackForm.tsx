@@ -3,10 +3,14 @@
 import { useState } from "react";
 import { LeadCaptureSuccess } from "@/components/public/LeadCaptureSuccess";
 import { appendLeadQualification, VISIT_READINESS } from "@/lib/lead-qualification";
+import {
+  COMMON_LEAD_TIMEZONES,
+  PREFERRED_CALL_SLOT_LABELS,
+  PREFERRED_CALL_SLOTS,
+} from "@/types";
 
-// Low-friction "request a callback" form: Name + Phone only (prj.md Section 3.4 — the
-// "What is Managed Farmland?" page ends with a 10-minute-call CTA). Posts as a `callback`
-// lead type so the CRM can tell it apart from inquiries and site-visit requests.
+// Low-friction "Schedule a call" form. Posts as a `callback` lead type so the CRM
+// can tell it apart from inquiries and site-visit requests.
 type CallbackFormProps = {
   heading?: string;
   blurb?: string;
@@ -14,12 +18,19 @@ type CallbackFormProps = {
   sourcePage?: string;
 };
 
-const initial = { name: "", phone: "", visitReadiness: "", company: "" };
+const initial = {
+  name: "",
+  phone: "",
+  preferredCallSlot: "",
+  preferredTimezone: "Asia/Kolkata",
+  visitReadiness: "",
+  company: "",
+};
 
 export function CallbackForm({
-  heading = "Prefer to talk it through?",
-  blurb = "Leave your number and our team will call you back — usually within a working day.",
-  submitLabel = "Request a callback",
+  heading = "Schedule a call",
+  blurb = "Pick a comfortable time and our team will call you back with the facts first.",
+  submitLabel = "Schedule a call",
   sourcePage,
 }: CallbackFormProps) {
   const [form, setForm] = useState(initial);
@@ -34,6 +45,8 @@ export function CallbackForm({
       body: JSON.stringify({
         name: form.name,
         phone: form.phone,
+        preferredCallSlot: form.preferredCallSlot || undefined,
+        preferredTimezone: form.preferredTimezone || undefined,
         message: appendLeadQualification(undefined, { visitReadiness: form.visitReadiness }),
         company: form.company,
         leadType: "callback",
@@ -52,7 +65,7 @@ export function CallbackForm({
     return (
       <LeadCaptureSuccess
         testId="callback-success"
-        title="Callback request received"
+        title="Call request received"
         resetLabel="Send another request"
         onReset={() => setStatus("idle")}
       />
@@ -80,6 +93,35 @@ export function CallbackForm({
         required
         className={fieldClass}
       />
+      <label className="text-sm text-brand-600">
+        Preferred call time
+        <select
+          value={form.preferredCallSlot}
+          onChange={(e) => setForm({ ...form, preferredCallSlot: e.target.value })}
+          className={`${fieldClass} mt-1`}
+        >
+          <option value="">Any time is fine</option>
+          {PREFERRED_CALL_SLOTS.map((slot) => (
+            <option key={slot} value={slot}>
+              {PREFERRED_CALL_SLOT_LABELS[slot]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="text-sm text-brand-600">
+        Timezone
+        <input
+          list="lead-timezones"
+          value={form.preferredTimezone}
+          onChange={(e) => setForm({ ...form, preferredTimezone: e.target.value })}
+          className={`${fieldClass} mt-1`}
+        />
+        <datalist id="lead-timezones">
+          {COMMON_LEAD_TIMEZONES.map((timezone) => (
+            <option key={timezone} value={timezone} />
+          ))}
+        </datalist>
+      </label>
       <select
         value={form.visitReadiness}
         onChange={(e) => setForm({ ...form, visitReadiness: e.target.value })}

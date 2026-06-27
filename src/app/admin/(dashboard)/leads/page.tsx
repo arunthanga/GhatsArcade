@@ -22,6 +22,8 @@ export default async function AdminLeadsPage() {
           projectInterest: lead.projectInterest,
           plotInterest: lead.plotInterest,
           preferredDate: lead.preferredDate ? lead.preferredDate.toISOString().slice(0, 10) : null,
+          preferredCallSlot: lead.preferredCallSlot,
+          preferredTimezone: lead.preferredTimezone,
           sourceTitle:
             lead.sourceProject?.title ??
             lead.sourceListing?.title ??
