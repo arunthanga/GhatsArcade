@@ -18,6 +18,7 @@ let authorId: string;
 const base: CreateBlogPostInput = {
   title: "Why the Kerala-TN border",
   body: "Long form content.",
+  category: "location_spotlight",
   status: "draft",
 };
 
@@ -81,7 +82,12 @@ describe("public reads", () => {
     await createBlogPost({
       actorRole: "OWNER",
       authorId,
-      data: { ...base, title: "Idukki Title Guide", body: "Idukki land basics", status: "published" },
+      data: {
+        ...base,
+        title: "Idukki Title Guide",
+        body: "Idukki land basics",
+        status: "published",
+      },
     });
     await createBlogPost({
       actorRole: "OWNER",
