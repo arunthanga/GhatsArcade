@@ -30,12 +30,23 @@
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "esbuild",
+      "msw",
+      "prisma",
+      "sharp"
+    ]
+  },
   "dependencies": {
+    "@hookform/resolvers": "latest",
     "@libsql/client": "latest",
-    "@prisma/adapter-libsql": "latest",
-    "@prisma/client": "latest",
+    "@prisma/adapter-libsql": "^6.19.3",
+    "@prisma/client": "^6.19.3",
     "@tanstack/react-query": "latest",
-    "better-auth": "latest",
+    "better-auth": "1.4.5",
     "leaflet": "latest",
     "next": "latest",
     "react": "latest",
@@ -44,11 +55,10 @@
     "react-leaflet": "latest",
     "sanitize-html": "latest",
     "sharp": "latest",
-    "@hookform/resolvers": "latest",
     "zod": "latest"
   },
   "devDependencies": {
-    "@biomejs/biome": "latest",
+    "@biomejs/biome": "2.0.6",
     "@playwright/test": "latest",
     "@tailwindcss/postcss": "latest",
     "@testing-library/jest-dom": "latest",
@@ -65,7 +75,7 @@
     "msw": "latest",
     "next-sitemap": "latest",
     "postcss": "latest",
-    "prisma": "latest",
+    "prisma": "^6.19.3",
     "tailwindcss": "latest",
     "tsx": "latest",
     "typescript": "latest",
