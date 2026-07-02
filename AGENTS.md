@@ -45,19 +45,7 @@ port 3000. See `README.md` and `prj.md` for product detail.
 - **Running `next dev`/`next build` rewrites `tsconfig.json`** (jsx → `react-jsx`,
   adds `.next/dev/types`). That edit is expected/harmless; leave it uncommitted.
 
-### KNOWN BROKEN: app cannot render/build yet (missing source files)
-This is an incomplete scaffold. Several imported modules were **never committed**, so
-the dev server boots but every route 500s and `pnpm build` fails with "Module not
-found". This is a code-completeness issue, **not** an environment problem. Missing:
-- `src/components/public/BuyerTypePersonalization` (`BuyerTrustSnippet`, `BuyerTypeSelector`)
-- `src/components/public/HomeHowItWorks`
-- `src/components/public/EligibilityServiceNote`
-- `src/components/public/FarmhouseSupportNote`
-- `src/components/public/RelatedArticles`
-- `src/components/admin/RichTextEditor`
-
-The rest of the stack is verified working: `pnpm test:run` passes 127 tests (the only
-failing suite, `ListingCard.test.tsx`, is blocked solely by the missing files above),
-`pnpm test:integration` passes 56 DB-backed tests, and the Prisma + SQLite + Better
-Auth runtime (lead capture, CRM listing, owner login) works. Create the files above to
-make the UI build and run.
+### Verified working
+`pnpm check` (no errors), `pnpm typecheck`, `pnpm test:run` (129 tests), `pnpm build`
+(full production build), and `pnpm dev` all pass. The Prisma + SQLite + Better Auth
+runtime (lead capture, CRM listing, seeded-owner login) works end-to-end.
