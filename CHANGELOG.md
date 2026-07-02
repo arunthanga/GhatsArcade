@@ -7,6 +7,7 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- **Public-site UX pass.** The home hero now leads with three trust "proof points" (clean-title review, resident on-ground team, 24-hour WhatsApp follow-up) and a three-card quick-path grid (compare managed projects / browse listings / check legal basics). The public header (`HeaderNav`) is now **sticky** with active-page highlighting (`aria-current="page"`) and a persistent **"Schedule a visit"** CTA on desktop and mobile. Every `ListingCard` and `ProjectCard` gains an explicit **"View details →" / "View project →"** link so cards are unambiguously clickable.
 - **Admin WYSIWYG rich-text editor.** Project and event descriptions now use a lightweight in-app rich-text editor with paragraph, heading, bold, italic, and bullet-list controls while preserving the existing sanitised-HTML storage path.
 - **One-click WhatsApp from CRM leads.** Each admin lead row now includes a pre-filled `wa.me` link using the lead's WhatsApp/phone and source context for faster follow-up.
 - **Clubhouse and farmhouse support messaging.** Project detail pages now include a soft co-farmer support note for project-specific optional clubhouse spaces and optional farmhouse architecture/construction coordination. The copy frames the 20% permanent-structure / 80% open-land principle as preserving farmland character, while clarifying that conversion, residential permissions, approvals, compliance, and legal responsibility remain with the owner.
@@ -49,6 +50,11 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     hides.
 
 ### Security
+- **Baseline security response headers.** `next.config.mjs` now sets `X-Content-Type-Options: nosniff`,
+  `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`,
+  `X-DNS-Prefetch-Control: on`, and a restrictive `Permissions-Policy` (`camera=(), microphone=(),
+  geolocation=()`) on every route, and disables the `X-Powered-By` header. A Content-Security-Policy is
+  intentionally deferred until the set of third-party origins (map tiles, fonts, analytics) is settled.
 - **Rate-limited public lead capture.** `POST /api/leads` now enforces a per-client fixed-window
   limit (5/minute via `src/lib/rate-limit.ts`) before parsing or sending any confirmation email,
   returning `429` with a `Retry-After` header. Layered on top of the existing honeypot.
@@ -57,6 +63,13 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   cleaned before `dangerouslySetInnerHTML`.
 
 ### Changed
+- **Listings & projects filter UX.** Both browse pages now use a labelled, card-style filter panel that
+  surfaces previously URL-only filters in the UI — acreage min/max and a Kerala–Tamil Nadu border toggle
+  on `/listings`; project status, price-per-cent range, and plot-size (cents) range on `/projects` —
+  alongside a live result count, active-filter chips, a "Clear filters" link, and a friendlier
+  empty state that suggests widening the search.
+- **Reproducible tooling.** Linting/formatting migrated to **Biome 2.5** (Tailwind CSS files skipped),
+  and all dependencies are pinned behind a committed `pnpm-lock.yaml` for reproducible installs.
 - **Capped lead message history.** Repeat enquiries from the same phone no longer grow a lead's
   `message` without bound; merged history is trimmed to the most recent ~4000 characters.
 - **More relevant related-article links.** `listRelatedPostsForListing` now prefers genuine
@@ -73,6 +86,11 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   They were never wired; rich-text authoring is handled by the shipped lightweight in-app editor.
 
 ### Documentation
+- **Project audit & doc sync (v4.3).** Reconciled `README.md`, `prj.md`, and this changelog with the
+  public-site UX pass (sticky nav + active-page highlighting + persistent "Schedule a visit" CTA, home
+  hero proof-points/quick-paths, card-style listings/projects filter panels with acreage/status/plot-size
+  ranges + active-filter chips, per-card "View details" links) and the baseline security response headers
+  in `next.config.mjs`. Confirmed `docs/ERD.md` still matches `prisma/schema.prisma`.
 - **Project audit & doc sync (v4.1).** Reconciled README, prj.md, and CHANGELOG with lead dedup, saved/compare, owner contact (`site-contact.ts`), Resend inquiry email, dynamic `robots.ts`, `formatInr`, CRM dashboard cards, and `LeadStatusBadge`.
 - **Project audit & doc sync (v4).** Reconciled `prj.md` and `README.md` with the actual code:
   TipTap (`@tiptap/*`) was removed after evaluation, Leaflet maps are wired, and the tech-stack
