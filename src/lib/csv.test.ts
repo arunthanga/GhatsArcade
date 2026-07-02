@@ -3,7 +3,13 @@ import { toCsv } from "./csv";
 
 describe("toCsv", () => {
   it("emits a header row from explicit columns in order", () => {
-    const csv = toCsv([{ a: 1, b: 2 }], [{ key: "b", header: "B" }, { key: "a", header: "A" }]);
+    const csv = toCsv(
+      [{ a: 1, b: 2 }],
+      [
+        { key: "b", header: "B" },
+        { key: "a", header: "A" },
+      ],
+    );
     expect(csv).toBe("B,A\r\n2,1");
   });
 
@@ -21,7 +27,10 @@ describe("toCsv", () => {
   });
 
   it("renders null/undefined as empty fields", () => {
-    const csv = toCsv([{ a: null, b: undefined, c: 0 }], [{ key: "a" }, { key: "b" }, { key: "c" }]);
+    const csv = toCsv(
+      [{ a: null, b: undefined, c: 0 }],
+      [{ key: "a" }, { key: "b" }, { key: "c" }],
+    );
     expect(csv).toBe("a,b,c\r\n,,0");
   });
 

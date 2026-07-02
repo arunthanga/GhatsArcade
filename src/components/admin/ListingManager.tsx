@@ -92,40 +92,40 @@ export function ListingManager({ initialListings }: { initialListings: AdminList
 
       <div className="overflow-x-auto">
         <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>District</th>
-            <th>Status</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {initialListings.map((listing) => (
-            <tr key={listing.id}>
-              <td>{listing.title}</td>
-              <td>{listing.district}</td>
-              <td>
-                <select
-                  value={listing.status}
-                  onChange={(e) => handleStatusChange(listing.id, e.target.value)}
-                  disabled={busy}
-                >
-                  {LISTING_STATUSES.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                <button type="button" onClick={() => handleDelete(listing.id)} disabled={busy}>
-                  Delete
-                </button>
-              </td>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>District</th>
+              <th>Status</th>
+              <th />
             </tr>
-          ))}
-        </tbody>
+          </thead>
+          <tbody>
+            {initialListings.map((listing) => (
+              <tr key={listing.id}>
+                <td>{listing.title}</td>
+                <td>{listing.district}</td>
+                <td>
+                  <select
+                    value={listing.status}
+                    onChange={(e) => handleStatusChange(listing.id, e.target.value)}
+                    disabled={busy}
+                  >
+                    {LISTING_STATUSES.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td>
+                  <button type="button" onClick={() => handleDelete(listing.id)} disabled={busy}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
 

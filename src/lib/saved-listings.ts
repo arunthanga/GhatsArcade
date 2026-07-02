@@ -77,19 +77,12 @@ export function useSavedListings() {
     };
   }, []);
 
-  const isSaved = useCallback(
-    (slug: string) => saved.some((item) => item.slug === slug),
-    [saved],
-  );
+  const isSaved = useCallback((slug: string) => saved.some((item) => item.slug === slug), [saved]);
 
   const toggle = useCallback((listing: SavedListing) => {
     const current = read();
     const exists = current.some((item) => item.slug === listing.slug);
-    write(
-      exists
-        ? current.filter((item) => item.slug !== listing.slug)
-        : [...current, listing],
-    );
+    write(exists ? current.filter((item) => item.slug !== listing.slug) : [...current, listing]);
   }, []);
 
   const remove = useCallback((slug: string) => {

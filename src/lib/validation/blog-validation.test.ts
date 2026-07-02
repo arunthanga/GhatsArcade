@@ -15,22 +15,22 @@ describe("createBlogPostSchema", () => {
 
   it("rejects an unknown category", () => {
     expect(createBlogPostSchema.safeParse({ ...validPost, category: "nope" }).success).toBe(false);
-    expect(
-      createBlogPostSchema.safeParse({ ...validPost, category: "myth_busting" }).success,
-    ).toBe(true);
+    expect(createBlogPostSchema.safeParse({ ...validPost, category: "myth_busting" }).success).toBe(
+      true,
+    );
   });
 
   it("validates SEO fields and reading-time override", () => {
     expect(
       createBlogPostSchema.safeParse({ ...validPost, metaTitle: "x".repeat(71) }).success,
     ).toBe(false);
-    expect(
-      createBlogPostSchema.safeParse({ ...validPost, ogImageUrl: "not-a-url" }).success,
-    ).toBe(false);
+    expect(createBlogPostSchema.safeParse({ ...validPost, ogImageUrl: "not-a-url" }).success).toBe(
+      false,
+    );
     expect(createBlogPostSchema.safeParse({ ...validPost, ogImageUrl: "" }).success).toBe(true);
-    expect(
-      createBlogPostSchema.safeParse({ ...validPost, estimatedReadMinutes: 0 }).success,
-    ).toBe(false);
+    expect(createBlogPostSchema.safeParse({ ...validPost, estimatedReadMinutes: 0 }).success).toBe(
+      false,
+    );
     const parsed = createBlogPostSchema.parse({ ...validPost, estimatedReadMinutes: "7" });
     expect(parsed.estimatedReadMinutes).toBe(7);
   });
@@ -41,7 +41,9 @@ describe("createBlogPostSchema", () => {
   });
 
   it("validates the optional cover image URL", () => {
-    expect(createBlogPostSchema.safeParse({ ...validPost, coverImage: "nope" }).success).toBe(false);
+    expect(createBlogPostSchema.safeParse({ ...validPost, coverImage: "nope" }).success).toBe(
+      false,
+    );
     expect(
       createBlogPostSchema.safeParse({ ...validPost, coverImage: "https://cdn.example.com/c.jpg" })
         .success,
@@ -49,7 +51,9 @@ describe("createBlogPostSchema", () => {
   });
 
   it("rejects an unknown status", () => {
-    expect(createBlogPostSchema.safeParse({ ...validPost, status: "archived" }).success).toBe(false);
+    expect(createBlogPostSchema.safeParse({ ...validPost, status: "archived" }).success).toBe(
+      false,
+    );
   });
 
   it("does not accept a slug", () => {

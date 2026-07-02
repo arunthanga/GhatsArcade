@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  followUpNoteSchema,
-  leadCaptureSchema,
-  leadStatusUpdateSchema,
-} from "./index";
+import { followUpNoteSchema, leadCaptureSchema, leadStatusUpdateSchema } from "./index";
 
 const validInquiry = {
   name: "Asha",
@@ -22,7 +18,9 @@ describe("leadCaptureSchema", () => {
   });
 
   it("rejects an unknown buyer type", () => {
-    expect(leadCaptureSchema.safeParse({ ...validInquiry, buyerType: "alien" }).success).toBe(false);
+    expect(leadCaptureSchema.safeParse({ ...validInquiry, buyerType: "alien" }).success).toBe(
+      false,
+    );
   });
 
   it("passes the honeypot field through", () => {

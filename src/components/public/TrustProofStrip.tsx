@@ -37,9 +37,9 @@ export function TrustProofStrip({ className = "", compact = false }: TrustProofS
               See the facts, meet the person responsible, then decide.
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-brand-600">
-              We keep the business clean: verify clean titles, understand the maintenance scope,
-              and walk the site before any serious decision. For your family, investment security
-              starts with paperwork you can review and people you can meet.
+              We keep the business clean: verify clean titles, understand the maintenance scope, and
+              walk the site before any serious decision. For your family, investment security starts
+              with paperwork you can review and people you can meet.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">

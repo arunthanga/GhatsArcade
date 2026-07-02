@@ -93,43 +93,43 @@ export function ProjectManager({ initialProjects }: { initialProjects: AdminProj
 
       <div className="overflow-x-auto">
         <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>District</th>
-            <th>Plots remaining</th>
-            <th>Status</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {initialProjects.map((project) => (
-            <tr key={project.id}>
-              <td>{project.title}</td>
-              <td>{project.locationDistrict}</td>
-              <td>{countAvailablePlots(project.plots)}</td>
-              <td>
-                <select
-                  value={project.status}
-                  onChange={(e) => handleStatusChange(project.id, e.target.value)}
-                  disabled={busy}
-                >
-                  {PROJECT_STATUSES.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                <Link href={`/admin/projects/${project.id}`}>Manage plots</Link>{" "}
-                <button type="button" onClick={() => handleDelete(project.id)} disabled={busy}>
-                  Delete
-                </button>
-              </td>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>District</th>
+              <th>Plots remaining</th>
+              <th>Status</th>
+              <th />
             </tr>
-          ))}
-        </tbody>
+          </thead>
+          <tbody>
+            {initialProjects.map((project) => (
+              <tr key={project.id}>
+                <td>{project.title}</td>
+                <td>{project.locationDistrict}</td>
+                <td>{countAvailablePlots(project.plots)}</td>
+                <td>
+                  <select
+                    value={project.status}
+                    onChange={(e) => handleStatusChange(project.id, e.target.value)}
+                    disabled={busy}
+                  >
+                    {PROJECT_STATUSES.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td>
+                  <Link href={`/admin/projects/${project.id}`}>Manage plots</Link>{" "}
+                  <button type="button" onClick={() => handleDelete(project.id)} disabled={busy}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
 

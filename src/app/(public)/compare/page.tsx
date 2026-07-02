@@ -101,10 +101,7 @@ export default async function ComparePage({
                     {row.label}
                   </th>
                   {listings.map((listing) => (
-                    <td
-                      key={listing.slug}
-                      className="border-b border-brand-100 p-3 text-brand-800"
-                    >
+                    <td key={listing.slug} className="border-b border-brand-100 p-3 text-brand-800">
                       {row.render(listing)}
                     </td>
                   ))}

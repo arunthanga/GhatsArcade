@@ -7,9 +7,9 @@ import { prisma } from "@/lib/db";
 import { AuthorizationError, NotFoundError, ValidationError } from "@/lib/errors";
 import { canTransitionLeadStatus } from "@/lib/lead-status";
 import { can } from "@/lib/roles";
+import type { LeadInquiryInput } from "@/lib/validation";
 import { normalizePhone } from "@/lib/whatsapp";
 import type { ContactMethod, LeadStatus, LeadType } from "@/types";
-import type { LeadInquiryInput } from "@/lib/validation";
 
 const LEAD_INCLUDE = {
   sourceListing: { select: { id: true, title: true, slug: true } },

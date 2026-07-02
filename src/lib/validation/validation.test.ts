@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  createListingSchema,
-  listingFilterSchema,
-  updateListingSchema,
-} from "./index";
+import { createListingSchema, listingFilterSchema, updateListingSchema } from "./index";
 
 const validListing = {
   title: "5 Acre Cardamom Estate",

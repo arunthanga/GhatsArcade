@@ -3,11 +3,7 @@
 import { useState } from "react";
 import { LeadCaptureSuccess } from "@/components/public/LeadCaptureSuccess";
 import { appendLeadQualification, VISIT_READINESS } from "@/lib/lead-qualification";
-import {
-  COMMON_LEAD_TIMEZONES,
-  PREFERRED_CALL_SLOT_LABELS,
-  PREFERRED_CALL_SLOTS,
-} from "@/types";
+import { COMMON_LEAD_TIMEZONES, PREFERRED_CALL_SLOT_LABELS, PREFERRED_CALL_SLOTS } from "@/types";
 
 // Low-friction "Schedule a call" form. Posts as a `callback` lead type so the CRM
 // can tell it apart from inquiries and site-visit requests.

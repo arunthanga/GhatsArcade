@@ -127,12 +127,23 @@ export async function storeUpload(file: {
   if (kind === "image") {
     const pipeline = sharp(file.bytes, { failOn: "error" })
       .rotate() // honour EXIF orientation, then drop the metadata
-      .resize({ width: MAX_IMAGE_EDGE, height: MAX_IMAGE_EDGE, fit: "inside", withoutEnlargement: true })
+      .resize({
+        width: MAX_IMAGE_EDGE,
+        height: MAX_IMAGE_EDGE,
+        fit: "inside",
+        withoutEnlargement: true,
+      })
       .webp({ quality: 82 });
     const { data, info } = await pipeline.toBuffer({ resolveWithObject: true });
     const filename = `${id}.webp`;
     await persist(category, filename, data);
-    return { url: publicUrl(category, filename), kind, category, width: info.width, height: info.height };
+    return {
+      url: publicUrl(category, filename),
+      kind,
+      category,
+      width: info.width,
+      height: info.height,
+    };
   }
 
   if (kind === "pdf") {

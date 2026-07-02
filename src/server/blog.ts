@@ -82,8 +82,15 @@ export async function updateBlogPost(args: {
     new Date(),
   );
 
-  const { coverImage, metaTitle, metaDescription, ogImageUrl, estimatedReadMinutes, body, ...rest } =
-    args.data;
+  const {
+    coverImage,
+    metaTitle,
+    metaDescription,
+    ogImageUrl,
+    estimatedReadMinutes,
+    body,
+    ...rest
+  } = args.data;
 
   // Recompute reading time when the body changes, unless an explicit override was given.
   const readMinutes =

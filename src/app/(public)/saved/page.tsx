@@ -32,8 +32,8 @@ export default function SavedListingsPage() {
         <p className="mt-10 text-brand-600">Loading your saved listings…</p>
       ) : saved.length === 0 ? (
         <p className="mt-10 text-brand-600">
-          You haven't saved any listings yet. Tap "Save" on a listing to bookmark it here - no
-          login needed.
+          You haven't saved any listings yet. Tap "Save" on a listing to bookmark it here - no login
+          needed.
         </p>
       ) : (
         <section className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

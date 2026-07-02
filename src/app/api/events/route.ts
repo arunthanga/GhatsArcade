@@ -25,7 +25,11 @@ export async function POST(request: Request) {
   }
 
   try {
-    const event = await createEvent({ actorRole: user.role, createdById: user.id, data: parsed.data });
+    const event = await createEvent({
+      actorRole: user.role,
+      createdById: user.id,
+      data: parsed.data,
+    });
     return NextResponse.json({ event }, { status: 201 });
   } catch (error) {
     if (error instanceof AuthorizationError) {

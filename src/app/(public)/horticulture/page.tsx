@@ -14,7 +14,10 @@ const CROPS: { name: string; note: string }[] = [
   { name: "Banana", note: "Fast-maturing and reliable; good early income while trees establish." },
   { name: "Mango", note: "Premium seasonal fruit well suited to the region's climate." },
   { name: "Jackfruit", note: "Hardy, high-yield, and increasingly valued for fruit and timber." },
-  { name: "Pepper", note: "A high-value spice that climbs existing trees — efficient use of land." },
+  {
+    name: "Pepper",
+    note: "A high-value spice that climbs existing trees — efficient use of land.",
+  },
   { name: "Arecanut", note: "A traditional, long-horizon cash crop for the belt." },
   { name: "Timber species", note: "Slow-growing hardwoods that build long-term asset value." },
 ];
@@ -23,7 +26,10 @@ const CALENDAR: { season: string; activity: string }[] = [
   { season: "Pre-monsoon (Apr–May)", activity: "Land prep, planting, and soil enrichment" },
   { season: "Southwest monsoon (Jun–Sep)", activity: "Establishment, weeding, and growth" },
   { season: "Post-monsoon (Oct–Nov)", activity: "Fruit set, spice harvest begins" },
-  { season: "Dry season (Dec–Mar)", activity: "Coconut, mango, and main harvests; irrigation-led care" },
+  {
+    season: "Dry season (Dec–Mar)",
+    activity: "Coconut, mango, and main harvests; irrigation-led care",
+  },
 ];
 
 const OPTIONS: { title: string; body: string }[] = [

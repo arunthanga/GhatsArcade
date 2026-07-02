@@ -9,7 +9,10 @@ import { BLOG_CATEGORY_LABELS, type BlogCategory } from "@/types";
 export const dynamic = "force-dynamic";
 
 function excerpt(body: string, max = 160): string {
-  const text = body.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const text = body
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   return text.length > max ? `${text.slice(0, max).trimEnd()}…` : text;
 }
 
@@ -46,11 +49,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function BlogPostPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await getPublicPostBySlug(slug);
   if (!post) {

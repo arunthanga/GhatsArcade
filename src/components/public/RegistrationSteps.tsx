@@ -44,10 +44,7 @@ export function RegistrationSteps() {
       </p>
       <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {STEPS.map((step, index) => (
-          <li
-            key={step.title}
-            className="rounded-xl border border-brand-100 bg-white p-5"
-          >
+          <li key={step.title} className="rounded-xl border border-brand-100 bg-white p-5">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-700 text-sm font-semibold text-brand-50">
               {index + 1}
             </span>

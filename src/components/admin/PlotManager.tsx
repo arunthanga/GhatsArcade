@@ -89,44 +89,44 @@ export function PlotManager({
 
       <div className="overflow-x-auto">
         <table>
-        <thead>
-          <tr>
-            <th>Plot</th>
-            <th>Size (cents)</th>
-            <th>Price / cent</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {initialPlots.map((plot) => (
-            <tr key={plot.id}>
-              <td>{plot.plotNumber}</td>
-              <td>{plot.sizeCents}</td>
-              <td>{plot.pricePerCent}</td>
-              <td>{plot.totalPrice}</td>
-              <td>
-                <select
-                  value={plot.status}
-                  onChange={(e) => handleStatusChange(plot.id, e.target.value)}
-                  disabled={busy}
-                >
-                  {PLOT_STATUSES.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                <button type="button" onClick={() => handleDelete(plot.id)} disabled={busy}>
-                  Delete
-                </button>
-              </td>
+          <thead>
+            <tr>
+              <th>Plot</th>
+              <th>Size (cents)</th>
+              <th>Price / cent</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th />
             </tr>
-          ))}
-        </tbody>
+          </thead>
+          <tbody>
+            {initialPlots.map((plot) => (
+              <tr key={plot.id}>
+                <td>{plot.plotNumber}</td>
+                <td>{plot.sizeCents}</td>
+                <td>{plot.pricePerCent}</td>
+                <td>{plot.totalPrice}</td>
+                <td>
+                  <select
+                    value={plot.status}
+                    onChange={(e) => handleStatusChange(plot.id, e.target.value)}
+                    disabled={busy}
+                  >
+                    {PLOT_STATUSES.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td>
+                  <button type="button" onClick={() => handleDelete(plot.id)} disabled={busy}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
 

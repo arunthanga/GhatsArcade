@@ -19,8 +19,8 @@ export default async function ResourcesPage() {
     <main className="mx-auto max-w-3xl px-4 py-12">
       <h1 className="text-3xl font-semibold text-brand-900">Free Guides</h1>
       <p className="mt-2 text-brand-700">
-        Practical, no-jargon guides to help you make a confident decision. Each one is free -
-        just tell us where to send it.
+        Practical, no-jargon guides to help you make a confident decision. Each one is free - just
+        tell us where to send it.
       </p>
 
       {magnets.length === 0 ? (

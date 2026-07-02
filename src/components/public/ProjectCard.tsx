@@ -61,9 +61,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
           ) : null}
         </div>
         <p className="mt-1 text-sm text-brand-600">{project.locationDistrict}</p>
-        {project.tagline ? (
-          <p className="mt-2 text-sm text-brand-600">{project.tagline}</p>
-        ) : null}
+        {project.tagline ? <p className="mt-2 text-sm text-brand-600">{project.tagline}</p> : null}
 
         <div className="mt-4 flex items-end justify-between">
           <div>
@@ -74,10 +72,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
               </p>
             ) : null}
           </div>
-          <span
-            data-testid="plots-remaining"
-            className="text-xs font-medium text-brand-700"
-          >
+          <span data-testid="plots-remaining" className="text-xs font-medium text-brand-700">
             {remaining > 0 ? `${remaining} plots remaining` : "No plots available"}
           </span>
         </div>
