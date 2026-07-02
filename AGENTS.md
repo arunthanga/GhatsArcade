@@ -17,16 +17,19 @@ port 3000. See `README.md` and `prj.md` for product detail.
 - DB (local dev): `pnpm prisma db push` then `pnpm prisma db seed`
 
 ### Non-obvious gotchas
-- **Dependencies are pinned, not `latest`.** The repo's `package.json` originally
-  pinned every dep to `"latest"` with no committed lockfile, which resolves to
-  incompatible majors. Working pins (in this branch) + a committed `pnpm-lock.yaml`:
-  - `prisma` / `@prisma/client` / `@prisma/adapter-libsql` → `^6.19.3` (the schema
-    uses `datasource { url = env(...) }`, which **Prisma 7 removed**).
-  - `better-auth` → **exactly `1.4.5`** (>=1.4.6 requires every `adminRoles` entry to
-    be defined in a `roles` access-control config; the app uses `adminRoles: ["OWNER"]`
-    without one, so newer versions throw `Invalid admin roles: OWNER`).
-  - `@biomejs/biome` → `2.0.6` (matches `biome.json`'s `2.0.0` schema).
+- **Dependencies are pinned to semver ranges + a committed `pnpm-lock.yaml`.**
+  The critical, non-obvious pin:
+  - `better-auth` → **exactly `1.4.5`** (do NOT widen to `^1.3.9`/latest). `>=1.4.6`
+    requires every `adminRoles` entry to be defined in a `roles` access-control config;
+    `src/lib/auth.ts` uses `adminRoles: ["OWNER"]` without one, so newer versions throw
+    `Invalid admin roles: OWNER` at seed/auth time. (better-auth 1.4.5 emits a harmless
+    unmet-peer warning for `zod@^4` since the app uses zod 3 — safe to ignore.)
+  - The Prisma line stays on v6 (`@prisma/client`/`prisma`/`@prisma/adapter-libsql`
+    `^6.16.3`); the schema uses `datasource { url = env(...) }`, which **Prisma 7 removed**.
   Keep these pins; do not "upgrade to latest" without also migrating the code.
+- **pnpm is `9.15.9` via the `packageManager` field** (corepack). A one-time
+  `node_modules` purge prompt appears only when switching pnpm majors; on a warm
+  snapshot `pnpm install` runs non-interactively.
 - **`pnpm.onlyBuiltDependencies`** in `package.json` lets `sharp`/`prisma`/`esbuild`/
   `msw` run their install scripts non-interactively. Do not run `pnpm approve-builds`
   (interactive).
@@ -52,7 +55,6 @@ found". This is a code-completeness issue, **not** an environment problem. Missi
 - `src/components/public/FarmhouseSupportNote`
 - `src/components/public/RelatedArticles`
 - `src/components/admin/RichTextEditor`
-- `src/lib/rate-limit`
 
 The rest of the stack is verified working: `pnpm test:run` passes 127 tests (the only
 failing suite, `ListingCard.test.tsx`, is blocked solely by the missing files above),

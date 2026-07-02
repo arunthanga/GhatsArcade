@@ -2,14 +2,8 @@ import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { AuthorizationError, NotFoundError, ValidationError } from "@/lib/errors";
 import { prisma, resetDb } from "../../tests/helpers/db";
 import { createOwner } from "../../tests/helpers/factories";
+import { addFollowUpNote, captureLead, getLead, listLeads, updateLeadStatus } from "./leads";
 import { createListing } from "./listings";
-import {
-  addFollowUpNote,
-  captureLead,
-  getLead,
-  listLeads,
-  updateLeadStatus,
-} from "./leads";
 
 let ownerId: string;
 
@@ -17,6 +11,8 @@ const inquiry = {
   name: "Asha",
   phone: "+919876543210",
   buyerType: "resident_indian" as const,
+  leadType: "inquiry" as const,
+  isCofarmer: false,
   email: "",
   message: "Interested in this plot.",
 };
@@ -172,7 +168,11 @@ describe("listLeads / getLead", () => {
 describe("updateLeadStatus", () => {
   it("allows a legal transition", async () => {
     const lead = await captureLead(inquiry);
-    const updated = await updateLeadStatus({ actorRole: "ADMIN", id: lead.id, status: "contacted" });
+    const updated = await updateLeadStatus({
+      actorRole: "ADMIN",
+      id: lead.id,
+      status: "contacted",
+    });
     expect(updated.status).toBe("contacted");
   });
 
