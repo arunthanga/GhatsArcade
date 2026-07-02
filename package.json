@@ -31,13 +31,23 @@
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "esbuild",
+      "msw",
+      "prisma",
+      "sharp"
+    ]
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@libsql/client": "^0.15.15",
     "@prisma/adapter-libsql": "^6.16.3",
     "@prisma/client": "^6.16.3",
     "@tanstack/react-query": "^5.90.2",
-    "better-auth": "^1.3.9",
+    "better-auth": "1.4.5",
     "leaflet": "^1.9.4",
     "next": "^15.5.4",
     "react": "^19.1.1",
