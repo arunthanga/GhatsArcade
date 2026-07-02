@@ -31,10 +31,8 @@ function publicUrl(category: UploadCategory, filename: string): string {
 }
 
 async function listCategory(category: UploadCategory): Promise<MediaItem[]> {
-  let entries: Awaited<ReturnType<typeof readdir>>;
-  try {
-    entries = await readdir(categoryDir(category), { withFileTypes: true });
-  } catch {
+  const entries = await readdir(categoryDir(category), { withFileTypes: true }).catch(() => null);
+  if (!entries) {
     return []; // folder not created yet
   }
 
