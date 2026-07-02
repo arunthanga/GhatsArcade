@@ -50,16 +50,16 @@ export default function WhatIsManagedFarmlandPage() {
         <p>
           Owning farmland used to mean either living on it or watching it sit idle. Managed farmland
           removes that trade-off. You register as a co-farmer with a clearly demarcated, registered
-          plot of agricultural land, and an on-ground team handles the cultivation and upkeep on your
-          behalf — so the land stays alive and productive whether you visit every weekend or once a
-          year.
+          plot of agricultural land, and an on-ground team handles the cultivation and upkeep on
+          your behalf — so the land stays alive and productive whether you visit every weekend or
+          once a year.
         </p>
         <p>
           It's a model built for people whose time and home are elsewhere — busy professionals, NRIs
           working in the Gulf, families who want a productive legacy — but who still want the
-          grounding, the produce, peaceful living, and the long-term value of real agricultural land.
-          The aim is simple: investment growth with investment security, supported by clean titles
-          and a trusted developer you can speak to directly.
+          grounding, the produce, peaceful living, and the long-term value of real agricultural
+          land. The aim is simple: investment growth with investment security, supported by clean
+          titles and a trusted developer you can speak to directly.
         </p>
         <p>
           Some projects may include a clubhouse as a shared place to gather. If a co-farmer wants a

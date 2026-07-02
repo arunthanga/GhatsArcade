@@ -4,7 +4,8 @@ import { SITE_OWNER } from "@/lib/site-contact";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Why we focus on managed farmland in Kerala and the Kerala-Tamil Nadu border region, and how it works.",
+  description:
+    "Why we focus on managed farmland in Kerala and the Kerala-Tamil Nadu border region, and how it works.",
   alternates: { canonical: absoluteUrl("/about") },
 };
 

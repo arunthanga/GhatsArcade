@@ -6,7 +6,9 @@ function unique(prefix: string): string {
   return `${prefix}-${Date.now()}-${counter}`;
 }
 
-export function createOwner(overrides: Partial<{ email: string; password: string; name: string }> = {}): Promise<SafeUser> {
+export function createOwner(
+  overrides: Partial<{ email: string; password: string; name: string }> = {},
+): Promise<SafeUser> {
   return createCredentialedUser({
     email: overrides.email ?? `${unique("owner")}@example.com`,
     password: overrides.password ?? "owner-password-123",
@@ -15,7 +17,9 @@ export function createOwner(overrides: Partial<{ email: string; password: string
   });
 }
 
-export function createAdminUser(overrides: Partial<{ email: string; password: string; name: string }> = {}): Promise<SafeUser> {
+export function createAdminUser(
+  overrides: Partial<{ email: string; password: string; name: string }> = {},
+): Promise<SafeUser> {
   return createCredentialedUser({
     email: overrides.email ?? `${unique("admin")}@example.com`,
     password: overrides.password ?? "admin-password-123",

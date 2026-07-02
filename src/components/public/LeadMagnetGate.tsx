@@ -48,7 +48,10 @@ export function LeadMagnetGate({ id, title, sourceBlogPostId, sourcePage }: Lead
 
   if (status === "ready") {
     return (
-      <div data-testid="lead-magnet-ready" className="rounded-xl border border-brand-100 bg-brand-50 p-6">
+      <div
+        data-testid="lead-magnet-ready"
+        className="rounded-xl border border-brand-100 bg-brand-50 p-6"
+      >
         <h3 className="text-lg font-semibold text-brand-900">{title}</h3>
         <p className="mt-1 text-sm text-brand-700">Your guide is ready.</p>
         {fileUrl ? (

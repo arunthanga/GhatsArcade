@@ -82,7 +82,11 @@ export async function createEvent(args: {
   });
 }
 
-export async function updateEvent(args: { actorRole: unknown; id: string; data: UpdateEventInput }) {
+export async function updateEvent(args: {
+  actorRole: unknown;
+  id: string;
+  data: UpdateEventInput;
+}) {
   assertCanManage(args.actorRole);
   const existing = await prisma.event.findUnique({
     where: { id: args.id },

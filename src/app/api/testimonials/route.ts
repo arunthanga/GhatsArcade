@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { AuthorizationError } from "@/lib/errors";
 import { createTestimonialSchema } from "@/lib/validation";
-import { createTestimonial, listActiveTestimonials } from "@/server/testimonials";
 import { getCurrentUser } from "@/server/session";
+import { createTestimonial, listActiveTestimonials } from "@/server/testimonials";
 
 // Public: list active testimonials.
 export async function GET() {

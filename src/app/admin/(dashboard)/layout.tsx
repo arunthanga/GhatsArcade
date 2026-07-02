@@ -7,11 +7,7 @@ import { requireUser } from "@/server/session";
 // like the public marketing site. Guards every admin page: unauthenticated users are
 // redirected to /admin/login (that page lives outside this group, so no redirect loop).
 // The public website has no login surface at all; admin is reached directly via /admin.
-export default async function AdminDashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
 
   const links: AdminNavLink[] = [

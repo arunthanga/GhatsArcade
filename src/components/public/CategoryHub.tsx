@@ -14,7 +14,10 @@ export type HubPost = {
 };
 
 function excerpt(body: string, max = 160): string {
-  const text = body.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const text = body
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   return text.length > max ? `${text.slice(0, max).trimEnd()}…` : text;
 }
 

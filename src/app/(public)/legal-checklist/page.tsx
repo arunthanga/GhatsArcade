@@ -63,9 +63,9 @@ export default function LegalChecklistPage() {
 
       <p className="mt-6 text-sm text-brand-600">
         Each project page carries its own legal checklist section documenting what was verified for
-        that specific land. We encourage every prospective buyer — especially NRIs — to review the documents and
-        take independent legal advice before committing. That is what a trusted developer should make
-        easy, not avoid.
+        that specific land. We encourage every prospective buyer — especially NRIs — to review the
+        documents and take independent legal advice before committing. That is what a trusted
+        developer should make easy, not avoid.
       </p>
 
       <div className="mt-12">

@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  canTransitionLeadStatus,
-  isLeadStatus,
-  isTerminalLeadStatus,
-} from "./lead-status";
+import { canTransitionLeadStatus, isLeadStatus, isTerminalLeadStatus } from "./lead-status";
 
 describe("isLeadStatus", () => {
   it("accepts known statuses, rejects others (fail-closed)", () => {

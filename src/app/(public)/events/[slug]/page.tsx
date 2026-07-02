@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { sanitizeRichText } from "@/lib/sanitize";
+import { SanitizedHtml } from "@/components/public/SanitizedHtml";
 import { absoluteUrl } from "@/lib/seo";
 import { getPublicEventBySlug } from "@/server/events";
 
@@ -39,11 +39,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function EventDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const event = await getPublicEventBySlug(slug);
   if (!event) {
@@ -74,10 +70,9 @@ export default async function EventDetailPage({
       </header>
 
       {/* Description (rich text — sanitized on write, re-sanitized on render for defense-in-depth) */}
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitised via sanitizeRichText before render */}
-      <div
+      <SanitizedHtml
         className="prose prose-brand max-w-none leading-relaxed text-brand-800"
-        dangerouslySetInnerHTML={{ __html: sanitizeRichText(event.description) }}
+        html={event.description}
       />
 
       {event.photos.length > 0 ? (

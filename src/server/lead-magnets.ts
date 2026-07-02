@@ -93,7 +93,7 @@ export async function recordDownload(args: {
   };
 }): Promise<{ fileUrl: string; title: string } | null> {
   const magnet = await prisma.leadMagnetAsset.findUnique({ where: { id: args.id } });
-  if (!magnet || !magnet.isActive) {
+  if (!magnet?.isActive) {
     return null;
   }
 

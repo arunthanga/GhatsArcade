@@ -1,7 +1,7 @@
 // Pure plot-status rules (prj.md Section 8). A plot's status drives the public
 // "X plots remaining" indicator: only `available` plots count as remaining.
 
-import { type PlotStatus, PLOT_STATUSES } from "@/types";
+import { PLOT_STATUSES, type PlotStatus } from "@/types";
 
 export function isPlotStatus(value: unknown): value is PlotStatus {
   return typeof value === "string" && (PLOT_STATUSES as readonly string[]).includes(value);

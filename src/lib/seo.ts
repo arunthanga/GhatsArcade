@@ -68,7 +68,9 @@ export type ArticleJsonLdInput = {
 
 export function articleJsonLd(post: ArticleJsonLdInput): Record<string, unknown> {
   const published =
-    post.publishedAt instanceof Date ? post.publishedAt.toISOString() : (post.publishedAt ?? undefined);
+    post.publishedAt instanceof Date
+      ? post.publishedAt.toISOString()
+      : (post.publishedAt ?? undefined);
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -83,7 +85,9 @@ export function articleJsonLd(post: ArticleJsonLdInput): Record<string, unknown>
   };
 }
 
-export function faqPageJsonLd(items: { question: string; answer: string }[]): Record<string, unknown> {
+export function faqPageJsonLd(
+  items: { question: string; answer: string }[],
+): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",

@@ -138,7 +138,14 @@ describe("public reads", () => {
     await createListing({
       actorRole: "OWNER",
       createdById: ownerId,
-      data: { ...baseData, title: "Wayanad Big", status: "published", district: "Wayanad", priceInr: 15_000_000, sizeAcres: 12 },
+      data: {
+        ...baseData,
+        title: "Wayanad Big",
+        status: "published",
+        district: "Wayanad",
+        priceInr: 15_000_000,
+        sizeAcres: 12,
+      },
     });
 
     expect(await listPublicListings({ district: "Wayanad" })).toHaveLength(1);
@@ -183,7 +190,11 @@ describe("updateListing", () => {
 
 describe("deleteListing", () => {
   it("deletes an existing listing", async () => {
-    const listing = await createListing({ actorRole: "OWNER", createdById: ownerId, data: baseData });
+    const listing = await createListing({
+      actorRole: "OWNER",
+      createdById: ownerId,
+      data: baseData,
+    });
     await deleteListing({ actorRole: "OWNER", id: listing.id });
     expect(await prisma.listing.findUnique({ where: { id: listing.id } })).toBeNull();
   });
@@ -197,7 +208,11 @@ describe("deleteListing", () => {
 
 describe("listAllListings", () => {
   it("returns every status for an admin and denies unknown roles", async () => {
-    await createListing({ actorRole: "OWNER", createdById: ownerId, data: { ...baseData, status: "draft" } });
+    await createListing({
+      actorRole: "OWNER",
+      createdById: ownerId,
+      data: { ...baseData, status: "draft" },
+    });
     await createListing({
       actorRole: "OWNER",
       createdById: ownerId,
@@ -205,6 +220,8 @@ describe("listAllListings", () => {
     });
 
     expect(await listAllListings({ actorRole: "ADMIN" })).toHaveLength(2);
-    await expect(listAllListings({ actorRole: "guest" })).rejects.toBeInstanceOf(AuthorizationError);
+    await expect(listAllListings({ actorRole: "guest" })).rejects.toBeInstanceOf(
+      AuthorizationError,
+    );
   });
 });

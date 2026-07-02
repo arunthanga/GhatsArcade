@@ -12,11 +12,7 @@ const LeafletMap = dynamic(() => import("./LeafletMap"), {
   ),
 });
 
-export function LocationMap(props: {
-  latitude: number;
-  longitude: number;
-  title: string;
-}) {
+export function LocationMap(props: { latitude: number; longitude: number; title: string }) {
   return (
     <div className="space-y-2">
       <LeafletMap {...props} />

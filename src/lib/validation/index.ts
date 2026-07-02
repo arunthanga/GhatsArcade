@@ -111,20 +111,13 @@ export type FollowUpNoteInput = z.infer<typeof followUpNoteSchema>;
 export const createBlogPostSchema = z.object({
   title: z.string().min(1, "Title is required"),
   body: z.string().min(1, "Body is required"),
-  coverImage: z
-    .string()
-    .url("Cover image must be a valid URL")
-    .or(z.literal(""))
-    .optional(),
+  coverImage: z.string().url("Cover image must be a valid URL").or(z.literal("")).optional(),
   category: z.enum(BLOG_CATEGORIES).default("lifestyle"),
   status: z.enum(BLOG_STATUSES).default("draft"),
   // SEO overrides — fall back to title/excerpt/cover at render time when omitted.
   // Empty strings are accepted so an admin can clear a previously set value.
   metaTitle: z.string().max(70, "Keep the meta title under 70 characters").optional(),
-  metaDescription: z
-    .string()
-    .max(200, "Keep the meta description under 200 characters")
-    .optional(),
+  metaDescription: z.string().max(200, "Keep the meta description under 200 characters").optional(),
   ogImageUrl: z.string().url("OG image must be a valid URL").or(z.literal("")).optional(),
   // Optional manual override; the service auto-estimates from the body when omitted.
   estimatedReadMinutes: z.coerce

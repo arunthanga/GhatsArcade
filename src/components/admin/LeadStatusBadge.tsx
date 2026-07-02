@@ -29,11 +29,7 @@ export function LeadStatusBadge({ status }: { status: string }) {
   ].join(" ");
 
   return (
-    <span
-      data-testid="lead-status-badge"
-      data-status={status}
-      className={className}
-    >
+    <span data-testid="lead-status-badge" data-status={status} className={className}>
       {style.label}
     </span>
   );

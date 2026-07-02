@@ -43,9 +43,7 @@ export default function WhoShouldBuyPage() {
         <span className="inline-block rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-700">
           Is this your family?
         </span>
-        <h1 className="mt-3 text-3xl font-semibold text-brand-900">
-          Who becomes a co-farmer?
-        </h1>
+        <h1 className="mt-3 text-3xl font-semibold text-brand-900">Who becomes a co-farmer?</h1>
         <p className="mt-2 text-lg text-brand-600">
           Our co-farmers don't fit one mould — but most see themselves in one of these. Read on and
           see which one feels like you.

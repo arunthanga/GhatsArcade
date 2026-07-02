@@ -116,7 +116,11 @@ export function MediaLibrary({ items }: { items: MediaLibraryItem[] }) {
 
       {/* Filter tabs */}
       <div className="flex flex-wrap gap-2">
-        <FilterChip label={`All (${items.length})`} active={filter === "all"} onClick={() => setFilter("all")} />
+        <FilterChip
+          label={`All (${items.length})`}
+          active={filter === "all"}
+          onClick={() => setFilter("all")}
+        />
         {CATEGORY_OPTIONS.map((c) => (
           <FilterChip
             key={c}

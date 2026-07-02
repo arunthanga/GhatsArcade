@@ -18,10 +18,7 @@ export function LocaleProvider({
   locale: Locale;
   children: React.ReactNode;
 }) {
-  const value = useMemo<I18nContextValue>(
-    () => ({ locale, t: makeTranslator(locale) }),
-    [locale],
-  );
+  const value = useMemo<I18nContextValue>(() => ({ locale, t: makeTranslator(locale) }), [locale]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 

@@ -2,7 +2,7 @@
 // fast to unit-test and are the single source of truth for public visibility and the
 // publishedAt lifecycle. Unknown statuses fail closed.
 
-import { type BlogStatus, BLOG_STATUSES } from "@/types";
+import { BLOG_STATUSES, type BlogStatus } from "@/types";
 
 export function isBlogStatus(value: unknown): value is BlogStatus {
   return typeof value === "string" && (BLOG_STATUSES as readonly string[]).includes(value);

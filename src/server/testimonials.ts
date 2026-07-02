@@ -32,7 +32,10 @@ async function resolveProjectId(projectId: string | undefined): Promise<string |
   if (!projectId) {
     return null;
   }
-  const project = await prisma.project.findUnique({ where: { id: projectId }, select: { id: true } });
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    select: { id: true },
+  });
   return project?.id ?? null;
 }
 

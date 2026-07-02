@@ -21,7 +21,10 @@ function assertCanManage(actorRole: unknown): void {
 }
 
 async function assertProjectExists(projectId: string): Promise<void> {
-  const project = await prisma.project.findUnique({ where: { id: projectId }, select: { id: true } });
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    select: { id: true },
+  });
   if (!project) {
     throw new NotFoundError("Project not found.");
   }
@@ -99,7 +102,10 @@ export async function updateHorticultureLog(args: {
   });
 }
 
-export async function deleteHorticultureLog(args: { actorRole: unknown; id: string }): Promise<void> {
+export async function deleteHorticultureLog(args: {
+  actorRole: unknown;
+  id: string;
+}): Promise<void> {
   assertCanManage(args.actorRole);
   const existing = await prisma.horticultureLog.findUnique({
     where: { id: args.id },

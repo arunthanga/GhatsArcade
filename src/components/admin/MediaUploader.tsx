@@ -22,7 +22,10 @@ export type UploadCategory =
 
 // Posts a single file to /api/uploads and hands the stored URL back to the caller.
 // Reused across every admin form that needs media (cover photos, galleries, PDFs, video).
-export async function uploadFile(file: File, category: UploadCategory = "misc"): Promise<UploadResult> {
+export async function uploadFile(
+  file: File,
+  category: UploadCategory = "misc",
+): Promise<UploadResult> {
   const body = new FormData();
   body.append("file", file);
   body.append("category", category);

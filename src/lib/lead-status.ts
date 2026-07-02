@@ -2,7 +2,7 @@
 // fast to unit-test and is the single source of truth for legal status changes.
 // Unknown statuses fail closed.
 
-import { type LeadStatus, LEAD_STATUSES } from "@/types";
+import { LEAD_STATUSES, type LeadStatus } from "@/types";
 
 // converted/lost are terminal: once a lead is closed it cannot reopen.
 const TERMINAL_LEAD_STATUSES: readonly LeadStatus[] = ["converted", "lost"];

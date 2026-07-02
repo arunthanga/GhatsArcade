@@ -36,8 +36,8 @@ export default async function ContactPage({
     <main className="mx-auto max-w-3xl px-4 py-12">
       <h1 className="text-3xl font-semibold text-brand-900">Contact</h1>
       <p className="mt-2 text-brand-700">
-        Book a site visit, ask a question, or request the documents for a specific project.
-        We usually reply the same day.
+        Book a site visit, ask a question, or request the documents for a specific project. We
+        usually reply the same day.
       </p>
       {whatsappNumber ? (
         <div className="mt-4">
@@ -49,7 +49,10 @@ export default async function ContactPage({
       <TrustProofStrip className="mt-8 rounded-xl border border-brand-100" compact />
 
       <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2">
-        <section id="site-visit" className="scroll-mt-24 rounded-xl border border-brand-100 bg-brand-50 p-6">
+        <section
+          id="site-visit"
+          className="scroll-mt-24 rounded-xl border border-brand-100 bg-brand-50 p-6"
+        >
           <SiteVisitForm
             defaultProjectInterest={projectInterest}
             sourceProjectId={sourceProjectId}

@@ -85,7 +85,11 @@ describe("faqPageJsonLd", () => {
       { question: "Q2?", answer: "A2." },
     ]);
     expect(json["@type"]).toBe("FAQPage");
-    const entities = json.mainEntity as { "@type": string; name: string; acceptedAnswer: { text: string } }[];
+    const entities = json.mainEntity as {
+      "@type": string;
+      name: string;
+      acceptedAnswer: { text: string };
+    }[];
     expect(entities).toHaveLength(2);
     expect(entities[0]?.name).toBe("Q1?");
     expect(entities[0]?.acceptedAnswer.text).toBe("A1.");

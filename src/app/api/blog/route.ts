@@ -25,7 +25,11 @@ export async function POST(request: Request) {
   }
 
   try {
-    const post = await createBlogPost({ actorRole: user.role, authorId: user.id, data: parsed.data });
+    const post = await createBlogPost({
+      actorRole: user.role,
+      authorId: user.id,
+      data: parsed.data,
+    });
     return NextResponse.json({ post }, { status: 201 });
   } catch (error) {
     if (error instanceof AuthorizationError) {

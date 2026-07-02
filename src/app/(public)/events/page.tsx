@@ -25,7 +25,11 @@ function EventCard({ event }: { event: PublicEvent }) {
       <Link href={`/events/${event.slug}`} className="flex h-full flex-col">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={cover.url} alt={cover.alt ?? event.title} className="h-44 w-full object-cover" />
+          <img
+            src={cover.url}
+            alt={cover.alt ?? event.title}
+            className="h-44 w-full object-cover"
+          />
         ) : null}
         <div className="flex flex-1 flex-col p-5">
           <time dateTime={event.eventDate.toISOString()} className="text-xs text-brand-500">
@@ -52,7 +56,9 @@ export default async function EventsPage() {
   return (
     <main className="mx-auto max-w-5xl px-4 py-12">
       <header className="mb-10">
-        <h1 className="text-3xl font-semibold text-brand-900 sm:text-4xl">Events &amp; Open Days</h1>
+        <h1 className="text-3xl font-semibold text-brand-900 sm:text-4xl">
+          Events &amp; Open Days
+        </h1>
         <p className="mt-3 max-w-2xl text-brand-700">
           Come see a managed farmland project in person. Join an upcoming open day, or browse photos
           from past gatherings.

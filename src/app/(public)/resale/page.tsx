@@ -12,23 +12,28 @@ export const metadata: Metadata = {
 const STEPS: { title: string; detail: string }[] = [
   {
     title: "Tell us you'd like to sell",
-    detail: "Reach out and let us know your plot and your timeline. There's no lock-in — it's your land to sell whenever you choose.",
+    detail:
+      "Reach out and let us know your plot and your timeline. There's no lock-in — it's your land to sell whenever you choose.",
   },
   {
     title: "Valuation & listing",
-    detail: "We help you arrive at a fair, current market value and prepare a listing with the plot's history, plantation, and documentation.",
+    detail:
+      "We help you arrive at a fair, current market value and prepare a listing with the plot's history, plantation, and documentation.",
   },
   {
     title: "We surface it to demand",
-    detail: "Your plot is offered to incoming buyer enquiries and our existing owner network — the same pipeline that fills our projects.",
+    detail:
+      "Your plot is offered to incoming buyer enquiries and our existing owner network — the same pipeline that fills our projects.",
   },
   {
     title: "Due diligence & paperwork",
-    detail: "We support the prospective purchaser's due diligence with the title, encumbrance, and survey records we already maintain for the project.",
+    detail:
+      "We support the prospective purchaser's due diligence with the title, encumbrance, and survey records we already maintain for the project.",
   },
   {
     title: "Transfer & registration",
-    detail: "We walk both sides through the sale deed and sub-registrar process, just as we did when you first registered.",
+    detail:
+      "We walk both sides through the sale deed and sub-registrar process, just as we did when you first registered.",
   },
 ];
 
@@ -60,8 +65,8 @@ export default function ResalePage() {
         </span>
         <h1 className="mt-3 text-3xl font-semibold text-brand-900">Resale & exit</h1>
         <p className="mt-2 text-lg text-brand-600">
-          "Who do I sell to later?" is a fair question — and one we answer before you register. Here's our
-          commitment to helping you exit when the time is right.
+          "Who do I sell to later?" is a fair question — and one we answer before you register.
+          Here's our commitment to helping you exit when the time is right.
         </p>
       </header>
 
@@ -79,7 +84,10 @@ export default function ResalePage() {
         <h2 className="text-xl font-semibold text-brand-900">How resale works, step by step</h2>
         <ol className="mt-5 space-y-4">
           {STEPS.map((step, index) => (
-            <li key={step.title} className="flex gap-4 rounded-xl border border-brand-100 bg-white p-5">
+            <li
+              key={step.title}
+              className="flex gap-4 rounded-xl border border-brand-100 bg-white p-5"
+            >
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-700 text-sm font-semibold text-brand-50">
                 {index + 1}
               </span>
@@ -105,7 +113,9 @@ export default function ResalePage() {
       </section>
 
       <section className="mt-10 rounded-xl border border-brand-100 bg-white p-6">
-        <h2 className="text-lg font-semibold text-brand-900">Liquidity reassurance for NRI owners</h2>
+        <h2 className="text-lg font-semibold text-brand-900">
+          Liquidity reassurance for NRI owners
+        </h2>
         <p className="mt-2 leading-relaxed text-brand-700">
           Selling property from abroad can feel daunting, but you don't need to fly down to make it
           happen. We coordinate viewings, paperwork, and buyer due diligence locally on your behalf,

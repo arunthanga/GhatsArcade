@@ -217,7 +217,11 @@ export async function getProjectForAdmin(args: { actorRole: unknown; id: string 
 
 // --- Plot writes ----------------------------------------------------------
 
-function resolveTotalPrice(input: { sizeCents: number; pricePerCent: number; totalPrice?: number }) {
+function resolveTotalPrice(input: {
+  sizeCents: number;
+  pricePerCent: number;
+  totalPrice?: number;
+}) {
   return input.totalPrice ?? Math.round(input.sizeCents * input.pricePerCent);
 }
 

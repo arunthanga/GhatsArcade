@@ -43,11 +43,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ListingDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ListingDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const listing = await getPublicListingBySlug(slug);
   if (!listing) {
@@ -106,7 +102,9 @@ export default async function ListingDetailPage({
         </ul>
       ) : null}
 
-      <p className="mb-8 whitespace-pre-line leading-relaxed text-brand-800">{listing.description}</p>
+      <p className="mb-8 whitespace-pre-line leading-relaxed text-brand-800">
+        {listing.description}
+      </p>
 
       <TrustProofStrip className="mb-8 rounded-xl border border-brand-100" compact />
 

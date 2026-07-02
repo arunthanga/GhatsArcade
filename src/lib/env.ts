@@ -34,7 +34,10 @@ const publicSchema = z.object({
   NEXT_PUBLIC_WHATSAPP_NUMBER: z.string().optional(),
   // Office / contact location for the map on /contact. Both lat & lng must be set for the
   // map to render; the address is an optional human-readable line shown beside it.
-  NEXT_PUBLIC_OFFICE_LAT: z.preprocess(emptyToUndefined, z.coerce.number().min(-90).max(90).optional()),
+  NEXT_PUBLIC_OFFICE_LAT: z.preprocess(
+    emptyToUndefined,
+    z.coerce.number().min(-90).max(90).optional(),
+  ),
   NEXT_PUBLIC_OFFICE_LNG: z.preprocess(
     emptyToUndefined,
     z.coerce.number().min(-180).max(180).optional(),

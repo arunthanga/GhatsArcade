@@ -99,7 +99,7 @@ describe("captureLead deduplication", () => {
     }
 
     expect(lead.message).not.toBeNull();
-    expect(lead.message!.length).toBeLessThanOrEqual(4000);
+    expect(lead.message?.length).toBeLessThanOrEqual(4000);
     // The most recent enquiry is retained; the oldest history is trimmed away.
     expect(lead.message).toContain("round 9");
     expect(lead.message).toContain("Earlier history trimmed");
