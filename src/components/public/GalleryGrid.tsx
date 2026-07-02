@@ -59,6 +59,7 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
 
   return (
     <div>
+      {/* biome-ignore lint/a11y/useSemanticElements: an ARIA-labelled group of filter chips, not a form fieldset */}
       <div className="flex flex-wrap gap-2" role="group" aria-label="Filter photos by tag">
         <button
           type="button"

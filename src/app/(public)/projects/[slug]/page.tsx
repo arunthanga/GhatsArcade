@@ -5,16 +5,16 @@ import { ConstructionDisclaimer } from "@/components/public/ConstructionDisclaim
 import { FarmhouseSupportNote } from "@/components/public/FarmhouseSupportNote";
 import { LeadInquiryForm } from "@/components/public/LeadInquiryForm";
 import { LegalDisclaimer } from "@/components/public/LegalDisclaimer";
-import { PlotHoldForm } from "@/components/public/PlotHoldForm";
 import { LocationMap } from "@/components/public/LocationMap";
+import { PlotHoldForm } from "@/components/public/PlotHoldForm";
 import { RegistrationSteps } from "@/components/public/RegistrationSteps";
+import { SanitizedHtml } from "@/components/public/SanitizedHtml";
 import { StickyProjectCta } from "@/components/public/StickyProjectCta";
 import { TrustProofStrip } from "@/components/public/TrustProofStrip";
 import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { publicEnv } from "@/lib/env";
 import { formatAcres, formatInr } from "@/lib/format";
 import { countAvailablePlots } from "@/lib/plot-status";
-import { sanitizeRichText } from "@/lib/sanitize";
 import { absoluteUrl } from "@/lib/seo";
 import { getPublicProjectBySlug } from "@/server/projects";
 
@@ -44,7 +44,8 @@ export async function generateMetadata({
     return { title: "Project not found" };
   }
   const url = absoluteUrl(`/projects/${slug}`);
-  const description = project.tagline ?? `${project.title} - managed farmland in ${project.locationDistrict}.`;
+  const description =
+    project.tagline ?? `${project.title} - managed farmland in ${project.locationDistrict}.`;
   return {
     title: project.title,
     description,
@@ -65,11 +66,7 @@ const PLOT_STATUS_LABEL: Record<string, string> = {
   sold: "Sold",
 };
 
-export default async function ProjectDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const project = await getPublicProjectBySlug(slug);
   if (!project) {
@@ -119,10 +116,9 @@ export default async function ProjectDetailPage({
       {/* About (rich text — sanitized on write, re-sanitized on render for defense-in-depth) */}
       <section className="mb-10">
         <h2 className="mb-3 text-xl font-semibold text-brand-900">About this project</h2>
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitised via sanitizeRichText before render */}
-        <div
+        <SanitizedHtml
           className="prose prose-brand max-w-none leading-relaxed text-brand-800"
-          dangerouslySetInnerHTML={{ __html: sanitizeRichText(project.description) }}
+          html={project.description}
         />
       </section>
 
@@ -142,7 +138,10 @@ export default async function ProjectDetailPage({
           {distances.length > 0 ? (
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {distances.map((d) => (
-                <li key={d.city} className="rounded-lg border border-brand-100 bg-white p-3 text-sm">
+                <li
+                  key={d.city}
+                  className="rounded-lg border border-brand-100 bg-white p-3 text-sm"
+                >
                   <p className="font-medium text-brand-800">{d.city}</p>
                   <p className="text-brand-600">
                     {d.km} km{d.driveMinutes ? ` - ${d.driveMinutes} min` : ""}
