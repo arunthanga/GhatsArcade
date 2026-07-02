@@ -22,6 +22,17 @@ export function isLocale(value: unknown): value is Locale {
   return typeof value === "string" && (LOCALES as readonly string[]).includes(value);
 }
 
+// Deeply-optional variant used by the non-English message catalogues. String/number/
+// boolean leaves are widened (e.g. the literal "Home" becomes `string`) so a translation
+// is allowed to differ from the English source value — while the key *shape* is preserved.
 export type DeepPartial<T> = {
-  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+  [K in keyof T]?: T[K] extends string
+    ? string
+    : T[K] extends number
+      ? number
+      : T[K] extends boolean
+        ? boolean
+        : T[K] extends object
+          ? DeepPartial<T[K]>
+          : T[K];
 };

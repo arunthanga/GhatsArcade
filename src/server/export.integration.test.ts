@@ -59,6 +59,8 @@ describe("exportCsv - leads", () => {
       name: "Asha",
       phone: "+919876543210",
       buyerType: "resident_indian",
+      leadType: "inquiry",
+      isCofarmer: false,
       email: "",
       message: "hi",
       sourceListingId: listing.id,
