@@ -56,8 +56,8 @@ The site's job is to showcase land listings attractively, rank well in search en
 ## Features
 
 ### Public-facing website
-- **Home page** — hero, value proposition, featured listings, trust signals
-- **Listings page** — browse/filter by location, size, price range, land type
+- **Home page** — hero with trust proof-points and quick-path cards (compare projects / browse listings / legal basics), value proposition, featured listings, trust signals
+- **Listings & Projects pages** — labelled, card-style filter panels (district, land type/status, price range, acreage or plot size, Kerala–Tamil Nadu border) with a live result count, active-filter chips, a "Clear filters" link, and a friendlier empty state; each card carries an explicit "View details →" / "View project →" link
 - **Listing detail** — photos, description, location (text), price (Indian ₹ lakh formatting), land classification, buyer-eligibility disclaimer, inquiry form with a clear post-submit acknowledgement ("We'll contact you on WhatsApp within 24 hours"), WhatsApp click-to-chat with listing context pre-filled (title, acres, district, price), and a Save button for bookmarking
 - **Project detail** — project specs, plot availability, optional clubhouse information, and a soft farmhouse-support note: Ghats Arcade can guide architecture/construction coordination while permanent structures stay within 20% of the holding and at least 80% remains open farmland; conversion, residential permissions, approvals, and legal responsibility remain with the owner
 - **About** and **Contact** pages — owner contact details (Arun T., email, phone), site-visit + inquiry forms, WhatsApp; the Contact page shows an embedded OpenStreetMap of the office when `NEXT_PUBLIC_OFFICE_LAT`/`_LNG` are configured
@@ -78,7 +78,7 @@ The site's job is to showcase land listings attractively, rank well in search en
 - **Data export** — CSV export of leads/listings, **Owner-only**
 - **Blog / CMS management** — create/edit/delete/publish posts with an editorial category, per-post SEO overrides (meta title/description, social image), cover-image upload, and auto-estimated reading time (overridable)
 - **Multilingual UI** — English (default), Tamil, and Malayalam, switchable from the header. Cookie-based (`NEXT_LOCALE`), read server-side so pages re-render in the chosen language; missing translations fall back to English per key. Currently covers UI chrome (nav/footer/CTAs incl. Saved) + the home hero, extensible via `src/lib/i18n/messages/`
-- **Responsive design** — mobile, tablet, and laptop friendly: hamburger nav on mobile, horizontally scrollable data tables, and Tailwind `sm/md/lg` breakpoints throughout
+- **Responsive design** — mobile, tablet, and laptop friendly: a sticky public header with active-page highlighting and a persistent "Schedule a visit" CTA, hamburger nav on mobile, horizontally scrollable data tables, and Tailwind `sm/md/lg` breakpoints throughout
 
 ---
 
@@ -472,6 +472,7 @@ Full v4 model (see [prj.md](prj.md) Section 8 and the ERD in [docs/ERD.md](docs/
 - **Primary:** self-host via **Docker Compose** on a low-cost VPS, or use **Coolify** (Apache-2.0) as a self-hosted PaaS. The app ships with a SQLite volume; the Postgres scale-up path adds a Postgres service.
 - **Cloud database:** **Turso** (SQLite/libSQL) or **Neon / Supabase** (Postgres) free tiers — both permit commercial use.
 - **Caveat:** **Vercel's free Hobby tier prohibits commercial use.** Since Ghats Arcade is a commercial site, Hobby is not an option; use a paid tier or self-host. Truly-free-and-commercial hosting is limited, so a low-cost VPS (a few USD/month) is the realistic baseline.
+- **Baseline hardening:** `next.config.mjs` sends conservative security response headers on every route (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `X-DNS-Prefetch-Control`, `Permissions-Policy`) and disables the `X-Powered-By` header. A Content-Security-Policy is deferred until the third-party origin set (map tiles, fonts, analytics) is finalised.
 
 ---
 
