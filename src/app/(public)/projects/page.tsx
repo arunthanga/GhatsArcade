@@ -149,17 +149,16 @@ export default async function ProjectsPage({
       </form>
 
       {activeFilters.length > 0 ? (
-        <div className="mt-4 flex flex-wrap gap-2" role="list" aria-label="Active project filters">
+        <ul className="mt-4 flex flex-wrap gap-2" aria-label="Active project filters">
           {activeFilters.map((filter) => (
-            <span
+            <li
               key={filter}
-              role="listitem"
               className="rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-800"
             >
               {filter}
-            </span>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : null}
 
       {projects.length === 0 ? (
