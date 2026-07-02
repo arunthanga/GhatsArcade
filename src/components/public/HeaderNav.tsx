@@ -12,14 +12,19 @@ export type NavLink = { href: string; label: string };
 export function HeaderNav({
   brand,
   links,
+  cta,
   menuLabels,
 }: {
   brand: string;
   links: NavLink[];
+  cta?: NavLink;
   menuLabels: { open: string; close: string };
 }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
 
   // Close the mobile menu whenever the route changes.
   // biome-ignore lint/correctness/useExhaustiveDependencies: close on navigation
@@ -28,7 +33,7 @@ export function HeaderNav({
   }, [pathname]);
 
   return (
-    <header className="border-b border-brand-100 bg-brand-50/60 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-brand-100 bg-brand-50/90 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-4">
         <Link href="/" className="text-lg font-semibold tracking-tight text-brand-900">
           {brand}
@@ -37,14 +42,33 @@ export function HeaderNav({
         {/* Tablet / desktop nav */}
         <nav aria-label="Primary" className="hidden items-center gap-5 md:flex">
           <ul className="flex items-center gap-5 text-sm font-medium text-brand-700">
-            {links.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className="transition-colors hover:text-brand-900">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+            {links.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`rounded-full px-2.5 py-1 transition-colors ${
+                      active
+                        ? "bg-brand-100 text-brand-900"
+                        : "hover:bg-brand-100/70 hover:text-brand-900"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
+          {cta ? (
+            <Link
+              href={cta.href}
+              className="rounded-lg bg-brand-700 px-4 py-2 text-sm font-medium text-brand-50 transition-colors hover:bg-brand-800"
+            >
+              {cta.label}
+            </Link>
+          ) : null}
           <LanguageSwitcher className="text-brand-700" />
         </nav>
 
@@ -81,16 +105,32 @@ export function HeaderNav({
       {open ? (
         <nav id="mobile-nav" aria-label="Primary" className="border-t border-brand-100 md:hidden">
           <ul className="mx-auto flex max-w-5xl flex-col px-4 py-2 text-brand-800">
-            {links.map((link) => (
-              <li key={link.href}>
+            {links.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`block rounded-lg px-2 py-3 text-base font-medium ${
+                      active ? "bg-brand-100 text-brand-900" : "hover:bg-brand-100"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+            {cta ? (
+              <li className="py-2">
                 <Link
-                  href={link.href}
-                  className="block rounded-lg px-2 py-3 text-base font-medium hover:bg-brand-100"
+                  href={cta.href}
+                  className="block rounded-lg bg-brand-700 px-3 py-3 text-center text-base font-medium text-brand-50"
                 >
-                  {link.label}
+                  {cta.label}
                 </Link>
               </li>
-            ))}
+            ) : null}
           </ul>
         </nav>
       ) : null}

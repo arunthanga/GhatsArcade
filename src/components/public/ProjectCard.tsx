@@ -76,6 +76,12 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
             {remaining > 0 ? `${remaining} plots remaining` : "No plots available"}
           </span>
         </div>
+        <Link
+          href={`/projects/${project.slug}`}
+          className="mt-4 text-sm font-medium text-brand-700 hover:text-brand-900"
+        >
+          View project →
+        </Link>
       </div>
     </article>
   );

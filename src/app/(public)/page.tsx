@@ -105,6 +105,30 @@ const STATS = [
   { label: "Years in the region", value: 12, suffix: "+" },
 ];
 
+const HERO_PROOF_POINTS = [
+  "Clean-title documents reviewed before visits",
+  "Managed by a resident on-ground team",
+  "WhatsApp follow-up within 24 hours",
+];
+
+const QUICK_PATHS = [
+  {
+    href: "/projects",
+    label: "Compare managed projects",
+    description: "See plot availability, pricing, and project status.",
+  },
+  {
+    href: "/listings",
+    label: "Browse individual listings",
+    description: "Filter by district, budget, acreage, and land type.",
+  },
+  {
+    href: "/legal-checklist",
+    label: "Check legal basics",
+    description: "Understand title, land-use, and buyer-eligibility questions.",
+  },
+];
+
 function excerpt(body: string, max = 120): string {
   const text = body
     .replace(/<[^>]*>/g, " ")
@@ -140,7 +164,7 @@ export default async function HomePage() {
 
       {/* Block 1 — Hero (two CTAs, no form) */}
       <section className="bg-brand-900 text-brand-50">
-        <div className="mx-auto max-w-5xl px-4 py-24 text-center sm:py-32">
+        <div className="mx-auto max-w-5xl px-4 py-20 text-center sm:py-28">
           <p className="text-sm font-medium uppercase tracking-widest text-brand-300">
             {t("home.heroEyebrow")}
           </p>
@@ -150,6 +174,16 @@ export default async function HomePage() {
           <p className="mx-auto mt-4 max-w-xl text-lg text-brand-100/85">
             {t("home.heroSubtitle")}
           </p>
+          <ul className="mx-auto mt-6 flex max-w-3xl flex-wrap justify-center gap-3 text-sm text-brand-100">
+            {HERO_PROOF_POINTS.map((point) => (
+              <li
+                key={point}
+                className="rounded-full border border-brand-300/40 bg-brand-800/70 px-3 py-1"
+              >
+                {point}
+              </li>
+            ))}
+          </ul>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
               href="/contact#site-visit"
@@ -163,6 +197,20 @@ export default async function HomePage() {
             >
               {t("home.heroCtaProjects")}
             </Link>
+          </div>
+          <div className="mx-auto mt-10 grid max-w-4xl gap-3 text-left sm:grid-cols-3">
+            {QUICK_PATHS.map((path) => (
+              <Link
+                key={path.href}
+                href={path.href}
+                className="rounded-xl border border-brand-300/30 bg-brand-800/70 p-4 transition-colors hover:bg-brand-800"
+              >
+                <span className="text-sm font-semibold text-brand-50">{path.label}</span>
+                <span className="mt-1 block text-sm leading-relaxed text-brand-100/80">
+                  {path.description}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

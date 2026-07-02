@@ -37,8 +37,14 @@ export function ListingCard({ listing }: { listing: ListingCardData }) {
           </span>
         ) : null}
       </div>
-      <div className="mt-3">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <SaveListingButton listing={listing} />
+        <Link
+          href={`/listings/${listing.slug}`}
+          className="text-sm font-medium text-brand-700 hover:text-brand-900"
+        >
+          View details →
+        </Link>
       </div>
     </article>
   );
