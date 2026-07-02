@@ -19,7 +19,14 @@ describe("ListingCard", () => {
     expect(screen.getByText("5 acres")).toBeInTheDocument();
     expect(screen.getByText("₹75,00,000")).toBeInTheDocument();
     expect(screen.getByText(/weekend home rhythm/i)).toBeInTheDocument();
-    expect(screen.getByRole("link")).toHaveAttribute("href", "/listings/5-acre-estate");
+    expect(screen.getByRole("link", { name: "5 Acre Estate" })).toHaveAttribute(
+      "href",
+      "/listings/5-acre-estate",
+    );
+    expect(screen.getByRole("link", { name: /view details/i })).toHaveAttribute(
+      "href",
+      "/listings/5-acre-estate",
+    );
   });
 
   it("shows an 'Under offer' badge only for under_offer listings", () => {

@@ -18,6 +18,7 @@ export async function SiteHeader() {
     <HeaderNav
       brand="Ghats Arcade"
       links={links}
+      cta={{ href: "/contact#site-visit", label: t("common.scheduleVisit") }}
       menuLabels={{ open: t("nav.openMenu"), close: t("nav.closeMenu") }}
     />
   );

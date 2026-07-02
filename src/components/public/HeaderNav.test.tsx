@@ -23,6 +23,19 @@ function renderNav() {
   );
 }
 
+function renderNavWithCta() {
+  return render(
+    <LocaleProvider locale="en">
+      <HeaderNav
+        brand="Ghats Arcade"
+        links={links}
+        cta={{ href: "/contact#site-visit", label: "Schedule a site visit" }}
+        menuLabels={{ open: "Open", close: "Close" }}
+      />
+    </LocaleProvider>,
+  );
+}
+
 describe("HeaderNav", () => {
   it("renders the brand and primary nav links with correct hrefs", () => {
     renderNav();
@@ -32,6 +45,16 @@ describe("HeaderNav", () => {
     expect(screen.getByRole("link", { name: "Listings" })).toHaveAttribute("href", "/listings");
     expect(screen.getByRole("link", { name: "About" })).toHaveAttribute("href", "/about");
     expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
+  });
+
+  it("marks the current page and exposes a primary visit CTA", () => {
+    renderNavWithCta();
+
+    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "Schedule a site visit" })).toHaveAttribute(
+      "href",
+      "/contact#site-visit",
+    );
   });
 
   it("exposes a language switcher", () => {
