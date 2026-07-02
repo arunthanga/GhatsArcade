@@ -59,7 +59,9 @@ export default async function WhyInvestPage() {
         <span className="inline-block rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-700">
           For families with a long view
         </span>
-        <h1 className="mt-3 text-3xl font-semibold text-brand-900">Why farmland for your family?</h1>
+        <h1 className="mt-3 text-3xl font-semibold text-brand-900">
+          Why farmland for your family?
+        </h1>
         <p className="mt-2 text-lg text-brand-600">
           Investment security, investment growth, peaceful living, and legacy — in one clean-title
           asset your family can stand on together.

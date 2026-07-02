@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { AuthorizationError, NotFoundError } from "@/lib/errors";
 import { updateTestimonialSchema } from "@/lib/validation";
-import { deleteTestimonial, updateTestimonial } from "@/server/testimonials";
 import { getCurrentUser } from "@/server/session";
+import { deleteTestimonial, updateTestimonial } from "@/server/testimonials";
 
 type Ctx = { params: Promise<{ id: string }> };
 

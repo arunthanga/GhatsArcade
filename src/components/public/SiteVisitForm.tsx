@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 import { LeadCaptureSuccess } from "@/components/public/LeadCaptureSuccess";
-import {
-  appendLeadQualification,
-  BUDGET_RANGES,
-  VISIT_READINESS,
-} from "@/lib/lead-qualification";
+import { appendLeadQualification, BUDGET_RANGES, VISIT_READINESS } from "@/lib/lead-qualification";
 
 // Standalone "Schedule a Site Visit" form (prj.md Section 3 / lead-capture surfaces).
 // Posts as a distinct `site_visit_request` lead type. Project pages deep-link here with

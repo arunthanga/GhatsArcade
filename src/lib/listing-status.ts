@@ -2,7 +2,7 @@
 // unit-test and is the single source of truth for what the public can see and which
 // status changes are legal. Unknown statuses fail closed.
 
-import { type ListingStatus, LISTING_STATUSES } from "@/types";
+import { LISTING_STATUSES, type ListingStatus } from "@/types";
 
 // Statuses visible to anonymous public visitors. `draft` (not ready) and `sold`
 // (no longer available) are hidden from browse/detail.

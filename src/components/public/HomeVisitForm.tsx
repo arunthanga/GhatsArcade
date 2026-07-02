@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 import { LeadCaptureSuccess } from "@/components/public/LeadCaptureSuccess";
-import {
-  appendLeadQualification,
-  BUDGET_RANGES,
-  VISIT_READINESS,
-} from "@/lib/lead-qualification";
+import { appendLeadQualification, BUDGET_RANGES, VISIT_READINESS } from "@/lib/lead-qualification";
 
 // Block 8 — first home-page lead capture (prj.md Section 3.1): "Schedule a Visit".
 // Deliberately low-friction: no email at this stage, just contact details plus

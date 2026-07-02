@@ -4,7 +4,7 @@
 // Hard invariant: exactly one OWNER; the OWNER role can never be assigned, removed,
 // or duplicated through any code path. Unknown roles fail closed (deny everything).
 
-import { type Role, ROLES } from "@/types";
+import { ROLES, type Role } from "@/types";
 
 export const ACTIONS = [
   "listing:manage",

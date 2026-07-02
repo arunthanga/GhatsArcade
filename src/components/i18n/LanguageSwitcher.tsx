@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useI18n } from "@/components/i18n/LocaleProvider";
-import { LOCALE_COOKIE, LOCALES, LOCALE_LABELS, type Locale } from "@/lib/i18n/config";
+import { LOCALE_COOKIE, LOCALE_LABELS, LOCALES, type Locale } from "@/lib/i18n/config";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 

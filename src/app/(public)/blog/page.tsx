@@ -14,7 +14,10 @@ export const metadata: Metadata = {
 };
 
 function excerpt(body: string, max = 180): string {
-  const text = body.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const text = body
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   return text.length > max ? `${text.slice(0, max).trimEnd()}…` : text;
 }
 
@@ -29,7 +32,8 @@ export default async function BlogPage() {
     <main className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="text-3xl font-semibold text-brand-900">The Farmlands Journal</h1>
       <p className="mt-2 text-brand-700">
-        Guides and stories for co-farmer families on managed farmland in the Kerala–Tamil Nadu border region.
+        Guides and stories for co-farmer families on managed farmland in the Kerala–Tamil Nadu
+        border region.
       </p>
 
       {posts.length === 0 ? (
@@ -43,7 +47,9 @@ export default async function BlogPage() {
                   {categoryLabel(post.category)}
                 </span>
                 {post.estimatedReadMinutes ? (
-                  <span className="text-xs text-brand-500">{post.estimatedReadMinutes} min read</span>
+                  <span className="text-xs text-brand-500">
+                    {post.estimatedReadMinutes} min read
+                  </span>
                 ) : null}
               </div>
               <h2 className="text-xl font-semibold text-brand-800">

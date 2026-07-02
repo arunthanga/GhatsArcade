@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Listings",
-  description: "Browse managed farmland and agricultural land listings across Kerala and the Kerala-Tamil Nadu border.",
+  description:
+    "Browse managed farmland and agricultural land listings across Kerala and the Kerala-Tamil Nadu border.",
   alternates: { canonical: absoluteUrl("/listings") },
 };
 

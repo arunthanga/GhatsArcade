@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 import { LeadCaptureSuccess } from "@/components/public/LeadCaptureSuccess";
-import {
-  appendLeadQualification,
-  BUDGET_RANGES,
-  BUYING_TIMELINES,
-} from "@/lib/lead-qualification";
+import { appendLeadQualification, BUDGET_RANGES, BUYING_TIMELINES } from "@/lib/lead-qualification";
 import { BUYER_TYPE_LABELS, BUYER_TYPES } from "@/types";
 
 type LeadInquiryFormProps = {

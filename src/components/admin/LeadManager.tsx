@@ -5,10 +5,10 @@ import { useState } from "react";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import {
   BUYER_TYPE_LABELS,
+  type BuyerType,
   CONTACT_METHODS,
   LEAD_STATUSES,
   PREFERRED_CALL_SLOT_LABELS,
-  type BuyerType,
   type PreferredCallSlot,
 } from "@/types";
 import { LeadStatusBadge } from "./LeadStatusBadge";
@@ -78,7 +78,9 @@ export function LeadManager({ initialLeads }: { initialLeads: AdminLeadRow[] }) 
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [noteDrafts, setNoteDrafts] = useState<Record<string, { text: string; method: string }>>({});
+  const [noteDrafts, setNoteDrafts] = useState<Record<string, { text: string; method: string }>>(
+    {},
+  );
 
   function draftFor(id: string) {
     return noteDrafts[id] ?? { text: "", method: CONTACT_METHODS[0] };

@@ -72,42 +72,42 @@ export function LeadMagnetManager({ initialMagnets }: { initialMagnets: AdminLea
 
       <div className="overflow-x-auto">
         <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>File</th>
-            <th>Downloads</th>
-            <th>Active</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {initialMagnets.map((magnet) => (
-            <tr key={magnet.id}>
-              <td>{magnet.title}</td>
-              <td>
-                <a href={magnet.fileUrl} target="_blank" rel="noopener noreferrer">
-                  view
-                </a>
-              </td>
-              <td>{magnet.downloadCount}</td>
-              <td>
-                <button
-                  type="button"
-                  onClick={() => toggleActive(magnet.id, !magnet.isActive)}
-                  disabled={busy}
-                >
-                  {magnet.isActive ? "Active" : "Inactive"}
-                </button>
-              </td>
-              <td>
-                <button type="button" onClick={() => handleDelete(magnet.id)} disabled={busy}>
-                  Delete
-                </button>
-              </td>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>File</th>
+              <th>Downloads</th>
+              <th>Active</th>
+              <th />
             </tr>
-          ))}
-        </tbody>
+          </thead>
+          <tbody>
+            {initialMagnets.map((magnet) => (
+              <tr key={magnet.id}>
+                <td>{magnet.title}</td>
+                <td>
+                  <a href={magnet.fileUrl} target="_blank" rel="noopener noreferrer">
+                    view
+                  </a>
+                </td>
+                <td>{magnet.downloadCount}</td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={() => toggleActive(magnet.id, !magnet.isActive)}
+                    disabled={busy}
+                  >
+                    {magnet.isActive ? "Active" : "Inactive"}
+                  </button>
+                </td>
+                <td>
+                  <button type="button" onClick={() => handleDelete(magnet.id)} disabled={busy}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
 

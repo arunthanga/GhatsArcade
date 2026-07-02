@@ -34,8 +34,8 @@ export default async function ProjectsPage({
     <main className="mx-auto max-w-5xl px-4 py-12">
       <h1 className="text-3xl font-semibold text-brand-900">Our Projects</h1>
       <p className="mt-2 max-w-2xl text-brand-700">
-        Theme-based, managed farmland on the Kerala-Tamil Nadu border. Clear titles,
-        engineered infrastructure, and a resident team that lives here.
+        Theme-based, managed farmland on the Kerala-Tamil Nadu border. Clear titles, engineered
+        infrastructure, and a resident team that lives here.
       </p>
 
       <form method="get" className="mt-6 flex flex-wrap items-center gap-3">

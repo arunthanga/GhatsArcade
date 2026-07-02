@@ -58,9 +58,7 @@ function toPayload(form: LogForm) {
 }
 
 function activityLabel(type: string): string {
-  return (
-    HORTICULTURE_ACTIVITY_LABELS[type as keyof typeof HORTICULTURE_ACTIVITY_LABELS] ?? type
-  );
+  return HORTICULTURE_ACTIVITY_LABELS[type as keyof typeof HORTICULTURE_ACTIVITY_LABELS] ?? type;
 }
 
 const inputClass =

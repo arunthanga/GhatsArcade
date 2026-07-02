@@ -17,8 +17,8 @@ export default async function AdminTestimonialsPage() {
       <div>
         <h1 className="text-2xl font-semibold text-white">Testimonials</h1>
         <p className="text-sm text-slate-400">
-          Real owner stories powering the home page carousel. Reorder with the display number,
-          hide one without deleting it, and optionally attach a YouTube video and a linked project.
+          Real owner stories powering the home page carousel. Reorder with the display number, hide
+          one without deleting it, and optionally attach a YouTube video and a linked project.
         </p>
       </div>
       <TestimonialManager

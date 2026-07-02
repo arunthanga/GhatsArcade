@@ -142,9 +142,7 @@ export async function listPublicListings(filters: ListingFilter = {}) {
       status: { in: [...PUBLIC_LISTING_STATUSES] },
       ...(filters.district ? { district: filters.district } : {}),
       ...(filters.landType ? { landType: filters.landType } : {}),
-      ...(filters.keralaTnBorder !== undefined
-        ? { keralaTnBorder: filters.keralaTnBorder }
-        : {}),
+      ...(filters.keralaTnBorder !== undefined ? { keralaTnBorder: filters.keralaTnBorder } : {}),
       ...(filters.minPriceInr !== undefined || filters.maxPriceInr !== undefined
         ? {
             priceInr: {

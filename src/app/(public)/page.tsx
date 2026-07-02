@@ -62,12 +62,21 @@ const DISCIPLINES = [
 ];
 
 const PILLARS: { title: string; body: string }[] = [
-  { title: "Organic living", body: "Grow closer to food, fruit, and produce your family can trust." },
+  {
+    title: "Organic living",
+    body: "Grow closer to food, fruit, and produce your family can trust.",
+  },
   { title: "Peaceful living", body: "Slow down and reconnect with something real." },
-  { title: "Weekend rhythm", body: "Let the body follow the land's natural rhythm on visits and quiet weekends." },
+  {
+    title: "Weekend rhythm",
+    body: "Let the body follow the land's natural rhythm on visits and quiet weekends.",
+  },
   { title: "Legacy", body: "A place where your family's story continues." },
   { title: "Balance", body: "The seasons set the pace; you simply keep it." },
-  { title: "Vacation home feeling", body: "On the farm, every moment asks you to just be here — without pretending it is residential land." },
+  {
+    title: "Vacation home feeling",
+    body: "On the farm, every moment asks you to just be here — without pretending it is residential land.",
+  },
 ];
 
 const STEPS: { title: string; body: string }[] = [
@@ -217,8 +226,8 @@ export default async function HomePage() {
           Land that comes with a team
         </h2>
         <p className="mx-auto mt-2 max-w-2xl text-center text-brand-600">
-          You're joining a co-farming community with a full team behind your land — seven disciplines
-          on every project.
+          You're joining a co-farming community with a full team behind your land — seven
+          disciplines on every project.
         </p>
         <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-7">
           {DISCIPLINES.map((discipline) => (
@@ -256,7 +265,10 @@ export default async function HomePage() {
       <section className="mx-auto max-w-5xl px-4 py-16">
         <div className="mb-8 flex items-end justify-between">
           <h2 className="text-2xl font-semibold text-brand-900">Featured projects</h2>
-          <Link href="/projects" className="text-sm font-medium text-brand-600 hover:text-brand-900">
+          <Link
+            href="/projects"
+            className="text-sm font-medium text-brand-600 hover:text-brand-900"
+          >
             View all
           </Link>
         </div>
@@ -310,8 +322,8 @@ export default async function HomePage() {
           It's managed for you, not without you
         </h2>
         <p className="mx-auto mt-2 max-w-2xl text-center text-brand-600">
-          Hear it from co-farmers themselves — families and professionals who own here and visit when
-          it suits them.
+          Hear it from co-farmers themselves — families and professionals who own here and visit
+          when it suits them.
         </p>
         <div className="mt-10">
           {testimonials.length > 0 ? (
@@ -358,7 +370,10 @@ export default async function HomePage() {
         <section className="mx-auto max-w-5xl px-4 py-16">
           <div className="mb-8 flex items-end justify-between">
             <h2 className="text-2xl font-semibold text-brand-900">Stories from our community</h2>
-            <Link href="/events" className="text-sm font-medium text-brand-600 hover:text-brand-900">
+            <Link
+              href="/events"
+              className="text-sm font-medium text-brand-600 hover:text-brand-900"
+            >
               All events
             </Link>
           </div>
@@ -398,7 +413,10 @@ export default async function HomePage() {
           <div className="mx-auto max-w-5xl px-4 py-16">
             <div className="mb-8 flex items-end justify-between">
               <h2 className="text-2xl font-semibold text-brand-900">From the Farmlands Journal</h2>
-              <Link href="/blog" className="text-sm font-medium text-brand-600 hover:text-brand-900">
+              <Link
+                href="/blog"
+                className="text-sm font-medium text-brand-600 hover:text-brand-900"
+              >
                 Read all articles
               </Link>
             </div>
@@ -411,7 +429,11 @@ export default async function HomePage() {
                 >
                   {post.coverImage ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={post.coverImage} alt={post.title} className="h-40 w-full object-cover" />
+                    <img
+                      src={post.coverImage}
+                      alt={post.title}
+                      className="h-40 w-full object-cover"
+                    />
                   ) : (
                     <div className="h-40 w-full bg-brand-100" />
                   )}

@@ -2,7 +2,7 @@
 // easy to reason about and is the single source of truth for public visibility and
 // legal status changes. Unknown statuses fail closed.
 
-import { type ProjectStatus, PROJECT_STATUSES } from "@/types";
+import { PROJECT_STATUSES, type ProjectStatus } from "@/types";
 
 // Statuses visible to anonymous public visitors. Per prj.md, "Sold Out projects remain
 // visible" (proof that plots actually sell), and "Coming Soon" builds anticipation.

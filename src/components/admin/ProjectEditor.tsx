@@ -114,15 +114,28 @@ export function ProjectEditor({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <label className={labelClass}>
           Title
-          <input className={input} value={form.title} onChange={(e) => set("title", e.target.value)} required />
+          <input
+            className={input}
+            value={form.title}
+            onChange={(e) => set("title", e.target.value)}
+            required
+          />
         </label>
         <label className={labelClass}>
           Theme
-          <input className={input} value={form.theme} onChange={(e) => set("theme", e.target.value)} />
+          <input
+            className={input}
+            value={form.theme}
+            onChange={(e) => set("theme", e.target.value)}
+          />
         </label>
         <label className={`${labelClass} md:col-span-2`}>
           Tagline
-          <input className={input} value={form.tagline} onChange={(e) => set("tagline", e.target.value)} />
+          <input
+            className={input}
+            value={form.tagline}
+            onChange={(e) => set("tagline", e.target.value)}
+          />
         </label>
         <div className="md:col-span-2">
           <RichTextEditor
@@ -211,7 +224,11 @@ export function ProjectEditor({
         </label>
         <label className={labelClass}>
           Road status
-          <select className={input} value={form.roadStatus} onChange={(e) => set("roadStatus", e.target.value)}>
+          <select
+            className={input}
+            value={form.roadStatus}
+            onChange={(e) => set("roadStatus", e.target.value)}
+          >
             {ROAD_STATUSES.map((r) => (
               <option key={r} value={r}>
                 {r}
@@ -221,7 +238,11 @@ export function ProjectEditor({
         </label>
         <label className={`${labelClass} md:col-span-2`}>
           Road spec
-          <input className={input} value={form.roadSpec} onChange={(e) => set("roadSpec", e.target.value)} />
+          <input
+            className={input}
+            value={form.roadSpec}
+            onChange={(e) => set("roadSpec", e.target.value)}
+          />
         </label>
         <label className={labelClass}>
           Clubhouse

@@ -290,13 +290,7 @@ export function BlogManager({ initialPosts }: { initialPosts: AdminBlogRow[] }) 
 }
 
 // Shared field set for both create and edit forms.
-function PostFields({
-  form,
-  setForm,
-}: {
-  form: PostForm;
-  setForm: (next: PostForm) => void;
-}) {
+function PostFields({ form, setForm }: { form: PostForm; setForm: (next: PostForm) => void }) {
   return (
     <div className="grid gap-4">
       <label className="flex flex-col gap-1 text-sm text-slate-300">

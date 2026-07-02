@@ -32,19 +32,14 @@ function resolveColumns(
   return first ? Object.keys(first).map((key) => ({ key })) : [];
 }
 
-export function toCsv(
-  rows: ReadonlyArray<Record<string, unknown>>,
-  columns?: CsvColumn[],
-): string {
+export function toCsv(rows: ReadonlyArray<Record<string, unknown>>, columns?: CsvColumn[]): string {
   const cols = resolveColumns(rows, columns);
   if (cols.length === 0) {
     return "";
   }
 
   const headerLine = cols.map((col) => escapeField(col.header ?? col.key)).join(DELIMITER);
-  const dataLines = rows.map((row) =>
-    cols.map((col) => escapeField(row[col.key])).join(DELIMITER),
-  );
+  const dataLines = rows.map((row) => cols.map((col) => escapeField(row[col.key])).join(DELIMITER));
 
   return [headerLine, ...dataLines].join(ROW_SEPARATOR);
 }
